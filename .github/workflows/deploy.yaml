@@ -13,23 +13,15 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
-      #- name: Set up Node.js 
-        #uses: actions/setup-node@v3
-        #with:
-          #node-version: '18.12'
 
       - name: Install Dependencies
         run: npm ci --verbose --frozen-lockfile
 
-      #- name: Verify dependencies
-        #run: npm audit
+      - name: Verify dependencies
+        run: npm audit
 
       - name: Build application
-        run: npm run build
-
-      - name: Install Vercel CLI
-        run: npm install -g vercel@25.1.0
+        run: npm run buildg
       
       - name: Deploy to Vercel
         uses: amondnet/vercel-action@v25
