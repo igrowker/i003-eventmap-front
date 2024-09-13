@@ -21,7 +21,7 @@ jobs:
         run: npm audit
 
       - name: Build application
-        run: npm run buildg
+        run: npm run build
       
       - name: Deploy to Vercel
         uses: amondnet/vercel-action@v25
