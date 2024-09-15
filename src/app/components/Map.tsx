@@ -5,7 +5,7 @@ import MarkerIcon from 'leaflet/dist/images/marker-icon.png'
 import MarkerShadow from 'leaflet/dist/images/marker-shadow.png'
 import 'leaflet/dist/leaflet.css'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
-import { useState } from 'react'
+import LocateControl from './LocateControl'
 
 const Map = () => {
 
@@ -37,6 +37,7 @@ const Map = () => {
                         Ud está Aquí. <br />
                     </Popup>
                 </Marker>
+                <LocateControl />
             </MapContainer>
         
     )
