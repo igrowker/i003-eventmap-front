@@ -34,7 +34,7 @@ const Map = () => {
                     })
                 } position={[-34.6047, -58.3995]}>
                      <Popup>
-                        Ud está Aquí. <br />
+                        Ud está No  Aquí. <br />
                     </Popup>
                 </Marker>
                 <LocateControl />
