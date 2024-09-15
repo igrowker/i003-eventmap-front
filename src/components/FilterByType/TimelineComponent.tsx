@@ -2,7 +2,7 @@ import { FilterByDateProps } from "@/types/filter-types";
 import { handleSelectFilter } from "@/utils/handleSelectFilter";
 import { useState } from "react";
 
-export default function TimelineComponent({ filterValueState, setIsFilterMenuOpen }: FilterByDateProps) {
+export default function TimelineComponent({ onDateRangeChange, filterValueState, setIsFilterMenuOpen }: FilterByDateProps) {
   const { filterValues, setFilterValues } = filterValueState
 
   return (

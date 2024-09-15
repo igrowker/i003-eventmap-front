@@ -6,7 +6,7 @@ import FilterByType from "./FilterByType"
 import TimelineComponent from "./TimelineComponent"
 
 
-export default function FilterComponent({ onFilterChange = () => {} }: FilterComponentProps) {
+export default function FilterComponent({ onFilterChange }: FilterComponentProps) {
   const [filterValues, setFilterValues] = useState<FilterValues>(INITIAL_FILTER_VALUES)
   const [isFilterMenuOpen, setIsFilterMenuOpen] = useState<boolean>(false)
 
@@ -26,7 +26,7 @@ export default function FilterComponent({ onFilterChange = () => {} }: FilterCom
         </button>
         <div className={`${!isFilterMenuOpen ? 'max-sm:hidden' : ''} relative max-sm:border max-sm:border-dark max-sm:border-opacity-20 max-sm:rounded-lg max-sm:p-2 flex max-sm:flex-col-reverse items-center gap-4`}>
           <TimelineComponent filterValueState={{ filterValues, setFilterValues }} setIsFilterMenuOpen={setIsFilterMenuOpen} />
-          <FilterByType filterByTypeList={FILTER_BY_TYPE_LIST} filterValueState={{ filterValues, setFilterValues }} setIsFilterMenuOpen={setIsFilterMenuOpen} />
+          <FilterByType onFilterChange={onFilterChange} filterByTypeList={FILTER_BY_TYPE_LIST} filterValueState={{ filterValues, setFilterValues }} setIsFilterMenuOpen={setIsFilterMenuOpen} />
         </div>
       </div>
     </div>
