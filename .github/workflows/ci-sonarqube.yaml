@@ -22,9 +22,9 @@ jobs:
       uses: SonarSource/sonarqube-scan-action@v2.3.0 # Ex: v2.1.0, See the latest version at https://github.com/marketplace/actions/official-sonarqube-scan
       with:
         args: >
-          -Dsonar.projectKey=eventmap \
-          -Dsonar.sources=. \
-          -Dsonar.host.url=https://0319-190-142-156-24.ngrok-free.app \
+          -Dsonar.projectKey=eventmap
+          -Dsonar.sources=.
+          -Dsonar.host.url=https://0319-190-142-156-24.ngrok-free.app
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
