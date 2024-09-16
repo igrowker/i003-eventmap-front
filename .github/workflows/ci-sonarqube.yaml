@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
-      types: [opened, synchronize, reopened]
 
 jobs:
   sonarqube:
@@ -21,8 +19,6 @@ jobs:
         args: >
           -Dsonar.projectKey=eventmap
           -Dsonar.sources=.
-          -Dsonar.host.url=https://0319-190-142-156-24.ngrok-free.app
-          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: https://0319-190-142-156-24.ngrok-free.app
