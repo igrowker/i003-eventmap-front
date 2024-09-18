@@ -9,18 +9,10 @@ on:
       #- 'releases/**'
   workflow_dispatch:
 
-concurrency: 
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   deploy:
     name: Deploy to Vercel
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-      repository-projects: write
 
     steps:
       - name: Checkout code
@@ -68,13 +60,10 @@ jobs:
         uses: amondnet/vercel-action@v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          github-token: ${{ secrets.GH_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          scope: ${{ secrets.VERCEL_ORG_ID }}
           vercel-args: ${{ github.ref == 'refs/heads/main' && '--prod' || '' }}
           working-directory: ./
-          github-comment: true
 
       - name: Print preview URL
         run: |
