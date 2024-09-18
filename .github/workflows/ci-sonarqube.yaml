@@ -24,4 +24,4 @@ jobs:
           -Dsonar.sources=.
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        SONAR_HOST_URL: https://0319-190-142-156-24.ngrok-free.app
+        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
