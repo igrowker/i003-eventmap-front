@@ -9,10 +9,15 @@ on:
       #- 'releases/**'
   workflow_dispatch:
 
+    
 jobs:
   deploy:
     name: Deploy to Vercel
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      repository-projects: write
 
     steps:
       - name: Checkout code
@@ -64,7 +69,5 @@ jobs:
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           vercel-args: ${{ github.ref == 'refs/heads/main' && '--prod' || '' }}
           working-directory: ./
-
-      - name: Print preview URL
-        run: |
-          echo ${{ steps.deploy.outputs.preview-url }}
+          github-token: ${{ secrets.GH_TOKEN }}
+          github-comment: true
