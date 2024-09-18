@@ -4,20 +4,13 @@ on:
   push:
     branches:
       - main
-      - develop
-      - devops-workflow
       #- 'releases/**'
   workflow_dispatch:
 
-    
 jobs:
   deploy:
     name: Deploy to Vercel
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-      repository-projects: write
 
     steps:
       - name: Checkout code
@@ -26,7 +19,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: 20'
           cache: 'npm'
 
       - name: Cache node modules
@@ -69,5 +62,3 @@ jobs:
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           vercel-args: ${{ github.ref == 'refs/heads/main' && '--prod' || '' }}
           working-directory: ./
-          github-token: ${{ secrets.GH_TOKEN }}
-          github-comment: true
