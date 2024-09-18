@@ -5,7 +5,8 @@ on:
     branches:
       - main
       - develop
-      - 'releases/**'
+      - devops-workflow
+      #- 'releases/**'
   workflow_dispatch:
 
 jobs:
