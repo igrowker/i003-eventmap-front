@@ -1,11 +1,6 @@
 name: CI-sonarqube
 
 on:
-  push:
-    branches:
-      - main
-      - devops-workflow
-      - 'releases/**'
   workflow_dispatch:
 
 jobs:

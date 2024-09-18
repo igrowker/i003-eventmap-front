@@ -1,10 +1,11 @@
-name: CI.deploy
+name: Deploy to Vercel
 
 on:
   push:
     branches:
       - main
       - develop
+      - 'releases/**'
   workflow_dispatch:
 
 jobs:
@@ -17,10 +18,11 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
 
       - name: Cache node modules
         uses: actions/cache@v3
@@ -54,10 +56,18 @@ jobs:
         run: npm run build
       
       - name: Deploy to Vercel
+        id: deploy
         uses: amondnet/vercel-action@v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-args: '--prod'
+          vercel-args: ${{ github.ref == 'refs/heads/main' && '--prod' || '' }}
           vercel-org-id: ${{ secrets.ORG_ID}}
           vercel-project-id: ${{ secrets.PROJECT_ID}}
+          github-token: ${{ secrets.GH_TOKEN }}
+          scope: ${{ secrets.ORG_ID }}
+          github-comment: true
           working-directory: ./
+
+      - name: Print preview URL
+        run: |
+          echo ${{ steps.deploy.outputs.preview-url }}
