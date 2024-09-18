@@ -9,6 +9,10 @@ on:
       #- 'releases/**'
   workflow_dispatch:
 
+concurrency: 
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   deploy:
     name: Deploy to Vercel
@@ -64,7 +68,6 @@ jobs:
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID}}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID}}
           github-token: ${{ secrets.GH_TOKEN }}
-          scope: ${{ secrets.VERCEL_ORG_ID }}
           github-comment: true
           working-directory: ./
 
