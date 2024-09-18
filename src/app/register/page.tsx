@@ -57,23 +57,52 @@ export default function Register() {
     const { firstName, lastName, email, password, confirmPassword, cuitCuil } =
       formValues;
 
-    if (!firstName.trim()) newErrors.firstName = "El nombre es requerido";
-    if (!lastName.trim()) newErrors.lastName = "El apellido es requerido";
+    if (!firstName.trim()) {
+      newErrors.firstName = "El nombre es requerido";
+    } else if (firstName.length < 3) {
+      newErrors.firstName = "El nombre debe tener al menos 3 caracteres";
+    } else if (firstName.length > 50) {
+      newErrors.firstName = "El nombre no puede exceder los 50 caracteres";
+    }
+
+    if (!lastName.trim()) {
+      newErrors.lastName = "El apellido es requerido";
+    } else if (lastName.length < 3) {
+      newErrors.lastName = "El apellido debe tener al menos 3 caracteres";
+    } else if (lastName.length > 50) {
+      newErrors.lastName = "El apellido no puede exceder los 50 caracteres";
+    }
 
     const trimmedEmail = email.trim();
-    if (!trimmedEmail) newErrors.email = "El email es requerido";
-    else if (!validateEmail(trimmedEmail)) newErrors.email = "Email inválido";
+    if (!trimmedEmail) {
+      newErrors.email = "El email es requerido";
+    } else if (!validateEmail(trimmedEmail)) {
+      newErrors.email = "Email inválido";
+    }
 
-    if (!password.trim()) newErrors.password = "La contraseña es requerida";
-    if (!confirmPassword.trim())
+    if (!password.trim()) {
+      newErrors.password = "La contraseña es requerida";
+    } else if (password.length < 6) {
+      newErrors.password = "La contraseña debe tener al menos 6 caracteres";
+    } else if (password.length > 50) {
+      newErrors.password = "La contraseña no puede exceder los 50 caracteres";
+    }
+
+    if (!confirmPassword.trim()) {
       newErrors.confirmPassword = "La contraseña es requerida";
-    else if (password !== confirmPassword)
+    } else if (password !== confirmPassword) {
       newErrors.confirmPassword = "Las contraseñas no coinciden";
+    }
 
-    if (!cuitCuil.trim()) newErrors.cuitCuil = "El CUIT/CUIL es requerido";
+    if (!cuitCuil.trim()) {
+      newErrors.cuitCuil = "El CUIT/CUIL es requerido";
+    } else if (cuitCuil.length !== 11) {
+      newErrors.cuitCuil = "CUIT/CUIL Inválido";
+    }
 
-    if (!termsAccepted)
+    if (!termsAccepted) {
       newErrors.termsAccepted = "Debes aceptar los términos y condiciones";
+    }
 
     setErrors(newErrors);
     return newErrors;
@@ -92,9 +121,8 @@ export default function Register() {
         password: formValues.password,
         cuitCuil: formValues.cuitCuil.trim(),
       };
-      
-      //Enviar datos al backend
 
+      //Enviar datos al backend
     }
   };
 
