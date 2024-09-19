@@ -2,7 +2,7 @@ name: Vercel Preview Deployment
 
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID}}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
 on:
   push:
@@ -39,4 +39,5 @@ jobs:
           vercel alias --token=${{ secrets.VERCEL_TOKEN }} set "${{ steps.vercel_deploy.outputs.preview_url }}" "your-project-${branch_name}.vercel.app"
 
       - name: Output Deployment URL
-        run: echo "The Preview URL is: $PREVIEW_URL"
+        run: |
+          echo "The Preview URL is: $PREVIEW_URL"
