@@ -37,7 +37,7 @@ jobs:
       - name: Alias Deployment to Custom URL
         run: |
           branch_name=$(echo "${{ github.ref }}" | sed 's/refs\/heads\///')
-          vercel alias --token=${{ secrets.VERCEL_TOKEN }} set "${{ steps.vercel_deploy.outputs.preview_url }}" "your-project-${branch_name}.vercel.app"
+          vercel alias --token=${{ secrets.VERCEL_TOKEN }} set "$PREVIEW_URL" "your-project-${branch_name}.vercel.app"
 
       - name: Output Deployment URL
         run: |
