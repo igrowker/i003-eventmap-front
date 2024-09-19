@@ -1,4 +1,4 @@
-name: CI-sonarqube
+name: CI sonarqube
 
 on:
   workflow_dispatch:
