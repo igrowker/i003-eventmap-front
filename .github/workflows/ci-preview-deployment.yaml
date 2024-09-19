@@ -1,16 +1,21 @@
 name: Vercel Preview Deployment
+
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID}}
+
 on:
   push:
     branches-ignore:
       - main
+
 jobs:
   Deploy-Preview:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
@@ -24,5 +29,14 @@ jobs:
       - name: Deploy Project Artifacts to Vercel
         run: |
           branch_name=$(echo "${{ github.ref }}" | sed 's/refs\/heads\///')
-          url="$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})"
-          vercel alias --token=${{ secrets.VERCEL_TOKEN }} set "$url" "your-project-${branch_name}.vercel.app"
+          url=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} --env=preview)
+          echo "Vercel Deployment URL: $url"
+          echo "PREVIEW_URL=$url" >> $GITHUB_ENV
+
+      - name: Alias Deployment to Custom URL
+        run: |
+          branch_name=$(echo "${{ github.ref }}" | sed 's/refs\/heads\///')
+          vercel alias --token=${{ secrets.VERCEL_TOKEN }} set "${{ steps.vercel_deploy.outputs.preview_url }}" "your-project-${branch_name}.vercel.app"
+
+      - name: Output Deployment URL
+        run: echo "The Preview URL is: $PREVIEW_URL"
