@@ -102,6 +102,7 @@ export default function PostEvent() {
       </div>
 
       {/* Hablar con christian para ver como recuperar latitud y longitud de abajo. */}
+      {/* Buscar la forma de convertir direccion en lat y lon, georoutingmachine */}
 
       <div>
         <label>Latitud</label>
