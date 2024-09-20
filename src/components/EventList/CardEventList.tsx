@@ -2,11 +2,11 @@ import { eventTypes } from "@/types/events-list-types"
 import { getEventTimeFormatted } from "@/utils/getEventTimeFormatted"
 import Image from "next/image"
 
-export default function CardEventList({ event }: { event: eventTypes }) {
+export default function CardEventList({ event, lastCardRef }: { event: eventTypes, lastCardRef: React.RefObject<HTMLDivElement> | null }) {
   const { img, name, date, location, type } = event
 
   return (
-    <div className="flex-1 flex sm:flex-col gap-4 bg-neutral-100 border rounded-lg p-4">
+    <div ref={lastCardRef} className="flex-1 flex sm:flex-col gap-4 bg-neutral-100 border rounded-lg p-4">
       {
         img
           ? <Image width={180} height={180} src={img} alt={`Imagen de ${name}`} className="max-sm:min-w-[180px] sm:w-full h-[180px] bg-gray-400 rounded-lg" />
