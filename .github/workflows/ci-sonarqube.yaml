@@ -16,14 +16,16 @@ jobs:
         # Disabling shallow clones is recommended for improving the relevancy of reporting
         fetch-depth: 0
 
-    - name: SonarQube Scan
+    - name: Analyze with SonarQube
       uses: SonarSource/sonarqube-scan-action@v2.3.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
       with:
-        args: >
+        args:
           -Dsonar.projectKey=eventmapfront
           -Dsonar.sources=.
-          -Dsonar.token=${{ secrets.SONAR_TOKEN }}
-          -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }}
           -X
           -Dsonar.pullrequest.branch=${{ github.head_ref }}
           -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
