@@ -1,6 +1,7 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-[![ESLint](https://github.com/igrowker/i003-eventmap-front/actions/workflows/ci-eslint.yaml/badge.svg)](https://github.com/igrowker/i003-eventmap-front/actions/workflows/ci-eslint.yaml)
+[![Linting](https://github.com/igrowker/i003-eventmap-front/actions/workflows/ci-eslint.yaml/badge.svg)](https://github.com/igrowker/i003-eventmap-front/actions/workflows/ci-eslint.yaml)
+[![Preview Deployment](https://github.com/igrowker/i003-eventmap-front/actions/workflows/ci-preview-deployment.yaml/badge.svg)](https://github.com/igrowker/i003-eventmap-front/actions/workflows/ci-preview-deployment.yaml)
 
 ## Getting Started
 
