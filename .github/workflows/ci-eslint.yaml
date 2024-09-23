@@ -39,11 +39,11 @@ jobs:
           --config .eslintrc.json
           --ext .js,.jsx,.ts,.tsx
           --format @microsoft/eslint-formatter-sarif
-          --output-file eslint-results.sarif
+          --output-file results.sarif
         
       - name: Show SARIF file content
         run: |
-          cat ./eslint-results.sarif
+          cat ./results.sarif
 
       - name: Upload analysis results to GitHub
         uses: github/codeql-action/upload-sarif@v3
