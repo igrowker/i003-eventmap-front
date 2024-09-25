@@ -7,13 +7,14 @@ concurrency:
 on:
   push:
     branches:
-      - main
+      - develop
+      - devops-workflow
       #- 'releases/**'
   workflow_dispatch:
 
 jobs:
   deploy:
-    name: Deploy to Vercel (prod)
+    name: Deploy to Vercel
     runs-on: ubuntu-latest
 
     steps:
@@ -51,6 +52,12 @@ jobs:
       - name: Install Dependencies
         run: npm ci --verbose --frozen-lockfile
 
+    #   - name: Audit dependencies
+    #     run: npm audit --production --audit-level=moderate
+
+    #   - name: Run unit tests
+    #     run: npm test
+
       - name: Build application
         run: npm run build
       
@@ -60,9 +67,5 @@ jobs:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-args: ${{ github.ref == 'refs/heads/main' && '--prod' || '' }}
+          vercel-args: ''
           working-directory: ./
-
-      - name: Rollback on failure
-        if: failure()
-        run: vercel rollback --token ${{ secrets.VERCEL_TOKEN }} --prod
