@@ -2,19 +2,27 @@
 
 import MarkerIcon from "leaflet/dist/images/marker-icon.png";
 import MarkerShadow from "leaflet/dist/images/marker-shadow.png";
-import L from "leaflet";
+import L, { ColorGradientConfig } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet.heat";
 import LocateControl from "./LocateControl";
 import HeatmapLayer from "react-leaflet-heat-layer";
 
-
 interface AddressPoint {
   lat: number;
   lng: number;
   value: number;
 }
+
+const gradientConfig: ColorGradientConfig = {
+  0: "#0000FF", // Azul oscuro
+  0.1: "#00FFFF", // Azul claro
+  0.3: "#FFFFFF", // Blanco
+  0.5: "#0000FF", // Rojo
+  0.7: "#FFA500", // Naranja
+  1: "#FF0000", // Rojo
+};
 
 const addressPoints: AddressPoint[] = [
   { lat: -34.5828, lng: -58.4158, value: 0.95 },
@@ -42,27 +50,17 @@ const addressPoints: AddressPoint[] = [
   { lat: -34.607, lng: -58.4343, value: 0.44 },
 ];
 
-
-
 const Map = () => {
-  const formatLatLng = (latlng: any) => { //chequear esto 
+  const formatLatLng = (latlng: any) => {
+    //chequear esto
     return `${latlng.lat.toFixed(4)}, ${latlng.lng.toFixed(4)}`;
-  };
-
-
-  const addCustomLatLng = (latlng: any, value: number) => {
-    return {
-      lat: latlng.lat,
-      lng: latlng.lng,
-      value: value
-    };
   };
 
   return (
     <MapContainer
       style={{ height: "100vh", width: "100vw" }}
       center={[-34.6047, -58.3995]}
-      zoom={13}
+      zoom={16}
       scrollWheelZoom={true}
     >
       <TileLayer
@@ -75,26 +73,15 @@ const Map = () => {
         latlngs={addressPoints.map((point) => [
           point.lat,
           point.lng,
-          point.value,
+          point.value / 100, // Normalizo el valor a un rango 0-1
         ])}
         radius={25}
         blur={15}
         maxZoom={15}
         max={100}
-        gradient={["#00FF00", "#FF0000"]}
+        gradient={gradientConfig}
         minOpacity={0.8}
-        
       />
-
-      {/* <HeatmapLayer
-        latlngs={addressPoints.map((point) => addCustomLatLng(point, point.value))}
-        radius={25}
-        blur={15}
-        maxZoom={15}
-        max={100}
-        gradient={["#00FF00", "#FF0000"]}
-        minOpacity={0.1} // Transparencia mínima
-      /> */}
 
       {/* Marcadores personalizados */}
       {addressPoints.map((point) => (
@@ -127,3 +114,4 @@ const Map = () => {
 };
 
 export default Map;
+
