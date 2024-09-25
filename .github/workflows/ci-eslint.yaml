@@ -38,7 +38,7 @@ jobs:
         run: npx eslint .
           --config .eslintrc.json
           --ext .js,.jsx,.ts,.tsx
-          --format @microsoft/eslint-formatter-sarif --save-dev
+          --format @microsoft/eslint-formatter-sarif
           --output-file results.sarif
         
       - name: Show SARIF file content
