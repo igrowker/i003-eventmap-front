@@ -1,10 +1,9 @@
 import React from 'react';
-import Logo from '../../../public/logotipo_b.svg';
 
 function Header() {
   return (
-    <div>
-      <Logo />
+    <div className='flex items-center justify-start'>
+      <h1 className='text-3xl text-black'>EventMap</h1>
     </div>
   );
 }
