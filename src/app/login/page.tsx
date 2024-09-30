@@ -20,6 +20,7 @@ export default function Login() {
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState();
+  const [loginError, setLoginError] = useState("");
 
   const [formValues, setFormValues] = useState<FormValues>({
     email: "",
@@ -57,6 +58,7 @@ export default function Login() {
 
     if (Object.keys(newErrors).length === 0) {
       setLoading(true);
+      setLoginError("");
 
       try {
         const trimmedFormValues = {
@@ -74,12 +76,17 @@ export default function Login() {
         );
         const res = await req.json();
         console.log(res);
-        setUser(res.profile.name);
+        if (req.ok) {
+          setUser(res.profile.name);
+          setShowModal(true);
+        } else {
+          setLoginError("Datos incorrectos, intenta de nuevo.");
+        }
       } catch (error) {
         console.error("Error al enviar los datos:", error);
+        setLoginError("Hubo un problema al intentar conectarse al servidor.");
       } finally {
         setLoading(false);
-        setShowModal(true);
       }
     }
   };
@@ -210,7 +217,9 @@ export default function Login() {
           </div>
         </div>
         <div className="flex justify-end pr-2 pt-1">
-          <button className="underline text-[#5C5F5F]">Olvidé mi contraseña</button>
+          <button className="underline text-[#5C5F5F]">
+            Olvidé mi contraseña
+          </button>
         </div>
         {/* <span className="my-3 text-center text-gray-700">O</span>
         <div className="flex flex-col gap-4">
@@ -221,17 +230,23 @@ export default function Login() {
             Facebook
           </button>
         </div> */}
+
         {loading ? (
           <div className="w-full flex justify-center my-4">
             <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-current" />
           </div>
         ) : (
-          <button
-            className="bg-[#6750A4] text-white text-lg p-2 py-2.5 my-4 w-full rounded-full"
-            type="submit"
-          >
-            Ingresar
-          </button>
+          <>
+            {loginError && (
+              <div className="text-center text-[#cc5555]">{loginError}</div>
+            )}
+            <button
+              className="bg-[#6750A4] text-white text-lg p-2 py-2.5 my-4 w-full rounded-full"
+              type="submit"
+            >
+              Ingresar
+            </button>
+          </>
         )}
 
         <div>
@@ -249,8 +264,14 @@ export default function Login() {
         } z-50 inset-0 flex justify-center items-center bg-black/50`}
       >
         <div className="bg-white p-8 rounded shadow-lg text-center">
-          <h1 className="text-lg">Sesion Iniciada! Bienvenido <span className="font-bold">{user}</span></h1>
-          <button onClick={() => setShowModal(false)} className="mt-4 p-2 bg-blue-500 text-white rounded">
+          <h1 className="text-lg">
+            Sesion Iniciada! Bienvenido{" "}
+            <span className="font-bold">{user}</span>
+          </h1>
+          <button
+            onClick={() => setShowModal(false)}
+            className="mt-4 p-2 bg-blue-500 text-white rounded"
+          >
             Cerrar
           </button>
         </div>
