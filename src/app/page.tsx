@@ -6,6 +6,7 @@ import CardEventsSwiper from "@/components/CardEvents/CardsEvents";
 import CrearEventoButton from "@/components/CreateEventButton/CreateEventButton";
 import Newsletter from "@/components/Newsletter/Newsletter";
 import NavBar from "@/components/navbar/NavBar";
+import Link from "next/link";
 
 const Dynamic = dynamic(() => import("./components/Map"), {
   loading: () => <p>...Loading</p>,
@@ -95,7 +96,9 @@ export default function Home() {
         <Header />
       </header>
       <div className="flex w-full justify-end pb-3">
-        <CrearEventoButton />
+        <Link href={'/createEvent'}>
+          <CrearEventoButton />
+        </Link>
       </div>
       <h4 className="font-semibold text-black text-sm pb-4">
         Optimizá tus rutas y maximizá tus ganancias
