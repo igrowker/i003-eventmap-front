@@ -4,6 +4,8 @@ import HomeCategories from "@/components/HomeCategories/HomeCategories";
 import Header from "@/components/header/Header";
 import CardEventsSwiper from "@/components/CardEvents/CardsEvents";
 import CrearEventoButton from "@/components/CreateEventButton/CreateEventButton";
+import Newsletter from "@/components/Newsletter/Newsletter";
+import NavBar from "@/components/navbar/NavBar";
 
 const Dynamic = dynamic(() => import("./components/Map"), {
   loading: () => <p>...Loading</p>,
@@ -109,6 +111,12 @@ export default function Home() {
       <section className="pt-3">
         <CardEventsSwiper events={events} />
       </section>
+      <div className="pt-5 pb-16 max-w-[384px]" >
+        <Newsletter/>
+      </div>
+      <nav>
+        <NavBar/>
+      </nav>
     </main>
   );
 }
