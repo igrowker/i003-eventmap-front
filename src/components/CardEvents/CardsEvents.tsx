@@ -39,11 +39,12 @@ const CardEventsSwiper: React.FC<EventProps> = ({ events }) => {
     >
       {events.map((event) => (
         <SwiperSlide key={event.id}>
-          <div className="border rounded-lg shadow-md p-3 w-full h-auto min-h-32">{/* Ajusta el tamaño según tus necesidades */}
+          <div className='p-0.5 bg-gradient-to-t from-pink-300 via-red-400 to-green-300 rounded-lg'>
+            <div className="border rounded-lg shadow-md p-3 w-full h-auto min-h-32 bg-bgHome">
             <img
               src={event.photos[0]}
               alt={event.name}
-              className="w-full h-32 object-cover rounded-lg" // Asegúrate de que las imágenes se ajusten correctamente
+              className="w-full h-32 object-cover rounded-lg"
             />
             <div className="mt-2">
               <h2 className="font-semibold text-black text-sm">{event.name}</h2>
@@ -55,6 +56,7 @@ const CardEventsSwiper: React.FC<EventProps> = ({ events }) => {
               </p>
             </div>
           </div>
+        </div>
         </SwiperSlide>
       ))}
     </Swiper>

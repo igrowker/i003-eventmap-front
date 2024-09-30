@@ -14,7 +14,8 @@ const config: Config = {
         tertiary: "#FF3130",
         light: "#F7FAFC",
         dark: "#08121F",
-        bgHome:"#F6FAFD"
+        bgHome:"#F6FAFD",
+        createEventButton: "#6750A4"
       },
       fontFamily:{
         latoBold: ['Lato-Bold']
