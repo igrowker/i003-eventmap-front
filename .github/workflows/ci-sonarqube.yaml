@@ -1,27 +1,32 @@
-name: CI-sonarqube
+name: CI sonarqube
 
 on:
-  push:
-    branches:
-      - main
-      - devops-workflow
-      - 'releases/**'
   workflow_dispatch:
+
+permissions:
+  pull-requests: read
 
 jobs:
   sonarqube:
     runs-on: ubuntu-latest
     steps:
+
     - uses: actions/checkout@v4
       with:
         # Disabling shallow clones is recommended for improving the relevancy of reporting
         fetch-depth: 0
-    - name: SonarQube Scan
-      uses: SonarSource/sonarqube-scan-action@v2.3.0 # Ex: v2.1.0, See the latest version at https://github.com/marketplace/actions/official-sonarqube-scan
-      with:
-        args: >
-          -Dsonar.projectKey=eventmap
-          -Dsonar.sources=.
+
+    - name: Analyze with SonarQube
+      uses: SonarSource/sonarqube-scan-action@v2.3.0
       env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        SONAR_HOST_URL: https://0319-190-142-156-24.ngrok-free.app
+        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      with:
+        args:
+          -Dsonar.projectKey=eventmapfront
+          -Dsonar.sources=.
+          -X
+          -Dsonar.pullrequest.branch=${{ github.head_ref }}
+          -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
+          -Dsonar.pullrequest.base=${{ github.base_ref }}
