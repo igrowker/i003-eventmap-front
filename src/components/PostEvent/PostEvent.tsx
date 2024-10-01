@@ -10,7 +10,7 @@ type EventFormData = {
   type: "Gastronomico" | "Artistico" | "Deportivo";
   time: string;
   description: string;
-  capacity: "Menos de 500" | "Entre 500 y 2000" | "Entre 2000 y 5000" | "Más de 5000";
+  amount: string;
   location: { lat: string; lon: string };
 };
 
@@ -22,16 +22,18 @@ export default function PostEvent() {
     type: "Gastronomico",
     time: "",
     description: "",
-    capacity: "Menos de 500",
+    amount: "Menos de 500",
     location: { lat: "", lon: "" },
   });
 
-  const [suggestions, setSuggestions] = useState<{ label: string; latitude: number; longitude: number }[]>([]);
+  const [suggestions, setSuggestions] = useState<
+    { label: string; latitude: number; longitude: number }[]
+  >([]);
   const [provider, setProvider] = useState<any>(null);
 
   useEffect(() => {
     const loadProvider = async () => {
-      const { OpenStreetMapProvider } = await import('leaflet-geosearch');
+      const { OpenStreetMapProvider } = await import("leaflet-geosearch");
       const osmProvider = new OpenStreetMapProvider();
       setProvider(osmProvider);
     };
@@ -39,34 +41,51 @@ export default function PostEvent() {
     loadProvider();
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => {
+    const { name, value } = e.target;
 
-    if (e.target.name === "address" && provider) {
-      fetchSuggestions(e.target.value);
+    if (name === "amount") {
+      let numericAmount: number;
+      switch (value) {
+        case "Menos de 500":
+          numericAmount = 0.3;
+          break;
+        case "Entre 500 y 2000":
+          numericAmount = 0.5;
+          break;
+        case "Entre 2000 y 5000":
+          numericAmount = 0.7;
+          break;
+        case "Más de 5000":
+          numericAmount = 0.9;
+          break;
+        default:
+          numericAmount = 0.3;
+      }
+
+      setFormData((prevData) => ({
+        ...prevData,
+        amount: value,
+      }));
+      console.log("amount:", numericAmount);
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
     }
   };
 
-  const fetchSuggestions = async (input: string) => {
-    if (!input || !provider) {
-      setSuggestions([]);
-      return;
-    }
-
-    const results = await provider.search({ query: input });
-    const formattedResults = results.map((result: { label: any; y: any; x: any; }) => ({
-      label: result.label,
-      latitude: result.y,
-      longitude: result.x,
-    }));
-
-    setSuggestions(formattedResults);
-  };
-
-  const handleSuggestionClick = (suggestion: { label: string; latitude: number; longitude: number }) => {
+  //al hacer click en una sugerencia de dirección
+  const handleSuggestionClick = (suggestion: {
+    label: string;
+    latitude: number;
+    longitude: number;
+  }) => {
     setFormData((prevData) => ({
       ...prevData,
       address: suggestion.label,
@@ -75,12 +94,69 @@ export default function PostEvent() {
         lon: suggestion.longitude.toString(),
       },
     }));
+
+    console.log("Dirección seleccionada:", suggestion.label);
+    console.log(
+      "Latitud:",
+      suggestion.latitude,
+      "Longitud:",
+      suggestion.longitude
+    );
+
     setSuggestions([]);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(formData); //enviar formData al backend
+
+    let numericAmount: number;
+    switch (formData.amount) {
+      case "Menos de 500":
+        numericAmount = 0.3;
+        break;
+      case "Entre 500 y 2000":
+        numericAmount = 0.5;
+        break;
+      case "Entre 2000 y 5000":
+        numericAmount = 0.7;
+        break;
+      case "Más de 5000":
+        numericAmount = 0.9;
+        break;
+      default:
+        numericAmount = 0.3;
+    }
+
+    const finalData = {
+      ...formData,
+      amount: numericAmount, //valor numérico al backend
+    };
+
+    console.log("Final formData:", finalData);
+  };
+
+  //búsqueda de direcciones
+  const handleAddressSearch = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      address: value,
+    }));
+
+    if (provider && value.length > 3) {
+      const results = await provider.search({ query: value });
+      setSuggestions(
+        results.map((result: any) => ({
+          label: result.label,
+          latitude: result.y,
+          longitude: result.x,
+        }))
+      );
+    } else {
+      setSuggestions([]);
+    }
   };
 
   return (
@@ -134,7 +210,7 @@ export default function PostEvent() {
             type="text"
             name="address"
             value={formData.address}
-            onChange={handleChange}
+            onChange={handleAddressSearch}
             placeholder="Dirección del evento"
             required
             className="w-full px-3 py-2 border border-gray-300 rounded-full"
@@ -184,8 +260,8 @@ export default function PostEvent() {
         <div className="mb-4">
           <label className="block text-gray-700">Capacidad</label>
           <select
-            name="capacity"
-            value={formData.capacity}
+            name="amount"
+            value={formData.amount}
             onChange={handleChange}
             className="w-full px-3 py-2 border border-gray-300 rounded-full"
           >
@@ -198,11 +274,11 @@ export default function PostEvent() {
 
         <button
           type="submit"
-          className="w-full bg-createEventButton text-white py-2 rounded-full"
+          className="w-full bg-createEventButton text-white py-2 rounded-full hover:bg-violet-500"
         >
-          Publicar
+          Crear evento
         </button>
       </form>
     </main>
   );
-}
+};
