@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react'
 import { HiHome } from "react-icons/hi2";
 import { IoMdNotificationsOutline } from "react-icons/io";

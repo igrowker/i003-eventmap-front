@@ -16,6 +16,7 @@
     "@svgr/webpack": "^8.1.0",
     "@types/leaflet.locatecontrol": "^0.74.5",
     "leaflet": "^1.9.4",
+    "leaflet-geosearch": "^4.0.0",
     "leaflet.locatecontrol": "^0.81.1",
     "next": "14.2.7",
     "react": "^18.3.1",
