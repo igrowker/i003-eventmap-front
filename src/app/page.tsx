@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React from "react";
 import dynamic from "next/dynamic";
@@ -98,7 +98,7 @@ export default function Home() {
         <Header />
       </header>
       <div className="flex w-full justify-end pb-3">
-        <Link href={'/createEvent'}>
+        <Link href={"/createEvent"}>
           <CrearEventoButton />
         </Link>
       </div>
@@ -116,11 +116,11 @@ export default function Home() {
       <section className="pt-3">
         <CardEventsSwiper events={events} />
       </section>
-      <div className="pt-5 pb-16 max-w-[384px]" >
-        <Newsletter/>
+      <div className="pt-5 pb-16 max-w-[384px]">
+        <Newsletter />
       </div>
       <nav>
-        <NavBar/>
+        <NavBar />
       </nav>
     </main>
   );

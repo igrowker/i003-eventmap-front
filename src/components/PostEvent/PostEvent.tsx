@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useReducer, useCallback, useEffect, ChangeEvent, FormEvent } from "react";
+import React, {
+  useReducer,
+  useCallback,
+  useEffect,
+  ChangeEvent,
+  FormEvent,
+} from "react";
 import { BiArrowBack } from "react-icons/bi";
 import ModalPostEvent from "../modals/modalPostEvent/ModalPostEvent";
 import Link from "next/link";
@@ -64,13 +70,19 @@ const PostEvent: React.FC = () => {
   }, []);
 
   const handleChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    (
+      e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+    ) => {
       const { name, value } = e.target;
 
       if (name === "amount") {
         dispatch({ type: "SET_FIELD", field: "amount", value });
       } else {
-        dispatch({ type: "SET_FIELD", field: name as keyof EventFormData, value });
+        dispatch({
+          type: "SET_FIELD",
+          field: name as keyof EventFormData,
+          value,
+        });
       }
     },
     []
@@ -135,7 +147,7 @@ const PostEvent: React.FC = () => {
         capacity: numericAmount,
       };
 
-      if(finalData){
+      if (finalData) {
         setShowModal(true);
         setTimeout(() => {
           setShowModal(false);
@@ -149,7 +161,7 @@ const PostEvent: React.FC = () => {
 
   return (
     <main className="max-w-lg mx-auto p-4 rounded-lg bg-bgHome">
-      <Link href={'/'}>
+      <Link href={"/"}>
         <BiArrowBack size={30} />
       </Link>
       <form className="pt-2" onSubmit={handleSubmit}>

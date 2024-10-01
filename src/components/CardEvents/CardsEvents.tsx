@@ -4,6 +4,7 @@ import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper-bundle.css';
 import { Pagination, Navigation } from 'swiper/modules';
+import Image from 'next/image';
 
 interface Event {
     id: number;
@@ -41,7 +42,7 @@ const CardEventsSwiper: React.FC<EventProps> = ({ events }) => {
         <SwiperSlide key={event.id}>
           <div className='p-0.5 bg-gradient-to-t from-violet-400 via-green-200 to-violet-400 rounded-lg'>
             <div className="border rounded-lg shadow-md p-3 w-full h-auto min-h-32 bg-bgHome">
-            <img
+            <Image
               src={event.photos[0]}
               alt={event.name}
               className="w-full h-32 object-cover rounded-lg"
