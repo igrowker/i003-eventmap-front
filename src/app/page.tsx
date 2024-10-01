@@ -94,7 +94,7 @@ const events = [
 export default function Home() {
   return (
     <main className=" bg-bgHome flex min-h-screen flex-col items-center p-5 relative min-w-[360px]">
-      <header className="flex w-full justify-start sm:max-w-sm">
+      <header className="flex w-full justify-center sm:max-w-sm">
         <Header />
       </header>
       <div className="flex w-full justify-end pb-3">

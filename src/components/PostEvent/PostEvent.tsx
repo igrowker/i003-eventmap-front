@@ -3,6 +3,7 @@
 import React, { useReducer, useCallback, useEffect, ChangeEvent, FormEvent } from "react";
 import { BiArrowBack } from "react-icons/bi";
 import ModalPostEvent from "../modals/modalPostEvent/ModalPostEvent";
+import Link from "next/link";
 
 interface EventFormData {
   name: string;
@@ -148,7 +149,9 @@ const PostEvent: React.FC = () => {
 
   return (
     <main className="max-w-lg mx-auto p-4 rounded-lg bg-bgHome">
-      <BiArrowBack size={30} />
+      <Link href={'/'}>
+        <BiArrowBack size={30} />
+      </Link>
       <form className="pt-2" onSubmit={handleSubmit}>
         <h1 className="text-2xl font-bold mb-8">Crear evento</h1>
 

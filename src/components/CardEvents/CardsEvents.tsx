@@ -39,7 +39,7 @@ const CardEventsSwiper: React.FC<EventProps> = ({ events }) => {
     >
       {events.map((event) => (
         <SwiperSlide key={event.id}>
-          <div className='p-0.5 bg-gradient-to-t from-pink-300 via-red-400 to-green-300 rounded-lg'>
+          <div className='p-0.5 bg-gradient-to-t from-violet-400 via-green-200 to-violet-400 rounded-lg'>
             <div className="border rounded-lg shadow-md p-3 w-full h-auto min-h-32 bg-bgHome">
             <img
               src={event.photos[0]}
