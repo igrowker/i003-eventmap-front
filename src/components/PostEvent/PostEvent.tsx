@@ -1,35 +1,57 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useReducer, useCallback, useEffect, ChangeEvent, FormEvent } from "react";
 import { BiArrowBack } from "react-icons/bi";
+import ModalPostEvent from "../modals/modalPostEvent/ModalPostEvent";
 
-type EventFormData = {
+interface EventFormData {
   name: string;
   address: string;
   date: string;
-  type: "Gastronomico" | "Artistico" | "Deportivo";
   time: string;
+  type: string;
   description: string;
   amount: string;
   location: { lat: string; lon: string };
+}
+
+interface Suggestion {
+  label: string;
+  latitude: number;
+  longitude: number;
+}
+
+type Action =
+  | { type: "SET_FIELD"; field: keyof EventFormData; value: string }
+  | { type: "SET_LOCATION"; location: { lat: string; lon: string } };
+
+const initialState: EventFormData = {
+  name: "",
+  address: "",
+  date: "",
+  time: "",
+  type: "Gastronomico",
+  description: "",
+  amount: "Menos de 500",
+  location: { lat: "", lon: "" },
 };
 
-export default function PostEvent() {
-  const [formData, setFormData] = useState<EventFormData>({
-    name: "",
-    address: "",
-    date: "",
-    type: "Gastronomico",
-    time: "",
-    description: "",
-    amount: "Menos de 500",
-    location: { lat: "", lon: "" },
-  });
+function formReducer(state: EventFormData, action: Action): EventFormData {
+  switch (action.type) {
+    case "SET_FIELD":
+      return { ...state, [action.field]: action.value };
+    case "SET_LOCATION":
+      return { ...state, location: action.location };
+    default:
+      return state;
+  }
+}
 
-  const [suggestions, setSuggestions] = useState<
-    { label: string; latitude: number; longitude: number }[]
-  >([]);
-  const [provider, setProvider] = useState<any>(null);
+const PostEvent: React.FC = () => {
+  const [formData, dispatch] = useReducer(formReducer, initialState);
+  const [suggestions, setSuggestions] = React.useState<Suggestion[]>([]);
+  const [provider, setProvider] = React.useState<any>(null);
+  const [showModal, setShowModal] = React.useState<any>(false);
 
   useEffect(() => {
     const loadProvider = async () => {
@@ -37,20 +59,60 @@ export default function PostEvent() {
       const osmProvider = new OpenStreetMapProvider();
       setProvider(osmProvider);
     };
-
     loadProvider();
   }, []);
 
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
-  ) => {
-    const { name, value } = e.target;
+  const handleChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+      const { name, value } = e.target;
 
-    if (name === "amount") {
+      if (name === "amount") {
+        dispatch({ type: "SET_FIELD", field: "amount", value });
+      } else {
+        dispatch({ type: "SET_FIELD", field: name as keyof EventFormData, value });
+      }
+    },
+    []
+  );
+
+  const handleAddressSearch = useCallback(
+    async (e: ChangeEvent<HTMLInputElement>) => {
+      const { value } = e.target;
+      dispatch({ type: "SET_FIELD", field: "address", value });
+
+      if (provider && value.length > 3) {
+        const results = await provider.search({ query: value });
+        setSuggestions(
+          results.map((result: any) => ({
+            label: result.label,
+            latitude: result.y,
+            longitude: result.x,
+          }))
+        );
+      } else {
+        setSuggestions([]);
+      }
+    },
+    [provider]
+  );
+
+  const handleSuggestionClick = useCallback((suggestion: Suggestion) => {
+    dispatch({
+      type: "SET_LOCATION",
+      location: {
+        lat: suggestion.latitude.toString(),
+        lon: suggestion.longitude.toString(),
+      },
+    });
+    dispatch({ type: "SET_FIELD", field: "address", value: suggestion.label });
+    setSuggestions([]);
+  }, []);
+
+  const handleSubmit = useCallback(
+    (e: FormEvent) => {
+      e.preventDefault();
       let numericAmount: number;
-      switch (value) {
+      switch (formData.amount) {
         case "Menos de 500":
           numericAmount = 0.3;
           break;
@@ -67,102 +129,27 @@ export default function PostEvent() {
           numericAmount = 0.3;
       }
 
-      setFormData((prevData) => ({
-        ...prevData,
-        amount: value,
-      }));
-      console.log("amount:", numericAmount);
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
-    }
-  };
+      const finalData = {
+        ...formData,
+        capacity: numericAmount,
+      };
 
-  //al hacer click en una sugerencia de dirección
-  const handleSuggestionClick = (suggestion: {
-    label: string;
-    latitude: number;
-    longitude: number;
-  }) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      address: suggestion.label,
-      location: {
-        lat: suggestion.latitude.toString(),
-        lon: suggestion.longitude.toString(),
-      },
-    }));
+      if(finalData){
+        setShowModal(true);
+        setTimeout(() => {
+          setShowModal(false);
+        }, 3000);
+      }
 
-    console.log("Dirección seleccionada:", suggestion.label);
-    console.log(
-      "Latitud:",
-      suggestion.latitude,
-      "Longitud:",
-      suggestion.longitude
-    );
-
-    setSuggestions([]);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    let numericAmount: number;
-    switch (formData.amount) {
-      case "Menos de 500":
-        numericAmount = 0.3;
-        break;
-      case "Entre 500 y 2000":
-        numericAmount = 0.5;
-        break;
-      case "Entre 2000 y 5000":
-        numericAmount = 0.7;
-        break;
-      case "Más de 5000":
-        numericAmount = 0.9;
-        break;
-      default:
-        numericAmount = 0.3;
-    }
-
-    const finalData = {
-      ...formData,
-      amount: numericAmount, //valor numérico al backend
-    };
-
-    console.log("Final formData:", finalData);
-  };
-
-  //búsqueda de direcciones
-  const handleAddressSearch = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const { value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      address: value,
-    }));
-
-    if (provider && value.length > 3) {
-      const results = await provider.search({ query: value });
-      setSuggestions(
-        results.map((result: any) => ({
-          label: result.label,
-          latitude: result.y,
-          longitude: result.x,
-        }))
-      );
-    } else {
-      setSuggestions([]);
-    }
-  };
+      console.log("Final formData:", finalData);
+    },
+    [formData]
+  );
 
   return (
     <main className="max-w-lg mx-auto p-4 rounded-lg bg-bgHome">
       <BiArrowBack size={30} />
-      <form className="pt-5" onSubmit={handleSubmit}>
+      <form className="pt-2" onSubmit={handleSubmit}>
         <h1 className="text-2xl font-bold mb-8">Crear evento</h1>
 
         <div className="mb-4">
@@ -239,7 +226,7 @@ export default function PostEvent() {
             placeholder="Descripción del evento"
             required
             rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-3xl resize-none h-32"
+            className="w-full px-3 py-2 border border-gray-300 rounded-3xl resize-none h-24"
           />
         </div>
 
@@ -279,6 +266,14 @@ export default function PostEvent() {
           Crear evento
         </button>
       </form>
+      {showModal && (
+        <ModalPostEvent
+          message="¡Evento creado exitosamente!"
+          onClose={() => setShowModal(false)}
+        />
+      )}
     </main>
   );
 };
+
+export default PostEvent;
