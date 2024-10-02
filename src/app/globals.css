@@ -28,3 +28,10 @@ body {
   align-items: center;
   height: 100vh;
 }
+
+@font-face {
+  font-family: 'CocomatPro-Bold';
+  src: url('../../public/fonts/CocomatPro-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}

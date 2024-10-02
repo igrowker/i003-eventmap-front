@@ -4,7 +4,7 @@ import EventMapLogo from "@/../public/isotipo.webp";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { validateEmail } from "@/utils/formUtils";
+import { validateEmail, formatCuitCuil } from "@/utils/formUtils";
 
 interface FormValues {
   firstName: string;
@@ -50,10 +50,17 @@ export default function Register() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      [name]: value,
-    }));
+    if (name === "cuitCuil") {
+      setFormValues((prevValues) => ({
+        ...prevValues,
+        [name]: formatCuitCuil(value),
+      }));
+    } else {
+      setFormValues((prevValues) => ({
+        ...prevValues,
+        [name]: value,
+      }));
+    }
   };
 
   const handleError = () => {
@@ -64,12 +71,12 @@ export default function Register() {
 
     if (!firstName.trim()) {
       newErrors.firstName = "El nombre es requerido";
-    } else if (firstName.length < 3) {
-      newErrors.firstName = "El nombre debe tener al menos 3 caracteres";
+    } else if (firstName.length < 1) {
+      newErrors.firstName = "El nombre debe tener al menos 1 caracter";
     } else if (firstName.length > 50) {
       newErrors.firstName = "El nombre no puede exceder los 50 caracteres";
     } else if (!/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(firstName)) {
-      newErrors.firstName = "El nombre no puede contener numeros";
+      newErrors.firstName = "El nombre solo puede contener letras";
     }
 
     if (!lastName.trim()) {
@@ -79,7 +86,7 @@ export default function Register() {
     } else if (lastName.length > 50) {
       newErrors.lastName = "El apellido no puede exceder los 50 caracteres";
     } else if (!/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(lastName)) {
-      newErrors.lastName = "El apellido no puede contener numeros";
+      newErrors.lastName = "El apellido solo puede contener letras";
     }
 
     const trimmedEmail = email.trim();
@@ -91,17 +98,17 @@ export default function Register() {
 
     if (!password.trim()) {
       newErrors.password = "La contraseña es requerida";
-    } else if (password.length < 8 || password.length > 20) {
-      newErrors.password = "La contraseña debe tener entre 8 y 20 caracteres";
+    } else if (password.length < 8 || password.length > 16) {
+      newErrors.password = "La contraseña debe tener entre 8 y 16 caracteres";
     } else if (!/[A-Z]/.test(password)) {
-      newErrors.password =
-        "La contraseña debe tener al menos una letra mayúscula";
+      newErrors.password = "La contraseña debe tener al menos una letra mayúscula";
     } else if (!/[a-z]/.test(password)) {
-      newErrors.password =
-        "La contraseña debe tener al menos una letra minúscula";
+      newErrors.password = "La contraseña debe tener al menos una letra minúscula";
     } else if (!/\d/.test(password)) {
       newErrors.password = "La contraseña debe tener al menos un número";
-    }
+    } else if (!/[!@#$%^&*()\[\]{}\-_,.]/.test(password)) {
+      newErrors.password = "La contraseña debe tener al menos un carácter especial";
+    }    
 
     if (!confirmPassword.trim()) {
       newErrors.confirmPassword = "La contraseña es requerida";
@@ -144,10 +151,10 @@ export default function Register() {
           lastName: formValues.lastName.trim(),
           email: formValues.email.trim(),
           password: formValues.password,
-          cuit: formValues.cuitCuil.trim(),
+          cuit: formValues.cuitCuil,
         };
-
-        //Enviar datos al backend
+        
+        // Enviar datos al backend
         const req = await fetch(
           "https://i003-eventmap-back.onrender.com/auth/register",
           {
@@ -158,11 +165,13 @@ export default function Register() {
         );
         const res = await req.json();
         console.log(res);
+        if(req.ok){
+          setShowModal(true);
+        }
       } catch (error) {
         console.error("Error al enviar los dato", error);
       } finally {
         setLoading(false);
-        setShowModal(true);
       }
     }
   };
@@ -242,6 +251,7 @@ export default function Register() {
         </div>
       </div>
 
+      {/* REGISTER FORM */}
       <form
         onSubmit={handleSubmit}
         className="flex flex-col gap-6 bg-white px-4 py-4 rounded-t-3xl"
@@ -455,6 +465,7 @@ export default function Register() {
             <input
               name="cuitCuil"
               placeholder="XX-XXXXXXXX-X"
+              maxLength={13}
               className={`${
                 errors.cuitCuil
                   ? "border-[#cc5555] border-2"
