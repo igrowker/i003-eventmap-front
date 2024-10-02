@@ -11,7 +11,6 @@ export default function TimelineComponent({ onDateRangeChange, filterValueState,
       {/* <small><strong>{filterValues?.date}</strong> Días</small> */}
       {/* <input onChange={(e) => handleSelectFilter(e, filterValues, setFilterValues, setIsFilterMenuOpen)} type="range" className="accent-dark" name="date" value={filterValues?.date} max={7} min={0}  /> */}
       <CalendarDateSelector handleChange={(e) => handleSelectFilter(e, filterValues, setFilterValues, setIsFilterMenuOpen)} />
-
     </div>
   )
 }

@@ -5,7 +5,7 @@ export const EVENTS_LIST: eventTypes[] = [
     id: 1,
     name: "Evento Prueba 1",
     type: "Artístico",
-    date: "2024-09-27",
+    date: new Date().toISOString().split("T")[0],
     time: "15:45",
     location: {
       lat: "40.7128",
@@ -23,7 +23,7 @@ export const EVENTS_LIST: eventTypes[] = [
     id: 2,
     name: "Evento Prueba 2",
     type: "Artístico",
-    date: "2024-09-27",
+    date: new Date().toISOString().split("T")[0],
     time: "16:00",
     location: {
       lat: "46.7128",
@@ -41,7 +41,7 @@ export const EVENTS_LIST: eventTypes[] = [
     id: 3,
     name: "Evento Prueba 3",
     type: "Gastronómico",
-    date: "2024-09-27",
+    date: new Date().toISOString().split("T")[0],
     time: "18:30",
     location: {
       lat: "40.7128",
@@ -59,7 +59,7 @@ export const EVENTS_LIST: eventTypes[] = [
     id: 4,
     name: "Evento Prueba 4",
     type: "Deportivo",
-    date: "2024-09-28",
+    date: new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split("T")[0],
     time: "10:00",
     location: {
       lat: "41.1234",
@@ -77,7 +77,7 @@ export const EVENTS_LIST: eventTypes[] = [
     id: 5,
     name: "Evento Prueba 5",
     type: "Artístico",
-    date: "2024-09-28",
+    date: new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split("T")[0],
     time: "20:00",
     location: {
       lat: "42.1234",
@@ -95,7 +95,7 @@ export const EVENTS_LIST: eventTypes[] = [
     id: 6,
     name: "Evento Prueba 6",
     type: "Gastronómico",
-    date: "2024-09-30",
+    date: new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split("T")[0],
     time: "14:00",
     location: {
       lat: "40.9876",
@@ -113,7 +113,7 @@ export const EVENTS_LIST: eventTypes[] = [
     id: 7,
     name: "Evento Prueba 7",
     type: "Deportivo",
-    date: "2024-09-30",
+    date: new Date(new Date().setDate(new Date().getDate() + 3)).toISOString().split("T")[0],
     time: "09:00",
     location: {
       lat: "43.5678",
@@ -131,7 +131,7 @@ export const EVENTS_LIST: eventTypes[] = [
     id: 8,
     name: "Evento Prueba 8",
     type: "Artístico",
-    date: "2024-09-30",
+    date: new Date(new Date().setDate(new Date().getDate() + 3)).toISOString().split("T")[0],
     time: "19:00",
     location: {
       lat: "40.8765",

@@ -20,6 +20,7 @@ export default function OptionDays({ setFilters }: { setFilters: (filter: any) =
 
   const handleSelectDayTo = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target
+    if (value === '') return
     const dateInMs = new Date(value).getTime()
     // @ts-ignore
     setFilters(prev => {
