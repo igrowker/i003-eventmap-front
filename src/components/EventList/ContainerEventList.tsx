@@ -1,7 +1,7 @@
 import { EVENTS_LIST } from "@/mocks/events-list-mock";
 import CardEventList from "./CardEventList";
 import { eventTypes } from "@/types/events-list-types";
-import { getDateByFilterDate } from "@/utils/getDateByFilterDate";
+import { filterDateTo, getDateByFilterDate } from "@/utils/getDateByFilterDate";
 import { FILTER_BY_TYPE_LIST } from "@/constants/filter-resources";
 import { useEffect, useRef, useState } from "react";
 
@@ -11,7 +11,7 @@ export default function ContainerEventList({ filtersForEvents = [] }: { filtersF
 
   const filterBy = (event: eventTypes) => filtersForEvents?.every(({ property, filterValue }) => {
     if (property === 'type') return filterValue === FILTER_BY_TYPE_LIST[0].value ? true : event?.type === filterValue 
-    if (property === 'date') return getDateByFilterDate(event?.date, filterValue)
+    if (property === 'date') return filterDateTo(event?.date, filterValue)
   })
   const lastCardRef = useRef<HTMLDivElement>(null)
 
