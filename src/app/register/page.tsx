@@ -114,16 +114,13 @@ export default function Register() {
     } else if (password.length < 8 || password.length > 16) {
       newErrors.password = "La contraseña debe tener entre 8 y 16 caracteres";
     } else if (!/[A-Z]/.test(password)) {
-      newErrors.password =
-        "La contraseña debe tener al menos una letra mayúscula";
+      newErrors.password = "La contraseña debe tener al menos una letra mayúscula";
     } else if (!/[a-z]/.test(password)) {
-      newErrors.password =
-        "La contraseña debe tener al menos una letra minúscula";
+      newErrors.password = "La contraseña debe tener al menos una letra minúscula";
     } else if (!/\d/.test(password)) {
       newErrors.password = "La contraseña debe tener al menos un número";
     } else if (!/[!@#$%^&*()\[\]{}\-_,.]/.test(password)) {
-      newErrors.password =
-        "La contraseña debe tener al menos un carácter especial";
+      newErrors.password = "La contraseña debe tener al menos un carácter especial";
     }
 
     if (!confirmPassword.trim()) {

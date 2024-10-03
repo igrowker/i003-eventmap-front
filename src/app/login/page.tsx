@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { validateEmail } from "@/utils/formUtils";
-import Cookies from "js-cookie";
+// import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 
 import { BiSolidEnvelope } from "react-icons/bi";
