@@ -16,8 +16,9 @@ const LocateControl = createControlComponent(function(props) {
             popup: "Has sido geolocalizado dentro de un radio de {distance} metros.", // Personaliza el mensaje mostrado cuando se encuentra la ubicación
             
         },
-        // keepCurrentOnReCenter: false, // Mantiene la vista actual si el usuario interactúa con el mapa después de la geolocalización
+        
         flyTo: true, // Usa la animación suave para centrar el mapa en la ubicación del usuario
+        drawMarker: true
         
     });
 });

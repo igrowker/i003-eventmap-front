@@ -8,6 +8,7 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet.heat";
 import LocateControl from "./LocateControl";
 import HeatmapLayer from "react-leaflet-heat-layer";
+import Search from "./search"
 
 interface AddressPoint {
   lat: number;
@@ -59,8 +60,8 @@ const Map = () => {
   return (
     <MapContainer
       style={{ height: "100vh", width: "100vw" }}
-      center={[-34.6047, -58.3995]}
-      zoom={16}
+      center={[ -34.603851, -58.381775]}
+      zoom={14}
       scrollWheelZoom={true}
     >
       <TileLayer
@@ -75,12 +76,20 @@ const Map = () => {
           point.lng,
           point.value / 100, // Normalizo el valor a un rango 0-1
         ])}
-        radius={25}
-        blur={15}
+        radius={30}
+        blur={20}
         maxZoom={15}
-        max={100}
+        max={1}
         gradient={gradientConfig}
         minOpacity={0.8}
+      />
+
+      <Search
+        center={[-34.6047, -58.3995]}
+        zoom={15}
+        onSearchArea={(bounds) => {
+          console.log("Área seleccionada:", bounds);
+        }}
       />
 
       {/* Marcadores personalizados */}
@@ -114,4 +123,3 @@ const Map = () => {
 };
 
 export default Map;
-
