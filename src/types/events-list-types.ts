@@ -5,7 +5,12 @@ export interface eventTypes {
   id: number,
   name: string,
   date: string,
-  location: string
+  location: { lat: string, lon: string },
+  time: string,
+  photos: string[],
+  description: string,
+  amount: number,
+  createdAt: string,
+  userId: number,
   type: string;
-  img: string;
 }
