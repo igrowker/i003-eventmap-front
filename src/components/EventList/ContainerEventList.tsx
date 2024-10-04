@@ -6,6 +6,7 @@ import { FILTER_BY_TYPE_LIST } from "@/constants/filter-resources";
 import { useEffect, useRef, useState } from "react";
 import { Filters } from "@/types/filter-types";
 import { getEvents } from "@/utils/getEvents";
+import Link from "next/link";
 
 export default function ContainerEventList({ filtersForEvents = [] }: { filtersForEvents: Filters | [] }) {
   const API_URL = 'https://i003-eventmap-back.onrender.com/events'
@@ -42,14 +43,16 @@ export default function ContainerEventList({ filtersForEvents = [] }: { filtersF
 
   return (
     <div className="flex flex-col gap-4 items-center">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 py-4">
+      <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 py-4">
         {
           (
             filtersForEvents?.length > 0
               ? eventsList.slice(0, currentLimit).filter(event => filterBy(event))
               : eventsList.slice(0, currentLimit)
           ).map((event, index) => (
-            <CardEventList key={event.id} event={event} lastCardRef={index + 1 === currentLimit ? lastCardRef : null} />
+            <Link key={event.id} href={`/event/${event.id}`}>
+              <CardEventList event={event} lastCardRef={index + 1 === currentLimit ? lastCardRef : null} />
+            </Link>
           ))
         }
       </div>
