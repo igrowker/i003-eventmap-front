@@ -34,7 +34,6 @@ function NavBar() {
   return (
     <main className="fixed bottom-0 left-0 w-full bg-navbar-gradient shadow-lg z-50">
       <div className="flex justify-around items-center py-3">
-        {/* Iconos renderizados dinámicamente según el path actual */}
         <Link href="/">
           {renderIcon('/')}
         </Link>
