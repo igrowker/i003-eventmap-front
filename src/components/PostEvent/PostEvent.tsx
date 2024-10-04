@@ -10,10 +10,13 @@ import React, {
   useEffect,
   ChangeEvent,
   FormEvent,
+  useRef,
 } from "react";
 import { BiArrowBack } from "react-icons/bi";
 import ModalPostEvent from "../modals/modalPostEvent/ModalPostEvent";
 import Link from "next/link";
+import { TbPhotoPlus } from "react-icons/tb";
+import FilePhoto from '../../../public/TbPhotoPlus.svg'
 
 interface EventFormData {
   name: string;
@@ -69,6 +72,8 @@ const PostEvent: React.FC = () => {
   const [suggestions, setSuggestions] = React.useState<Suggestion[]>([]);
   const [provider, setProvider] = React.useState<any>(null);
   const [showModal, setShowModal] = React.useState<any>(false);
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     const loadProvider = async () => {
@@ -174,6 +179,12 @@ const PostEvent: React.FC = () => {
     [formData]
   );
 
+  const handleFileInputClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
   return (
     <main className="max-w-lg mx-auto p-4 rounded-lg bg-bgHome mb-20">
       <Link href={"/"}>
@@ -260,7 +271,8 @@ const PostEvent: React.FC = () => {
           />
         </div>
 
-        <div className="mb-4">
+        <div className="flex flex-row mb-4">
+          <div className="w-80">
           <label className="block text-gray-700">Tipo de evento</label>
           <select
             name="type"
@@ -274,16 +286,19 @@ const PostEvent: React.FC = () => {
           </select>
         </div>
 
-        <div className="mb-4">
-          <label className="block text-gray-700">Subir foto</label>
+        <div className="pt-6 pl-5">
           <input
             type="file"
+            ref={fileInputRef}
+            onChange={handleChange}
             name="files"
             accept="image/*"
-            onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-full"
+            className="hidden"
           />
+            <FilePhoto size={30} onClick={handleFileInputClick}/>
         </div>
+        </div>
+        
 
         <div className="mb-4">
           <label className="block text-gray-700">Capacidad</label>
