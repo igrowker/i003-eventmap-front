@@ -5,10 +5,20 @@ import { filterDateTo, getDateByFilterDate } from "@/utils/getDateByFilterDate";
 import { FILTER_BY_TYPE_LIST } from "@/constants/filter-resources";
 import { useEffect, useRef, useState } from "react";
 import { Filters } from "@/types/filter-types";
+import { getEvents } from "@/utils/getEvents";
 
 export default function ContainerEventList({ filtersForEvents = [] }: { filtersForEvents: Filters | [] }) {
+  const API_URL = 'https://i003-eventmap-back.onrender.com/events'
+  const [eventsList, setEventsList] = useState<eventTypes[]>(EVENTS_LIST) // El "EVENTS_LIST" es un mock de eventos temporal, hasta que cargue el backend
   const [currentLimit, setCurrentLimit] = useState(10)
   const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    getEvents(`${API_URL}?lat=-34.12&lon=-45.32`).then(data => {
+      console.log('data', data)
+      setEventsList(data)
+    })
+  }, [])
 
   // @ts-ignore
   const filterBy = (event: eventTypes) => filtersForEvents?.every(({ property, filterValue }) => {
@@ -36,8 +46,8 @@ export default function ContainerEventList({ filtersForEvents = [] }: { filtersF
         {
           (
             filtersForEvents?.length > 0
-              ? EVENTS_LIST.slice(0, currentLimit).filter(event => filterBy(event))
-              : EVENTS_LIST.slice(0, currentLimit)
+              ? eventsList.slice(0, currentLimit).filter(event => filterBy(event))
+              : eventsList.slice(0, currentLimit)
           ).map((event, index) => (
             <CardEventList key={event.id} event={event} lastCardRef={index + 1 === currentLimit ? lastCardRef : null} />
           ))
