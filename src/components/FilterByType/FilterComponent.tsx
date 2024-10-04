@@ -10,10 +10,6 @@ export default function FilterComponent({ onFilterChange }: FilterComponentProps
   const [filterValues, setFilterValues] = useState<FilterValues>(INITIAL_FILTER_VALUES)
   const [isFilterMenuOpen, setIsFilterMenuOpen] = useState<boolean>(false)
 
-  useEffect(() => {
-    console.log(filterValues)
-  }, [filterValues])
-
   return (
     <div>
       <h1 className="my-4">Filter</h1>

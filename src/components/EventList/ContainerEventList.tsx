@@ -4,14 +4,16 @@ import { eventTypes } from "@/types/events-list-types";
 import { filterDateTo, getDateByFilterDate } from "@/utils/getDateByFilterDate";
 import { FILTER_BY_TYPE_LIST } from "@/constants/filter-resources";
 import { useEffect, useRef, useState } from "react";
+import { Filters } from "@/types/filter-types";
 
-export default function ContainerEventList({ filtersForEvents = [] }: { filtersForEvents: { property: keyof eventTypes, filterValue: string }[] }) {
+export default function ContainerEventList({ filtersForEvents = [] }: { filtersForEvents: Filters | [] }) {
   const [currentLimit, setCurrentLimit] = useState(10)
   const [isLoading, setIsLoading] = useState(false)
 
+  // @ts-ignore
   const filterBy = (event: eventTypes) => filtersForEvents?.every(({ property, filterValue }) => {
     if (property === 'type') return filterValue === FILTER_BY_TYPE_LIST[0].value ? true : event?.type === filterValue 
-    if (property === 'date') return filterDateTo(event?.date, filterValue)
+    if (property === 'date') return filterValue ? filterDateTo(event?.date, filterValue) : true
   })
   const lastCardRef = useRef<HTMLDivElement>(null)
 

@@ -10,7 +10,7 @@ export default function TimelineComponent({ onDateRangeChange, filterValueState,
     <div className="flex flex-col gap-1">
       {/* <small><strong>{filterValues?.date}</strong> Días</small> */}
       {/* <input onChange={(e) => handleSelectFilter(e, filterValues, setFilterValues, setIsFilterMenuOpen)} type="range" className="accent-dark" name="date" value={filterValues?.date} max={7} min={0}  /> */}
-      <CalendarDateSelector handleChange={(e) => handleSelectFilter(e, filterValues, setFilterValues, setIsFilterMenuOpen)} />
+      <CalendarDateSelector handleChange={(e) => handleSelectFilter(e, filterValues, setFilterValues, setIsFilterMenuOpen)} filters={filterValues} section="filter" />
     </div>
   )
 }
