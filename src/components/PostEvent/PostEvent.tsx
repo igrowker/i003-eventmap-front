@@ -16,7 +16,7 @@ import { BiArrowBack } from "react-icons/bi";
 import ModalPostEvent from "../modals/modalPostEvent/ModalPostEvent";
 import Link from "next/link";
 import { TbPhotoPlus } from "react-icons/tb";
-import FilePhoto from '../../../public/TbPhotoPlus.svg'
+import FilePhoto from "../../../public/TbPhotoPlus.svg";
 
 interface EventFormData {
   name: string;
@@ -39,7 +39,11 @@ interface Suggestion {
 }
 
 type Action =
-  | { type: "SET_FIELD"; field: keyof EventFormData; value: string | File | null }
+  | {
+      type: "SET_FIELD";
+      field: keyof EventFormData;
+      value: string | File | null;
+    }
   | { type: "SET_LOCATION"; location: { lat: string; lon: string } };
 
 const initialState: EventFormData = {
@@ -49,11 +53,11 @@ const initialState: EventFormData = {
   time: "12:00",
   type: "Gastronomico",
   description: "",
-  amount: "0.3", 
+  amount: "0.3",
   capacity: "Menos de 500",
   lat: "",
   lon: "",
-  files: null
+  files: null,
 };
 
 function formReducer(state: EventFormData, action: Action): EventFormData {
@@ -85,11 +89,21 @@ const PostEvent: React.FC = () => {
   }, []);
 
   const handleChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    (
+      e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+    ) => {
       const { name, value } = e.target;
-  
-      if (name === "files" && e.target instanceof HTMLInputElement && e.target.files) {
-        dispatch({ type: "SET_FIELD", field: "files", value: e.target.files[0] });
+
+      if (
+        name === "files" &&
+        e.target instanceof HTMLInputElement &&
+        e.target.files
+      ) {
+        dispatch({
+          type: "SET_FIELD",
+          field: "files",
+          value: e.target.files[0],
+        });
       } else if (name === "capacity") {
         let numericAmount = "0.3";
         switch (value) {
@@ -108,7 +122,11 @@ const PostEvent: React.FC = () => {
         dispatch({ type: "SET_FIELD", field: "capacity", value });
         dispatch({ type: "SET_FIELD", field: "amount", value: numericAmount });
       } else {
-        dispatch({ type: "SET_FIELD", field: name as keyof EventFormData, value });
+        dispatch({
+          type: "SET_FIELD",
+          field: name as keyof EventFormData,
+          value,
+        });
       }
     },
     []
@@ -273,32 +291,31 @@ const PostEvent: React.FC = () => {
 
         <div className="flex flex-row mb-4">
           <div className="w-80">
-          <label className="block text-gray-700">Tipo de evento</label>
-          <select
-            name="type"
-            value={formData.type}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-full"
-          >
-            <option value="Gastronomico">Gastronómico</option>
-            <option value="Artistico">Artístico</option>
-            <option value="Deportivo">Deportivo</option>
-          </select>
-        </div>
+            <label className="block text-gray-700">Tipo de evento</label>
+            <select
+              name="type"
+              value={formData.type}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-full"
+            >
+              <option value="Gastronomico">Gastronómico</option>
+              <option value="Artistico">Artístico</option>
+              <option value="Deportivo">Deportivo</option>
+            </select>
+          </div>
 
-        <div className="pt-6 pl-5">
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleChange}
-            name="files"
-            accept="image/*"
-            className="hidden"
-          />
-            <FilePhoto size={30} onClick={handleFileInputClick}/>
+          <div className="pt-6 pl-5">
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleChange}
+              name="files"
+              accept="image/*"
+              className="hidden"
+            />
+            <FilePhoto size={30} onClick={handleFileInputClick} />
+          </div>
         </div>
-        </div>
-        
 
         <div className="mb-4">
           <label className="block text-gray-700">Capacidad</label>
