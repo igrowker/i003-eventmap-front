@@ -1,15 +1,22 @@
 "use client";
 
+//enviar por parametro (url) el id del usuario organizador para un getEventById
+//id del evento a modificar por req.body (lo mismo para delete)
+//por url el id del usuario que desea modificar su información
+
 import React, {
   useReducer,
   useCallback,
   useEffect,
   ChangeEvent,
   FormEvent,
+  useRef,
 } from "react";
 import { BiArrowBack } from "react-icons/bi";
 import ModalPostEvent from "../modals/modalPostEvent/ModalPostEvent";
 import Link from "next/link";
+import { TbPhotoPlus } from "react-icons/tb";
+import FilePhoto from "../../../public/TbPhotoPlus.svg";
 
 interface EventFormData {
   name: string;
@@ -19,7 +26,10 @@ interface EventFormData {
   type: string;
   description: string;
   amount: string;
-  location: { lat: string; lon: string };
+  capacity: string;
+  lat: string;
+  lon: string;
+  files: File | null;
 }
 
 interface Suggestion {
@@ -29,18 +39,25 @@ interface Suggestion {
 }
 
 type Action =
-  | { type: "SET_FIELD"; field: keyof EventFormData; value: string }
+  | {
+      type: "SET_FIELD";
+      field: keyof EventFormData;
+      value: string | File | null;
+    }
   | { type: "SET_LOCATION"; location: { lat: string; lon: string } };
 
 const initialState: EventFormData = {
   name: "",
   address: "",
   date: "",
-  time: "",
+  time: "12:00",
   type: "Gastronomico",
   description: "",
-  amount: "Menos de 500",
-  location: { lat: "", lon: "" },
+  amount: "0.3",
+  capacity: "Menos de 500",
+  lat: "",
+  lon: "",
+  files: null,
 };
 
 function formReducer(state: EventFormData, action: Action): EventFormData {
@@ -48,7 +65,7 @@ function formReducer(state: EventFormData, action: Action): EventFormData {
     case "SET_FIELD":
       return { ...state, [action.field]: action.value };
     case "SET_LOCATION":
-      return { ...state, location: action.location };
+      return { ...state, lat: action.location.lat, lon: action.location.lon };
     default:
       return state;
   }
@@ -59,6 +76,8 @@ const PostEvent: React.FC = () => {
   const [suggestions, setSuggestions] = React.useState<Suggestion[]>([]);
   const [provider, setProvider] = React.useState<any>(null);
   const [showModal, setShowModal] = React.useState<any>(false);
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     const loadProvider = async () => {
@@ -75,8 +94,33 @@ const PostEvent: React.FC = () => {
     ) => {
       const { name, value } = e.target;
 
-      if (name === "amount") {
-        dispatch({ type: "SET_FIELD", field: "amount", value });
+      if (
+        name === "files" &&
+        e.target instanceof HTMLInputElement &&
+        e.target.files
+      ) {
+        dispatch({
+          type: "SET_FIELD",
+          field: "files",
+          value: e.target.files[0],
+        });
+      } else if (name === "capacity") {
+        let numericAmount = "0.3";
+        switch (value) {
+          case "Entre 500 y 2000":
+            numericAmount = "0.5";
+            break;
+          case "Entre 2000 y 5000":
+            numericAmount = "0.7";
+            break;
+          case "Más de 5000":
+            numericAmount = "0.9";
+            break;
+          default:
+            numericAmount = "0.3";
+        }
+        dispatch({ type: "SET_FIELD", field: "capacity", value });
+        dispatch({ type: "SET_FIELD", field: "amount", value: numericAmount });
       } else {
         dispatch({
           type: "SET_FIELD",
@@ -124,43 +168,43 @@ const PostEvent: React.FC = () => {
   const handleSubmit = useCallback(
     (e: FormEvent) => {
       e.preventDefault();
-      let numericAmount: number;
-      switch (formData.amount) {
-        case "Menos de 500":
-          numericAmount = 0.3;
-          break;
-        case "Entre 500 y 2000":
-          numericAmount = 0.5;
-          break;
-        case "Entre 2000 y 5000":
-          numericAmount = 0.7;
-          break;
-        case "Más de 5000":
-          numericAmount = 0.9;
-          break;
-        default:
-          numericAmount = 0.3;
+
+      const formDataToSend = new FormData();
+      formDataToSend.append("name", formData.name);
+      formDataToSend.append("address", formData.address);
+      formDataToSend.append("date", formData.date);
+      formDataToSend.append("time", formData.time);
+      formDataToSend.append("type", formData.type);
+      formDataToSend.append("description", formData.description);
+      formDataToSend.append("amount", formData.amount);
+      formDataToSend.append("capacity", formData.capacity);
+      formDataToSend.append("lat", formData.lat);
+      formDataToSend.append("lon", formData.lon);
+
+      //archivo si está presente
+      if (formData.files) {
+        formDataToSend.append("files", formData.files);
       }
 
-      const finalData = {
-        ...formData,
-        capacity: numericAmount,
-      };
+      //petición al backend con formDataToSend en lugar de formData
+      console.log("FormData enviada:", formDataToSend);
 
-      if (finalData) {
-        setShowModal(true);
-        setTimeout(() => {
-          setShowModal(false);
-        }, 3000);
-      }
-
-      console.log("Final formData:", finalData);
+      setShowModal(true);
+      setTimeout(() => {
+        setShowModal(false);
+      }, 3000);
     },
     [formData]
   );
 
+  const handleFileInputClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
   return (
-    <main className="max-w-lg mx-auto p-4 rounded-lg bg-bgHome">
+    <main className="max-w-lg mx-auto p-4 rounded-lg bg-bgHome mb-20">
       <Link href={"/"}>
         <BiArrowBack size={30} />
       </Link>
@@ -245,25 +289,39 @@ const PostEvent: React.FC = () => {
           />
         </div>
 
-        <div className="mb-4">
-          <label className="block text-gray-700">Tipo de evento</label>
-          <select
-            name="type"
-            value={formData.type}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-full"
-          >
-            <option value="Gastronomico">Gastronómico</option>
-            <option value="Artistico">Artístico</option>
-            <option value="Deportivo">Deportivo</option>
-          </select>
+        <div className="flex flex-row mb-4">
+          <div className="w-80">
+            <label className="block text-gray-700">Tipo de evento</label>
+            <select
+              name="type"
+              value={formData.type}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-full"
+            >
+              <option value="Gastronomico">Gastronómico</option>
+              <option value="Artistico">Artístico</option>
+              <option value="Deportivo">Deportivo</option>
+            </select>
+          </div>
+
+          <div className="pt-6 pl-5">
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleChange}
+              name="files"
+              accept="image/*"
+              className="hidden"
+            />
+            <FilePhoto size={30} onClick={handleFileInputClick} />
+          </div>
         </div>
 
         <div className="mb-4">
           <label className="block text-gray-700">Capacidad</label>
           <select
-            name="amount"
-            value={formData.amount}
+            name="capacity"
+            value={formData.capacity}
             onChange={handleChange}
             className="w-full px-3 py-2 border border-gray-300 rounded-full"
           >

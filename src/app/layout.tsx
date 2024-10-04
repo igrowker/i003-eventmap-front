@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Lato } from "next/font/google";
 import "./globals.css";
+import NavBar from "@/components/navbar/NavBar";
 
-const lato = Lato({ weight: ['300', '400', '700'], subsets: ["latin"] });
+const lato = Lato({ weight: ["300", "400", "700"], subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -14,9 +15,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+
+
   return (
     <html lang="en">
-      <body className={lato.className}>{children}</body>
+      <body className={lato.className}>
+        {children}
+        {<NavBar />}
+      </body>
     </html>
   );
 }
