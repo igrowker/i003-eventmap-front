@@ -3,10 +3,12 @@ import { useState } from "react"
 import { OPTION_DAYS } from "@/constants/events-list-resources"
 import { OptionDaysType } from "@/types/events-list-types"
 import CalendarDateSelector from "../Global/CalendarDateSelector"
+import { FiltersState } from "@/types/filter-types"
 
-export default function OptionDays({ setFilters }: { setFilters: (filter: any) => void }) {
+export default function OptionDays({ filtersState }: { filtersState: FiltersState }) {
   const [optionSelected, setOptionSelected] = useState<OptionDaysType>(OPTION_DAYS[0].value)
   const [dateTo, setDateTo] = useState<string>('')
+  const { filters, setFilters } = filtersState
 
   // const handleSelectOptionDay = (value: OptionDaysType) => {
   //   setOptionSelected(value)
@@ -20,8 +22,7 @@ export default function OptionDays({ setFilters }: { setFilters: (filter: any) =
 
   const handleSelectDayTo = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target
-    if (value === '') return
-    const dateInMs = new Date(value).getTime()
+    const dateInMs = value !== '' ? new Date(value).getTime() : null
     // @ts-ignore
     setFilters(prev => {
       if (prev == null) return [{ property: 'date', filterValue: dateInMs }]
@@ -37,7 +38,7 @@ export default function OptionDays({ setFilters }: { setFilters: (filter: any) =
           <button key={value} onClick={() => handleSelectOptionDay(value)} className={`${optionSelected === value ? 'bg-dark text-light' : ''} w-fit sm:h-[30px] py-1 px-4 border border-dark rounded-full text-sm ring-dark ring-offset-2 hover:ring-2 transition duration-300 ease-out`}>{label}</button>
         ))
       } */}
-      <CalendarDateSelector handleChange={handleSelectDayTo} />
+      <CalendarDateSelector handleChange={handleSelectDayTo} filters={filters} />
     </div>
   )
 }

@@ -19,7 +19,7 @@ export default function SelectFilterByType({ setFilters }: { setFilters: (filter
 
   return (
     <div className="w-full">
-      <select onChange={handleSelectFilterByType} name="select-filter-type" className="w-full border p-2 rounded-lg">
+      <select onChange={handleSelectFilterByType} name="select-filter-type" className="w-full border py-2 px-4 rounded-full">
         {
           FILTER_BY_TYPE_LIST.map(({ label, value }) => (
             <option key={value} value={value}>{label}</option>

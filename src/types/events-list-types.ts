@@ -13,4 +13,6 @@ export interface eventTypes {
   createdAt: string,
   userId: number,
   type: string;
+  capacity: string;
+  addres: string;
 }
