@@ -8,7 +8,7 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet.heat";
 import LocateControl from "./LocateControl";
 import HeatmapLayer from "react-leaflet-heat-layer";
-import Search from "./search"
+// import Search from "./search"
 
 interface AddressPoint {
   lat: number;
@@ -84,13 +84,13 @@ const Map = () => {
         minOpacity={0.8}
       />
 
-      <Search
-        center={[-34.6047, -58.3995]}
+      {/* <Search
+        center={[-34.603851, -58.381775]}
         zoom={15}
         onSearchArea={(bounds) => {
           console.log("Área seleccionada:", bounds);
         }}
-      />
+      /> */}
 
       {/* Marcadores personalizados */}
       {addressPoints.map((point) => (
