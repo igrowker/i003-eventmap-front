@@ -67,9 +67,9 @@ const Search: React.FC<SearchProps> = ({ center, zoom, onSearchArea }) => {
     <>
       
         {position && (
-          <Marker position={position} icon={customIcon}>
+          <Marker position={position} icon={customIcon} >
             <Popup>
-              <div className="flex-col">
+              <div className="flex-col mb-96">
                 <button onClick={handleSearchArea}>Buscar en esta área</button>
                 <input
                   type="number"
