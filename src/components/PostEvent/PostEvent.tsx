@@ -1,5 +1,9 @@
 "use client";
 
+//enviar por parametro (url) el id del usuario organizador para un getEventById
+//id del evento a modificar por req.body (lo mismo para delete)
+//por url el id del usuario que desea modificar su información
+
 import React, {
   useReducer,
   useCallback,
@@ -106,7 +110,7 @@ const PostEvent: React.FC = () => {
         setSuggestions([]);
       }
     },
-    [provider]
+    []
   );
 
   const handleSuggestionClick = useCallback((suggestion: Suggestion) => {
@@ -160,7 +164,7 @@ const PostEvent: React.FC = () => {
   );
 
   return (
-    <main className="max-w-lg mx-auto p-4 rounded-lg bg-bgHome">
+    <main className="max-w-lg mx-auto p-4 rounded-lg bg-bgHome mb-20">
       <Link href={"/"}>
         <BiArrowBack size={30} />
       </Link>
