@@ -16,7 +16,8 @@ const config: Config = {
         dark: "#08121F",
         bgHome:"#F6FAFD",
         createEventButton: "#6750A4",
-        newsletter: "#E8DEF8"
+        newsletter: "#E8DEF8",
+        textPlaceholder: '#A2A4A4'
       },
       fontFamily:{
         latoBold: ['Lato-Bold'],
