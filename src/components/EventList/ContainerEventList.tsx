@@ -19,6 +19,7 @@ export default function ContainerEventList({ filtersForEvents = [], executeFilte
   useEffect(() => {
     getEvents(`${API_URL}?lat=-34.12&lon=-45.32`).then(data => {
       setEventsList(data)
+      setEventsListFiltered(data)
     })
   }, [])
 
