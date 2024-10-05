@@ -5,24 +5,40 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { validateEmail } from "@/utils/formUtils";
+// import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
-interface FormValues {
-  email: string;
-  password: string;
-}
+import { BiSolidEnvelope } from "react-icons/bi";
+import { BiArrowBack } from "react-icons/bi";
 
-interface Errors {
-  email?: string;
-  password?: string;
-}
+import { iconShowPassword } from "@/components/icons/IconShowPassword";
+import { iconHidePassword } from "@/components/icons/IconHidePassword";
+
+import {
+  FormValues,
+  Errors,
+  FormFieldStates,
+} from '@/types/login-types';
 
 export default function Login() {
-   
-  const [formValues, setFormValues] = useState<FormValues>({
-    email: '',
-    password: '',
+  const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState();
+  const [loginError, setLoginError] = useState("");
+  const [togglePassword, setTogglePassword] = useState(true);
+
+  const router = useRouter();
+
+  const [fieldStates, setFieldStates] = useState<FormFieldStates>({
+    email: { isFocused: false },
+    password: { isFocused: false },
   });
-  
+
+  const [formValues, setFormValues] = useState<FormValues>({
+    email: "",
+    password: "",
+  });
+
   const [errors, setErrors] = useState<Errors>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,91 +51,241 @@ export default function Login() {
 
   const handleError = () => {
     const newErrors: Errors = {};
-    
+
     const trimmedEmail = formValues.email.trim();
-    
+
     if (!trimmedEmail) newErrors.email = "El email es requerido";
     else if (!validateEmail(trimmedEmail)) newErrors.email = "Email inválido";
 
-    if (!formValues.password) newErrors.password = "La contraseña es requerida";
+    if (!formValues.password) newErrors.password = "La contraseña es requerido";
 
     setErrors(newErrors);
     return newErrors;
-  }
+  };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     const newErrors = handleError();
-    
+
     if (Object.keys(newErrors).length === 0) {
-      
-      //Enviar datos al backend
-      
+      setLoading(true);
+      setLoginError("");
+
+      try {
+        const trimmedFormValues = {
+          email: formValues.email.trim(),
+          password: formValues.password,
+        };
+        //Enviar datos al backend
+        const req = await fetch(
+          "https://i003-eventmap-back.onrender.com/auth/login",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(trimmedFormValues),
+          }
+        );
+        const res = await req.json();
+        if (req.ok) {
+          // const token = res.token;
+          // Cookies.set("auth_token", token);
+          console.log(res);
+          setUser(res.profile.name);
+          setShowModal(true);
+          setTimeout(() => {
+            router.push("/");
+          }, 1500);
+
+        } else {
+          setLoginError("El correo o la contraseña son incorrectos.");
+        }
+      } catch (error) {
+        console.error("Error al enviar los datos:", error);
+        setLoginError("Hubo un problema al intentar conectarse al servidor.");
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
   return (
-    <div className="py-5 px-4">
-      <Link href={'#'}>
-        <svg
-          className="mb-4"
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M15.9999 7.00008V9.00008H3.99991L9.49991 14.5001L8.07991 15.9201L0.159912 8.00008L8.07991 0.0800781L9.49991 1.50008L3.99991 7.00008H15.9999Z"
-            fill="black"
-          />
-        </svg>
-      </Link>
+    <div className="bg-[#131a23]">
+      <div className="py-5 px-4">
+        <Link href={"/"}>
+        <BiArrowBack className="mb-4" size={24} color="white"/>
+        </Link>
 
-      <h1 className="font-bold text-2xl">Iniciar sesión</h1>
-      <div className="flex flex-col items-center gap-4 py-6">
-        <Image
-          className=""
-          width={140}
-          height={140}
-          src={EventMapLogo}
-          alt="Logo EventMap"
-        />
-        <p className="font-bold text-center">Ingreso sólo para organizadores</p>
+        <h1 className="font-bold text-2xl text-white">Iniciar sesión</h1>
+        <div className="flex flex-col items-center gap-4 py-6">
+          <Image
+            className=""
+            width={140}
+            height={140}
+            src={EventMapLogo}
+            alt="Logo EventMap"
+          />
+        </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col">
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col bg-white rounded-t-3xl px-4"
+      >
+        <p className="font-bold text-center my-8">
+          Ingreso sólo para organizadores
+        </p>
         <div className="flex flex-col gap-4">
-          <input
-            name="email"
-            placeholder="Mail"
-            className="placeholder-gray-700 p-2 rounded-lg border border-black w-full"
-            type="text"
-            value={formValues.email}
-            onChange={handleChange}
-          />
-          {errors.email && <p className="text-red-500">{errors.email}</p>}
-          <input
-            name="password"
-            placeholder="Contraseña"
-            className="placeholder-gray-700 p-2 rounded-lg border border-black w-full"
-            type="password"
-            value={formValues.password}
-            onChange={handleChange}
-          />
-          {errors.password && <p className="text-red-500">{errors.password}</p>}
+          <div className="relative flex flex-col">
+            <label
+              className={`${
+                errors.email && !fieldStates.email.isFocused
+                  ? "text-[#cc5555]"
+                  : fieldStates.email.isFocused
+                  ? "text-[#6750a4]"
+                  : "text-[#8A8D8E]"
+              } absolute z-30 left-2.5 -top-2 text-xs font-bold bg-white px-1`}
+            >
+              Correo
+            </label>
+
+            <div className="relative flex items-center">
+              <BiSolidEnvelope
+                size={24}
+                color="#5C5F5F"
+                className="absolute left-3"
+              />
+              <input
+                name="email"
+                placeholder="correo@email.com"
+                className={`${
+                  errors.email
+                    ? "border-[#cc5555] border-2"
+                    : "border-[#8A8D8E] border-2"
+                } placeholder-textPlaceholder focus-visible:outline-[#6750a4] placeholder:font-normal pl-10 p-2 rounded-full w-full`}
+                type="text"
+                value={formValues.email}
+                onChange={handleChange}
+                onFocus={() =>
+                  setFieldStates((prev) => ({
+                    ...prev,
+                    email: { isFocused: true },
+                  }))
+                }
+                onBlur={() =>
+                  setFieldStates((prev) => ({
+                    ...prev,
+                    email: { isFocused: false },
+                  }))
+                }
+              />
+            </div>
+
+            {errors.email && (
+              <p className="text-[#cc5555] text-sm pt-1 text-end">{errors.email}</p>
+            )}
+          </div>
+
+          <div className="relative flex flex-col">
+            <label
+              className={`${
+                errors.password && !fieldStates.password.isFocused
+                  ? "text-[#cc5555]"
+                  : fieldStates.password.isFocused
+                  ? "text-[#6750a4]"
+                  : "text-[#8A8D8E]"
+              } absolute z-30 left-2.5 -top-2 text-xs font-bold bg-white px-1`}
+            >
+              Contraseña
+            </label>
+
+            <div className="relative flex items-center">
+              {togglePassword
+                ? iconShowPassword(() => setTogglePassword((prev) => !prev))
+                : iconHidePassword(() => setTogglePassword((prev) => !prev))}
+
+              <input
+                name="password"
+                placeholder="********"
+                className={`${
+                  errors.password
+                    ? "border-[#cc5555] border-2"
+                    : "border-[#8A8D8E]"
+                } placeholder-textPlaceholder font-normal focus-visible:outline-[#6750a4] p-2 pl-2 rounded-full border-2 w-full`}
+                type={togglePassword ? "password" : "text"}
+                value={formValues.password}
+                onChange={handleChange}
+                onFocus={() =>
+                  setFieldStates((prev) => ({
+                    ...prev,
+                    password: { isFocused: true },
+                  }))
+                }
+                onBlur={() =>
+                  setFieldStates((prev) => ({
+                    ...prev,
+                    password: { isFocused: false },
+                  }))
+                }
+              />
+            </div>
+
+            {errors.password && (
+              <p className="text-[#cc5555] text-sm pt-1 text-end">{errors.password}</p>
+            )}
+          </div>
         </div>
-        <button
-          type="submit"
-          className="bg-[#989898] p-3 rounded-lg text-white font-bold mt-8"
-        >
-          Ingresar
-        </button>
-        <Link className="self-center my-3" href={"/register"}>
-          <button type="button">Crear cuenta</button>
-        </Link>
+        <div className="flex justify-end pr-2 pt-1">
+          <button className="underline text-[#5C5F5F]">
+            Olvidé mi contraseña
+          </button>
+        </div>
+        {loading ? (
+          <div className="w-full flex justify-center my-4">
+            <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-current" />
+          </div>
+        ) : (
+          <>
+            {loginError && (
+              <div className="text-[#cc5555] text-sm text-end pt-1">{loginError}</div>
+            )}
+            <button
+              className="bg-[#6750A4] text-white text-lg p-2 py-2.5 my-4 w-full rounded-full"
+              type="submit"
+            >
+              Ingresar
+            </button>
+          </>
+        )}
+
+        <div>
+          <p className="text-center text-[#5C5F5F]">
+            ¿No tenés cuenta?{" "}
+            <Link href={"/register"} className="text-[#6750a4]">
+              Registrate
+            </Link>
+          </p>
+        </div>
       </form>
+      <div
+        className={`${
+          showModal ? "fixed" : "hidden"
+        } z-50 inset-0 flex justify-center items-center bg-black/50`}
+      >
+        <div className="bg-white p-8 rounded shadow-lg text-center">
+          <h1 className="text-lg">
+            Sesion Iniciada! Bienvenido{" "}
+            <span className="font-bold">{user}</span>
+          </h1>
+          <button
+            onClick={() => setShowModal(false)}
+            className="mt-4 p-2 bg-blue-500 text-white rounded"
+          >
+            Cerrar
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

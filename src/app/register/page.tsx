@@ -4,29 +4,37 @@ import EventMapLogo from "@/../public/isotipo.webp";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { validateEmail } from "@/utils/formUtils";
+import { validateEmail, formatCuitCuil } from "@/utils/formUtils";
 
-interface FormValues {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  cuitCuil: string;
-}
+import { BsFillPersonFill } from "react-icons/bs";
+import { BiSolidEnvelope } from "react-icons/bi";
+import { BiArrowBack } from "react-icons/bi";
 
-interface Errors {
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  password?: string;
-  confirmPassword?: string;
-  cuitCuil?: string;
-  termsAccepted?: string;
-}
+import { iconShowPassword } from "@/components/icons/IconShowPassword";
+import { iconHidePassword } from "@/components/icons/IconHidePassword";
+
+import {
+  FormValues,
+  Errors,
+  FormFieldStates,
+} from '@/types/register-types';
 
 export default function Register() {
+  const [togglePassword, setTogglePassword] = useState(true);
+  const [toggleConfirmPassword, setToggleConfirmPassword] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const [termsAccepted, setTermsAccepted] = useState(false);
+
+  const [fieldStates, setFieldStates] = useState<FormFieldStates>({
+    firstName: { isFocused: false },
+    lastName: { isFocused: false },
+    email: { isFocused: false },
+    password: { isFocused: false },
+    confirmPassword: { isFocused: false },
+    cuitCuil: { isFocused: false },
+  });
 
   const [formValues, setFormValues] = useState<FormValues>({
     firstName: "",
@@ -39,16 +47,33 @@ export default function Register() {
 
   const [errors, setErrors] = useState<Errors>({});
 
+  const handleFocusBlur = (
+    field: keyof FormFieldStates,
+    isFocused: boolean
+  ) => {
+    setFieldStates((prev) => ({
+      ...prev,
+      [field]: { isFocused },
+    }));
+  };
+
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTermsAccepted(e.target.checked);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      [name]: value,
-    }));
+    if (name === "cuitCuil") {
+      setFormValues((prevValues) => ({
+        ...prevValues,
+        [name]: formatCuitCuil(value),
+      }));
+    } else {
+      setFormValues((prevValues) => ({
+        ...prevValues,
+        [name]: value,
+      }));
+    }
   };
 
   const handleError = () => {
@@ -59,10 +84,12 @@ export default function Register() {
 
     if (!firstName.trim()) {
       newErrors.firstName = "El nombre es requerido";
-    } else if (firstName.length < 3) {
-      newErrors.firstName = "El nombre debe tener al menos 3 caracteres";
+    } else if (firstName.length < 1) {
+      newErrors.firstName = "El nombre debe tener al menos 1 caracter";
     } else if (firstName.length > 50) {
       newErrors.firstName = "El nombre no puede exceder los 50 caracteres";
+    } else if (!/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(firstName)) {
+      newErrors.firstName = "El nombre solo puede contener letras";
     }
 
     if (!lastName.trim()) {
@@ -71,6 +98,8 @@ export default function Register() {
       newErrors.lastName = "El apellido debe tener al menos 3 caracteres";
     } else if (lastName.length > 50) {
       newErrors.lastName = "El apellido no puede exceder los 50 caracteres";
+    } else if (!/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(lastName)) {
+      newErrors.lastName = "El apellido solo puede contener letras";
     }
 
     const trimmedEmail = email.trim();
@@ -82,10 +111,16 @@ export default function Register() {
 
     if (!password.trim()) {
       newErrors.password = "La contraseña es requerida";
-    } else if (password.length < 6) {
-      newErrors.password = "La contraseña debe tener al menos 6 caracteres";
-    } else if (password.length > 50) {
-      newErrors.password = "La contraseña no puede exceder los 50 caracteres";
+    } else if (password.length < 8 || password.length > 16) {
+      newErrors.password = "La contraseña debe tener entre 8 y 16 caracteres";
+    } else if (!/[A-Z]/.test(password)) {
+      newErrors.password = "La contraseña debe tener al menos una letra mayúscula";
+    } else if (!/[a-z]/.test(password)) {
+      newErrors.password = "La contraseña debe tener al menos una letra minúscula";
+    } else if (!/\d/.test(password)) {
+      newErrors.password = "La contraseña debe tener al menos un número";
+    } else if (!/[!@#$%^&*()\[\]{}\-_,.]/.test(password)) {
+      newErrors.password = "La contraseña debe tener al menos un carácter especial";
     }
 
     if (!confirmPassword.trim()) {
@@ -96,7 +131,15 @@ export default function Register() {
 
     if (!cuitCuil.trim()) {
       newErrors.cuitCuil = "El CUIT/CUIL es requerido";
-    } else if (cuitCuil.length !== 11) {
+    } else if (cuitCuil.length === 11) {
+      if (!/^\d{11}$/.test(cuitCuil)) {
+        newErrors.cuitCuil = "CUIT/CUIL Inválido";
+      }
+    } else if (cuitCuil.length === 13) {
+      if (!/^\d{2}-\d{8}-\d{1}$/.test(cuitCuil)) {
+        newErrors.cuitCuil = "CUIT/CUIL Inválido";
+      }
+    } else {
       newErrors.cuitCuil = "CUIT/CUIL Inválido";
     }
 
@@ -108,147 +151,306 @@ export default function Register() {
     return newErrors;
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const newErrors = handleError();
 
     if (Object.keys(newErrors).length === 0) {
-      const trimmedFormValues = {
-        firstName: formValues.firstName.trim(),
-        lastName: formValues.lastName.trim(),
-        email: formValues.email.trim(),
-        password: formValues.password,
-        cuitCuil: formValues.cuitCuil.trim(),
-      };
+      setLoading(true);
+      try {
+        const trimmedFormValues = {
+          name: formValues.firstName.trim(),
+          lastName: formValues.lastName.trim(),
+          email: formValues.email.trim(),
+          password: formValues.password,
+          cuit: formValues.cuitCuil,
+        };
 
-      //Enviar datos al backend
+        // Enviar datos al backend
+        const req = await fetch(
+          "https://i003-eventmap-back.onrender.com/auth/register",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(trimmedFormValues),
+          }
+        );
+        const res = await req.json();
+        console.log(res);
+        if (req.ok) {
+          setShowModal(true);
+        }
+      } catch (error) {
+        console.error("Error al enviar los dato", error);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
   return (
-    <div className="py-5 px-4">
-      <Link href={"#"}>
-        <svg
-          className="mb-4"
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M15.9999 7.00008V9.00008H3.99991L9.49991 14.5001L8.07991 15.9201L0.159912 8.00008L8.07991 0.0800781L9.49991 1.50008L3.99991 7.00008H15.9999Z"
-            fill="black"
-          />
-        </svg>
-      </Link>
+    <div className="bg-[#131a23]">
+      <div className="py-5 px-4">
+        <Link href={"/"}>
+          <BiArrowBack className="mb-4" size={24} color="white"/>
+        </Link>
 
-      <h1 className="font-bold text-2xl">Nuevo usuario EventMap</h1>
-      <div className="flex flex-col items-center gap-4 py-6">
-        <Image
-          className=""
-          width={140}
-          height={140}
-          src={EventMapLogo}
-          alt="Logo EventMap"
-        />
-        <div className="flex items-center gap-2">
-          <svg
-            width="11"
-            height="13"
-            viewBox="0 0 11 13"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              fillRule="evenodd"
-              clipRule="evenodd"
-              d="M1.98611 3.51389C1.98611 1.57322 3.55933 0 5.5 0C7.44067 0 9.01389 1.57322 9.01389 3.51389V4.19449C9.01389 4.23532 9.00855 4.2749 8.99854 4.31257C9.87615 4.63505 10.5602 5.34306 10.8505 6.23634C11 6.6966 11 7.26533 11 8.40278C11 9.54023 11 10.109 10.8505 10.5692C10.5482 11.4994 9.81889 12.2288 8.88866 12.531C8.4284 12.6806 7.85966 12.6806 6.72222 12.6806H4.27776C3.14032 12.6806 2.5716 12.6806 2.11134 12.531C1.18111 12.2288 0.451799 11.4994 0.14955 10.5692C0 10.109 0 9.54023 0 8.40278C0 7.26533 0 6.6966 0.14955 6.23634C0.439794 5.34306 1.12385 4.63505 2.00146 4.31257C1.99145 4.2749 1.98611 4.23532 1.98611 4.19449V3.51389ZM2.90278 4.14586C3.25095 4.125 3.68788 4.125 4.27778 4.125H6.72222C7.31212 4.125 7.74905 4.125 8.09722 4.14586V3.51389C8.09722 2.07948 6.93441 0.916667 5.5 0.916667C4.06559 0.916667 2.90278 2.07948 2.90278 3.51389V4.14586ZM5.5 6.72222C5.75313 6.72222 5.95833 6.92743 5.95833 7.18056V9.625C5.95833 9.87813 5.75313 10.0833 5.5 10.0833C5.24687 10.0833 5.04167 9.87813 5.04167 9.625V7.18056C5.04167 6.92743 5.24687 6.72222 5.5 6.72222Z"
-              fill="#413C3C"
-            />
-          </svg>
-          <p className="font-bold">Registro sólo para organizadores</p>
+        <h1 className="font-bold text-2xl text-white">
+          Nuevo usuario EventMap
+        </h1>
+        <div className="flex flex-col items-center gap-4 py-6">
+          <Image
+            className=""
+            width={120}
+            height={120}
+            src={EventMapLogo}
+            alt="Logo EventMap"
+          />
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <div className="flex gap-2">
-          <div className="w-full">
-            <input
-              name="firstName"
-              placeholder="Nombre"
-              className="placeholder-gray-700 p-2 rounded-lg border border-black w-full"
-              type="text"
-              value={formValues.firstName}
-              onChange={handleChange}
-            />
+      {/* REGISTER FORM */}
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col gap-6 bg-white px-4 py-4 rounded-t-3xl"
+      >
+        <div className="flex justify-center items-center gap-2 py-3">
+          <p className="font-bold">Registro sólo para organizadores</p>
+        </div>
+        <div className="flex gap-3">
+          {/* NAME */}
+          <div className="relative flex flex-col w-full">
+            <label
+              className={`${
+                errors.firstName && !fieldStates.firstName.isFocused
+                  ? "text-[#cc5555]"
+                  : fieldStates.firstName.isFocused
+                  ? "text-[#6750a4]"
+                  : "text-[#8A8D8E]"
+              } absolute z-30  left-2.5 -top-2 text-xs font-bold bg-white px-1`}
+            >
+              Nombre
+            </label>
+            <div className="relative flex items-center">
+              <BsFillPersonFill
+                color="#5C5F5F"
+                className="absolute left-3"
+                size={24}
+              />
+              <input
+                name="firstName"
+                placeholder="Nombre"
+                className={`${
+                  errors.firstName
+                    ? "border-[#cc5555] border-2"
+                    : "border-[#8A8D8E]"
+                } placeholder-textPlaceholder font-normal focus-visible:outline-[#6750a4] p-2 pl-10 rounded-full border-2 w-full`}
+                type="text"
+                value={formValues.firstName}
+                onChange={handleChange}
+                onFocus={() => handleFocusBlur("firstName", true)}
+                onBlur={() => handleFocusBlur("firstName", false)}
+              />
+            </div>
             {errors.firstName && (
-              <p className="text-red-500 text-sm">{errors.firstName}</p>
+              <p className="text-[#cc5555] text-sm pt-1 text-end">{errors.firstName}</p>
             )}
           </div>
 
-          <div className="w-full">
-            <input
-              name="lastName"
-              placeholder="Apellido"
-              className="placeholder-gray-700 p-2 rounded-lg border border-black w-full"
-              type="text"
-              value={formValues.lastName}
-              onChange={handleChange}
-            />
+          {/* LAST NAME */}
+          <div className="relative flex flex-col w-full">
+            <label
+              className={`${
+                errors.lastName && !fieldStates.lastName.isFocused
+                  ? "text-[#cc5555]"
+                  : fieldStates.lastName.isFocused
+                  ? "text-[#6750a4]"
+                  : "text-[#8A8D8E]"
+              } absolute z-30 left-2.5 -top-2 text-xs font-bold bg-white px-1`}
+            >
+              Apellido
+            </label>
+            <div className="relative flex items-center">
+              <BsFillPersonFill
+                color="#5C5F5F"
+                className="absolute left-3"
+                size={24}
+              />
+              <input
+                name="lastName"
+                placeholder="Apellido"
+                className={`${
+                  errors.lastName
+                    ? "border-[#cc5555] border-2"
+                    : "border-[#8A8D8E]"
+                } placeholder-textPlaceholder font-normal focus-visible:outline-[#6750a4] p-2 pl-10 rounded-full border-2 w-full`}
+                type="text"
+                value={formValues.lastName}
+                onChange={handleChange}
+                onFocus={() => handleFocusBlur("lastName", true)}
+                onBlur={() => handleFocusBlur("lastName", false)}
+              />
+            </div>
             {errors.lastName && (
-              <p className="text-red-500 text-sm">{errors.lastName}</p>
+              <p className="text-[#cc5555] text-sm pt-1 text-end">{errors.lastName}</p>
             )}
           </div>
         </div>
 
-        <div className="flex flex-col gap-4">
-          <input
-            name="email"
-            placeholder="Mail"
-            className="placeholder-gray-700 p-2 rounded-lg border border-black w-full"
-            type="text"
-            value={formValues.email}
-            onChange={handleChange}
-          />
+        {/* EMAIL */}
+        <div className="relative flex flex-col">
+          <label
+            className={`${
+              errors.email && !fieldStates.email.isFocused
+                ? "text-[#cc5555]"
+                : fieldStates.email.isFocused
+                ? "text-[#6750a4]"
+                : "text-[#8A8D8E]"
+            } absolute z-30  left-2.5 -top-2 text-xs font-bold bg-white px-1`}
+          >
+            Correo
+          </label>
+          <div className="relative flex items-center">
+            <BiSolidEnvelope
+              className="absolute left-3"
+              size={24}
+              color="#5C5F5F"
+            />
+            <input
+              name="email"
+              placeholder="correo@email.com"
+              className={`${
+                errors.email ? "border-[#cc5555] border-2" : "border-[#8A8D8E]"
+              } placeholder-textPlaceholder font-normal focus-visible:outline-[#6750a4] p-2 pl-10 rounded-full border-2 w-full`}
+              type="text"
+              value={formValues.email}
+              onChange={handleChange}
+              onFocus={() => handleFocusBlur("email", true)}
+              onBlur={() => handleFocusBlur("email", false)}
+            />
+          </div>
           {errors.email && (
-            <p className="text-red-500 text-sm">{errors.email}</p>
-          )}
-          <input
-            name="password"
-            placeholder="Contraseña"
-            className="placeholder-gray-700 p-2 rounded-lg border border-black w-full"
-            type="password"
-            value={formValues.password}
-            onChange={handleChange}
-          />
-          {errors.password && (
-            <p className="text-red-500 text-sm">{errors.password}</p>
-          )}
-          <input
-            name="confirmPassword"
-            placeholder="Repetir contraseña"
-            className="placeholder-gray-700 p-2 rounded-lg border border-black w-full"
-            type="password"
-            value={formValues.confirmPassword}
-            onChange={handleChange}
-          />
-          {errors.confirmPassword && (
-            <p className="text-red-500 text-sm">{errors.confirmPassword}</p>
-          )}
-          <input
-            name="cuitCuil"
-            placeholder="CUIT/CUIL"
-            className="placeholder-gray-700 p-2 rounded-lg border border-black w-full"
-            type="number"
-            value={formValues.cuitCuil}
-            onChange={handleChange}
-          />
-          {errors.cuitCuil && (
-            <p className="text-red-500 text-sm">{errors.cuitCuil}</p>
+            <p className="text-[#cc5555] text-sm pt-1 text-end">{errors.email}</p>
           )}
         </div>
+
+        {/* PASSWORD */}
+        <div className="relative flex flex-col">
+          <label
+            className={`${
+              errors.password && !fieldStates.password.isFocused
+                ? "text-[#cc5555]"
+                : fieldStates.password.isFocused
+                ? "text-[#6750a4]"
+                : "text-[#8A8D8E]"
+            } absolute z-30 left-2.5 -top-2 text-xs font-bold bg-white px-1`}
+          >
+            Contraseña
+          </label>
+          <div className="relative flex items-center">
+            {togglePassword
+              ? iconShowPassword(() => setTogglePassword((prev) => !prev))
+              : iconHidePassword(() => setTogglePassword((prev) => !prev))}
+            <input
+              name="password"
+              placeholder="Contraseña"
+              className={`${
+                errors.password
+                  ? "border-[#cc5555] border-2"
+                  : "border-[#8A8D8E]"
+              } placeholder-textPlaceholder font-normal focus-visible:outline-[#6750a4] p-2 pl-2 rounded-full border-2 w-full`}
+              type={togglePassword ? "password" : "text"}
+              value={formValues.password}
+              onChange={handleChange}
+              onFocus={() => handleFocusBlur("password", true)}
+              onBlur={() => handleFocusBlur("password", false)}
+            />
+          </div>
+          {errors.password && (
+            <p className="text-[#cc5555] text-sm pt-1 text-end">{errors.password}</p>
+          )}
+        </div>
+
+        {/* CONFIRM PASSWORD */}
+        <div className="relative flex flex-col">
+          <label
+            className={`${
+              errors.confirmPassword && !fieldStates.confirmPassword.isFocused
+                ? "text-[#cc5555]"
+                : fieldStates.confirmPassword.isFocused
+                ? "text-[#6750a4]"
+                : "text-[#8A8D8E]"
+            } absolute z-30 left-2.5 -top-2 text-xs font-bold bg-white px-1`}
+          >
+            Confirmar Contraseña
+          </label>
+          <div className="relative flex items-center">
+            {toggleConfirmPassword
+              ? iconShowPassword(() =>
+                  setToggleConfirmPassword((prev) => !prev)
+                )
+              : iconHidePassword(() =>
+                  setToggleConfirmPassword((prev) => !prev)
+                )}
+            <input
+              name="confirmPassword"
+              placeholder="Repetir contraseña"
+              className={`${
+                errors.confirmPassword
+                  ? "border-[#cc5555] border-2"
+                  : "border-[#8A8D8E]"
+              } placeholder-textPlaceholder font-normal focus-visible:outline-[#6750a4] p-2 pl-2 rounded-full border-2 w-full`}
+              type={toggleConfirmPassword ? "password" : "text"}
+              value={formValues.confirmPassword}
+              onChange={handleChange}
+              onFocus={() => handleFocusBlur("confirmPassword", true)}
+              onBlur={() => handleFocusBlur("confirmPassword", false)}
+            />
+          </div>
+          {errors.confirmPassword && (
+            <p className="text-[#cc5555] text-sm pt-1 text-end">
+              {errors.confirmPassword}
+            </p>
+          )}
+        </div>
+
+        {/* CUIT/CUIL */}
+        <div className="relative flex flex-col">
+          <label
+            className={`${
+              errors.cuitCuil && !fieldStates.cuitCuil.isFocused
+                ? "text-[#cc5555]"
+                : fieldStates.cuitCuil.isFocused
+                ? "text-[#6750a4]"
+                : "text-[#8A8D8E]"
+            } absolute z-30 left-2.5 -top-2 text-xs font-bold bg-white px-1`}
+          >
+            CUIT/CUIL
+          </label>
+          <div className="relative flex items-center">
+            <input
+              name="cuitCuil"
+              placeholder="XX-XXXXXXXX-X"
+              maxLength={13}
+              className={`${
+                errors.cuitCuil
+                  ? "border-[#cc5555] border-2"
+                  : "border-[#8A8D8E]"
+              } placeholder-textPlaceholder font-normal focus-visible:outline-[#6750a4] p-2 pl-2 rounded-full border-2 w-full`}
+              type="text"
+              value={formValues.cuitCuil}
+              onChange={handleChange}
+              onFocus={() => handleFocusBlur("cuitCuil", true)}
+              onBlur={() => handleFocusBlur("cuitCuil", false)}
+            />
+          </div>
+          {errors.cuitCuil && (
+            <p className="text-[#cc5555] text-sm pt-1 text-end">{errors.cuitCuil}</p>
+          )}
+        </div>
+
+        {/* TERMS AND CONDITIONS */}
         <div>
           <label className="flex justify-center gap-2" htmlFor="termsAccepted">
             <input
@@ -268,13 +470,34 @@ export default function Register() {
           )}
         </div>
 
-        <button
-          type="submit"
-          className="bg-[#989898] p-3 rounded-lg text-white font-bold my-3"
-        >
-          Crear Cuenta
-        </button>
+        {/* SPINNER AND CREATE ACCOUNT BUTTON */}
+        <div className="flex justify-center">
+          {loading ? (
+            <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-current" />
+          ) : (
+            <button
+              className="bg-[#6750A4] text-white text-lg p-2 py-2.5 w-full rounded-full"
+              type="submit"
+            >
+              Crear Cuenta
+            </button>
+          )}
+        </div>
       </form>
+
+      {/* MODAL */}
+      <div
+        className={`${
+          showModal ? "fixed" : "hidden"
+        } z-50 inset-0 flex justify-center items-center bg-black/50`}
+      >
+        <div className="bg-white p-8 rounded shadow-lg flex flex-col justify-center">
+          <h1 className="text-lg font-semibold">Registro completado</h1>
+          <button className="mt-4 p-2 bg-blue-500 text-white rounded">
+            <Link href={"/login"}>Iniciar Sesion</Link>
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
