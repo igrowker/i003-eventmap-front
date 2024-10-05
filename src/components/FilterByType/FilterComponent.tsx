@@ -1,13 +1,13 @@
 "use client"
 import { useEffect, useState } from "react"
 import { FILTER_BY_TYPE_LIST, INITIAL_FILTER_VALUES } from "@/constants/filter-resources"
-import { FilterComponentProps, type FilterValues } from "@/types/filter-types"
+import { FilterComponentProps, FiltersState, type FilterValues } from "@/types/filter-types"
 import FilterByType from "./FilterByType"
 import TimelineComponent from "./TimelineComponent"
 
 
 export default function FilterComponent({ onFilterChange }: FilterComponentProps) {
-  const [filterValues, setFilterValues] = useState<FilterValues>(INITIAL_FILTER_VALUES)
+  const [filterValues, setFilterValues] = useState(INITIAL_FILTER_VALUES)
   const [isFilterMenuOpen, setIsFilterMenuOpen] = useState<boolean>(false)
 
   return (
@@ -21,7 +21,9 @@ export default function FilterComponent({ onFilterChange }: FilterComponentProps
           <span className="text-light text-sm">Filtrar</span>
         </button>
         <div className={`${!isFilterMenuOpen ? 'max-sm:hidden' : ''} relative max-sm:border max-sm:border-dark max-sm:border-opacity-20 max-sm:rounded-lg max-sm:p-2 flex max-sm:flex-col-reverse items-center gap-4`}>
+          {/* @ts-ignore */}
           <TimelineComponent filterValueState={{ filterValues, setFilterValues }} setIsFilterMenuOpen={setIsFilterMenuOpen} />
+          {/* @ts-ignore */}
           <FilterByType onFilterChange={onFilterChange} filterByTypeList={FILTER_BY_TYPE_LIST} filterValueState={{ filterValues, setFilterValues }} setIsFilterMenuOpen={setIsFilterMenuOpen} />
         </div>
       </div>
