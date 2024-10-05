@@ -9,6 +9,7 @@ import "leaflet.heat";
 import LocateControl from "./LocateControl";
 import HeatmapLayer from "react-leaflet-heat-layer";
 // import Search from "./search"
+import { Location } from "./Location";
 
 interface AddressPoint {
   lat: number;
@@ -68,6 +69,7 @@ const Map = () => {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
+      <Location center={[-34.603851, -58.381775]}  />
 
       {/* Heatmap Layer */}
       <HeatmapLayer
