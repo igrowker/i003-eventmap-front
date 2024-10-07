@@ -1,7 +1,6 @@
 "use client";
 import CardEventsSwiper from "@/components/CardEvents/CardsEvents";
 import Link from "next/link";
-
 import useDecodedToken from "./functions/useDecodeToken";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
@@ -11,45 +10,35 @@ import { GiPartyFlags } from "react-icons/gi";
 import SliderEventContainer from "@/components/Profile/SliderEventContainer";
 import { useEffect, useState } from "react";
 import useUserInfo from "./functions/useUserInfo";
-
 import { Event } from "@/types/events-types";
 import PreviousEventCointainer from "@/components/Profile/PreviousEventContainer";
 import EmptyEvents from "@/components/Profile/EmptyEvents";
 
 function Profile() {
   const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const router = useRouter();
   const { userId } = useDecodedToken();
   const userInfo = useUserInfo(userId);
-  console.log(userInfo);
-
-  if (!userInfo) {
-    console.log("Cargando...");
-  }
-
-  if (userInfo) {
-    console.log(userInfo);
-  }
 
   useEffect(() => {
     if (userInfo) {
       setEvents(userInfo.events);
+      setLoading(false);
     }
   }, [userInfo]);
-  console.log(events);
 
   const previousEvents = (events: Event[]) => {
     const today = new Date();
     return events.filter((event) => new Date(event.date) < today);
   };
+
   const upcomingEvents = (events: Event[]) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-  
     return events.filter((event) => new Date(event.date) >= today);
   };
-  
 
   const handleLogout = () => {
     Cookies.remove("auth_token");
@@ -77,8 +66,20 @@ function Profile() {
       <div className="flex flex-col gap-3">
         <h2 className="font-semibold text-md">Mis próximos eventos</h2>
 
-        {/* UPCOMING EVENTS SLIDER */}
-        {events.length > 0 ? <SliderEventContainer events={upcomingEvents(events)} /> : <EmptyEvents text="No hay eventos agregados" />}
+        {/* UPCOMING EVENTS */}
+        {loading ? (
+          <div className="w-full flex justify-center my-4 h-[200px] items-center">
+            <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-current" />
+          </div>
+        ) : (
+          <>
+            {events.length > 0 ? (
+              <SliderEventContainer events={upcomingEvents(events)} />
+            ) : (
+              <EmptyEvents text="No hay eventos agregados" />
+            )}
+          </>
+        )}
       </div>
 
       <Link
@@ -114,10 +115,25 @@ function Profile() {
           <p>Eventos realizados este año</p>
         </div>
       </div>
+
       {/* PREVIOUS EVENTS */}
       <div>
         <h2 className="flex font-semibold py-4 text-md">Eventos anteriores</h2>
-        {events.length > 0 ? <PreviousEventCointainer events={previousEvents(events)} /> : <EmptyEvents text="No hay eventos anteriores" />}        
+
+        {/* Spinner para PREVIOUS EVENTS */}
+        {loading ? (
+          <div className="w-full flex justify-center my-4 h-[200px] items-center">
+            <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-current" />
+          </div>
+        ) : (
+          <>
+            {events.length > 0 ? (
+              <PreviousEventCointainer events={previousEvents(events)} />
+            ) : (
+              <EmptyEvents text="No hay eventos anteriores" />
+            )}
+          </>
+        )}
       </div>
     </section>
   );
