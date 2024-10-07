@@ -18,7 +18,7 @@ function ConcurrenceComponent({ concurrence, clas }: { concurrence: number, clas
 
   return (
     <div
-      className={` ${clas ? "bg-[#E5DFF7] px-4 py-2" : ""}  rounded-full self-start flex items-center gap-2`}>
+      className={` ${clas ? "bg-[#E5DFF7] px-4 py-2" : ""}  rounded-full self-start flex items-center gap-1`}>
       <svg
         width="12"
         height="10"

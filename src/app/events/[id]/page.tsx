@@ -17,13 +17,17 @@ interface Event {
   name: string;
   addres: string;
   description: string;
+  location: {
+    lat: string;
+    lon: string;
+  };
 }
 
 function EventDetails() {
   const [event, setEvent] = useState<Event | null>(null);
+  const [showNavigationButtons, setShowNavigationButtons] = useState(false);
   const path = usePathname();
   const id = path.split("/")[2];
-  // const id = "4fdbcb80-0d17-4ac5-a8dc-d9fd7495df16";
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -46,13 +50,37 @@ function EventDetails() {
     }
   }, [id]);
 
-  console.log(event);
-
   if (!event) {
-    return <div>Cargando evento...</div>;
+    return (
+      <div className="h-screen flex flex-col gap-2 justify-center items-center">
+        <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-current">
+        </div>
+      </div>
+    );
   }
 
-  const { time, date, amount, photos, name, addres, description } = event;
+  const { time, date, amount, photos, name, addres, description, location } =
+    event;
+
+  const handleNavigateClick = () => {
+    setShowNavigationButtons(true);
+  };
+
+  const handleGoogleMapsClick = () => {
+    window.open(
+      `https://maps.google.com/maps?daddr=${location.lat},${location.lon}`,
+      "_blank"
+    );
+    setShowNavigationButtons(false);
+  };
+
+  const handleWazeClick = () => {
+    window.open(
+      `https://waze.com/ul?ll=${location.lat},${location.lon}&navigate=yes`,
+      "_blank"
+    );
+    setShowNavigationButtons(false);
+  };
 
   return (
     <div>
@@ -89,23 +117,48 @@ function EventDetails() {
           </h1>
           <p className="text-[#454747] text-[15px]">{addres}</p>
         </div>
-        <button className="w-full py-2.5 font-bold text-white bg-[#6750A4] rounded-full flex items-center justify-center gap-2">
-          <svg
-            width="21"
-            height="20"
-            viewBox="0 0 21 20"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M18.5309 3.59808C18.7223 3.13323 18.6129 2.59808 18.2574 2.24261C17.902 1.88714 17.3668 1.77777 16.902 1.96917L3.15196 7.59417C2.59727 7.82073 2.28477 8.40667 2.39806 8.99261C2.51134 9.57855 3.02696 10.0004 3.62462 10.0004H10.4996V16.8754C10.4996 17.4731 10.9215 17.9848 11.5074 18.102C12.0934 18.2192 12.6793 17.9028 12.9059 17.3481L18.5309 3.59808Z"
-              stroke="white"
-              stroke-width="1.5"
-            />
-          </svg>
 
-          <span>ir a destino</span>
-        </button>
+        {showNavigationButtons ? (
+          <div className="flex flex-col justify-between gap-2">
+            <h1 className="text-center font-semibold text-lg">
+              Selecciona una opcion
+            </h1>
+            <div className="flex gap-2 ">
+              <button
+                onClick={handleGoogleMapsClick}
+                className="w-full py-2.5 font-bold text-white bg-[#6750A4] rounded-full"
+              >
+                Google Maps
+              </button>
+              <button
+                onClick={handleWazeClick}
+                className="w-full py-2.5 font-bold text-white bg-[#6750A4] rounded-full"
+              >
+                Waze
+              </button>
+            </div>
+          </div>
+        ) : (
+          <button
+            onClick={handleNavigateClick}
+            className="w-full py-2.5 font-bold text-white bg-[#6750A4] rounded-full flex items-center justify-center gap-2"
+          >
+            <svg
+              width="21"
+              height="20"
+              viewBox="0 0 21 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M18.5309 3.59808C18.7223 3.13323 18.6129 2.59808 18.2574 2.24261C17.902 1.88714 17.3668 1.77777 16.902 1.96917L3.15196 7.59417C2.59727 7.82073 2.28477 8.40667 2.39806 8.99261C2.51134 9.57855 3.02696 10.0004 3.62462 10.0004H10.4996V16.8754C10.4996 17.4731 10.9215 17.9848 11.5074 18.102C12.0934 18.2192 12.6793 17.9028 12.9059 17.3481L18.5309 3.59808Z"
+                stroke="white"
+                strokeWidth="1.5"
+              />
+            </svg>
+            <span>ir a destino</span>
+          </button>
+        )}
       </div>
     </div>
   );
