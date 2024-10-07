@@ -2,10 +2,9 @@ import { BiCalendarAlt } from "react-icons/bi"
 import { MAX_RANGE_DAYS_MS } from "@/constants/filter-resources";
 import { Filters, FilterValues } from "@/types/filter-types";
 
-export default function CalendarDateSelector({ handleChange, filters, section = 'list' }: { handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void, filters: Filters | FilterValues, section?: 'filter' | 'list' }) {
+export default function CalendarDateSelector({ handleChange, filters, section = 'list' }: { handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void, filters: Filters[] | FilterValues, section?: 'filter' | 'list' }) {
   const max = new Date(new Date().getTime() + MAX_RANGE_DAYS_MS).toISOString().split('T')[0]
   const min = new Date().toISOString().split('T')[0]
-  console.log('filters', filters)
   const filterDate = 
   section === 'list'
   // @ts-ignore
