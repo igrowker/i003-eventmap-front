@@ -204,7 +204,7 @@ const PostEvent: React.FC = () => {
   };
 
   return (
-    <main className="max-w-lg mx-auto p-4 rounded-lg bg-bgHome mb-20">
+    <main className="max-w-lg mx-auto p-4 rounded-lg bg-white mb-20">
       <Link href={"/"}>
         <BiArrowBack size={30} />
       </Link>

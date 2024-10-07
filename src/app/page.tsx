@@ -93,7 +93,7 @@ const events = [
 
 export default function Home() {
   return (
-    <main className=" bg-bgHome flex min-h-screen flex-col items-center p-5 relative min-w-[360px]">
+    <main className="bg-bgHome flex min-h-screen flex-col items-center p-5 relative min-w-[360px]">
       <header className="flex w-full justify-center sm:max-w-sm">
         <Header />
       </header>
@@ -119,7 +119,7 @@ export default function Home() {
       <div className="pt-5 pb-16 max-w-[384px]">
         <Newsletter />
       </div>
-      <nav>
+      <nav className="relative z-50">
         <NavBar />
       </nav>
     </main>
