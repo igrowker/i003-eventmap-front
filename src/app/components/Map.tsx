@@ -66,32 +66,31 @@ const Map = () => {
   };
 
   return (
-    <MapContainer
-      style={{ height: "100vh", width: "100vw" }}
-      center={[ -34.603851, -58.381775]}
-      zoom={14}
-      scrollWheelZoom={true}
-    >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      <Location center={[-34.603851, -58.381775]}  />
-
-      {/* Heatmap Layer */}
-      <HeatmapLayer
-        latlngs={addressPoints.map((point) => [
-          point.lat,
-          point.lng,
-          point.value / 100, // Normalizo el valor a un rango 0-1
-        ])}
-        radius={30}
-        blur={20}
-        maxZoom={15}
-        max={1}
-        gradient={gradientConfig}
-        minOpacity={0.8}
-      />
+    <div className={`relative transition-all duration-300 ${isExpanded ? 'h-screen w-full' : 'h-40 w-96'}`}>
+      <MapContainer
+        className={`h-full w-full rounded-2xl z-40`}
+        center={[-34.603851, -58.381775]}
+        zoom={14}
+        scrollWheelZoom={true}
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <Location center={[-34.603851, -58.381775]} />
+        <HeatmapLayer
+          latlngs={addressPoints.map((point) => [
+            point.lat,
+            point.lng,
+            point.value / 100,
+          ])}
+          radius={30}
+          blur={20}
+          maxZoom={15}
+          max={1}
+          gradient={gradientConfig}
+          minOpacity={0.8}
+        />
 
       {/* <Search
         center={[-34.603851, -58.381775]}
@@ -103,11 +102,10 @@ const Map = () => {
 
       {/* Marcadores personalizados */}
       {addressPoints.map((point) => (
-        <Marker
-          key={`${point.lat}-${point.lng}`}
-          position={[point.lat, point.lng]}
-          icon={
-            new L.Icon({
+          <Marker
+            key={`${point.lat}-${point.lng}`}
+            position={[point.lat, point.lng]}
+            icon={new L.Icon({
               iconUrl: MarkerIcon.src,
               iconRetinaUrl: MarkerIcon.src,
               iconSize: [25, 41],
@@ -115,19 +113,24 @@ const Map = () => {
               popupAnchor: [0, -41],
               shadowUrl: MarkerShadow.src,
               shadowSize: [41, 41],
-            })
-          }
-        >
-          <Popup>
-            Intensidad: {point.value.toFixed(2)}
-            <br />
-            Ubicacion: {formatLatLng(point)}
-          </Popup>
-        </Marker>
-      ))}
-
-      <LocateControl />
-    </MapContainer>
+            })}
+          >
+            <Popup>
+              Intensidad: {point.value.toFixed(2)}
+              <br />
+              Ubicación: {formatLatLng(point)}
+            </Popup>
+          </Marker>
+        ))}
+        <LocateControl />
+      </MapContainer>
+      <button
+        onClick={toggleExpand}
+        className="absolute top-2 right-2 z-50 bg-white p-2 rounded"
+      >
+        {isExpanded ? "Contraer Mapa" : "Expandir Mapa"}
+      </button>
+    </div>
   );
 };
 
