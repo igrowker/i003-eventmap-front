@@ -19,7 +19,6 @@ import { FormValues, Errors, FormFieldStates } from "@/types/login-types";
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState();
   const [loginError, setLoginError] = useState("");
   const [togglePassword, setTogglePassword] = useState(true);
 
@@ -74,6 +73,8 @@ export default function Login() {
       });
     }
   };
+
+
   const loginUser = async () => {
     setLoading(true);
     try {
@@ -95,7 +96,7 @@ export default function Login() {
         const token = res.token;
         Cookies.set("auth_token", token, {expires: 1});
         setTimeout(() => {
-          router.push("/");
+          router.push("/profile");
         }, 1000);
       } else {
         throw new Error("Login failed");
@@ -253,9 +254,10 @@ export default function Login() {
           </div>
         </div>
         <div className="flex justify-end pr-2 pt-1">
-          <button className="underline text-[#5C5F5F]">
+          <Link href={'/forgot-password'} className="underline text-[#5C5F5F]">
             Olvidé mi contraseña
-          </button>
+          </Link>
+          
         </div>
         {/* {loading ? (
           <div className="w-full flex justify-center my-4">
