@@ -10,3 +10,8 @@ export const getDateByFilterDate = (eventValue: string, filterDateValue: string)
     return new Date(eventValue) >= new Date(nextDayOfTomorrow.toISOString().split('T')[0])
   } else return true
 }
+
+export const filterDateTo = (eventValue: string, filterDateValue: string): boolean => {
+  const eventDateInMs = new Date(eventValue).getTime()
+  return Number(eventDateInMs) <= Number(filterDateValue)
+}

@@ -7,7 +7,7 @@ export const handleSelectFilter = (
   setIsFilterMenuOpen: (value: boolean) => void
 ) => {
   const filterBy = e.currentTarget.name as keyof FilterValues
-  const filterValue = e.currentTarget.value as FilterByType | FilterByDate
+  const filterValue = e.currentTarget.value as unknown as FilterValues[keyof FilterValues]
   if (filterValues[filterBy] !== filterValue) {
     // @ts-ignore
     setFilterValue({ ...filterValues, [filterBy]: filterValue })

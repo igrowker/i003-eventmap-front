@@ -17,7 +17,12 @@ const config: Config = {
         bgHome:"#F6FAFD",
         createEventButton: "#6750A4",
         newsletter: "#E8DEF8",
-        textPlaceholder: '#A2A4A4'
+        massive: "#B41D1D",
+        high: "#B4611D",
+        medium: "#4F72CA",
+        normal: "#0B8A8A",
+        textPlaceholder: '#A2A4A4',
+        selectOption: '#F1EAF5',
       },
       fontFamily:{
         latoBold: ['Lato-Bold'],
