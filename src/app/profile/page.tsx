@@ -1,5 +1,5 @@
 "use client";
-import CardEventsSwiper from "@/components/CardEvents/CardsEvents";
+
 import Link from "next/link";
 import useDecodedToken from "./functions/useDecodeToken";
 import Cookies from "js-cookie";
@@ -13,6 +13,8 @@ import useUserInfo from "./functions/useUserInfo";
 import { Event } from "@/types/events-types";
 import PreviousEventCointainer from "@/components/Profile/PreviousEventContainer";
 import EmptyEvents from "@/components/Profile/EmptyEvents";
+
+import toast, {Toaster} from "react-hot-toast";
 
 function Profile() {
   const [events, setEvents] = useState<Event[]>([]);
@@ -28,6 +30,11 @@ function Profile() {
       setLoading(false);
     }
   }, [userInfo]);
+  console.log(userInfo)
+
+  const logOutToast = () => {
+    toast.success("Sesion cerrada");
+  }
 
   const previousEvents = (events: Event[]) => {
     const today = new Date();
@@ -41,13 +48,28 @@ function Profile() {
   };
 
   const handleLogout = () => {
-    Cookies.remove("auth_token");
-    router.push("/");
+    logOutToast();
+    setTimeout(() => {
+      Cookies.remove("auth_token");
+      router.push("/");
+    }, 850);
   };
 
   return (
     <section className="px-3 py-5">
-      <Link href={"/events"}>
+      <Toaster toastOptions={{
+         duration: 1500,
+         position: "top-center",
+         className: "w-full",
+         style: {
+           background: "#e5dff7",
+           color: "#6750A4",
+           padding: "25px",
+           fontWeight: "bold",
+           fontSize: "17px",
+         }
+       }}/>
+      <Link href={"/"}>
         <BiArrowBack className="mb-4 top-3 left-3" size={24} color="black" />
       </Link>
       <div className="flex justify-between items-center">
@@ -117,7 +139,7 @@ function Profile() {
       </div>
 
       {/* PREVIOUS EVENTS */}
-      <div>
+      <div className="mb-12">
         <h2 className="flex font-semibold py-4 text-md">Eventos anteriores</h2>
 
         {/* Spinner para PREVIOUS EVENTS */}
