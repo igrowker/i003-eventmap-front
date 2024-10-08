@@ -10,8 +10,8 @@ import Link from "next/link";
 
 export default function ContainerEventList({ filtersForEvents = [], executeFilterState }: { filtersForEvents: Filters[] | [], executeFilterState: { executeFilter: boolean, setExecuteFilter: (value: boolean) => void } }) {
   const API_URL = 'https://i003-eventmap-back.onrender.com/events'
-  const [eventsList, setEventsList] = useState<eventTypes[]>(EVENTS_LIST) // El "EVENTS_LIST" es un mock de eventos temporal, hasta que cargue el backend
-  const [eventsListFiltered, setEventsListFiltered] = useState<eventTypes[]>(EVENTS_LIST)
+  const [eventsList, setEventsList] = useState<eventTypes[]>([])
+  const [eventsListFiltered, setEventsListFiltered] = useState<eventTypes[]>([])
   const [currentLimit, setCurrentLimit] = useState(10)
   const [isLoading, setIsLoading] = useState(false)
   const { executeFilter, setExecuteFilter } = executeFilterState
@@ -56,13 +56,15 @@ export default function ContainerEventList({ filtersForEvents = [], executeFilte
 
   return (
     <div className="flex flex-col gap-4 items-center">
-      <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 py-4">
+      <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 py-4 mb-6">
         {
-          eventsListFiltered.map((event, index) => (
-            <Link key={event.id} href={`/event/${event.id}`}>
-              <CardEventList event={event} lastCardRef={index + 1 === currentLimit ? lastCardRef : null} />
-            </Link>
-          ))
+          eventsListFiltered.length > 0
+            ? eventsListFiltered.map((event, index) => (
+              <Link key={event.id} href={`/event/${event.id}`}>
+                <CardEventList event={event} lastCardRef={index + 1 === currentLimit ? lastCardRef : null} />
+              </Link>
+            ))
+            : <span className="text-gray-500 text-center">No se encontraron eventos</span>
         }
       </div>
       {
