@@ -10,9 +10,6 @@ import DefaultNoPhoto from '@/assets/icons/default-no-photo.png'
 export default function CardEventList({ event, lastCardRef }: { event: eventTypes, lastCardRef: React.RefObject<HTMLDivElement> | null }) {
   const { photos, name, date, description, type, capacity } = event
 
-  console.log('photos', photos)
-
-
   const handleShareEvent = async () => {
     if (!navigator.share) return
     const shareData = {
