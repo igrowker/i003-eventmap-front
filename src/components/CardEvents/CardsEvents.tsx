@@ -30,7 +30,7 @@ const CardEventsSwiper: React.FC<EventProps> = ({ events }) => {
   return (
     <Swiper
       spaceBetween={5}
-      slidesPerView={2}
+      slidesPerView={1.7}
       pagination={{ clickable: true }}
       navigation={true}
       scrollbar={{ draggable: true }}
