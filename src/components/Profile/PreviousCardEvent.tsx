@@ -19,8 +19,12 @@ function PreviousCardEvent({
   const imageSrc =
     Array.isArray(photos) && photos.length > 0 ? photos[0] : defaultImage;
 
+  const handleNavigation = (id: string) => {
+      window.location.href = `/events/${id}`
+  }
+
   return (
-    <div onClick={() => window.open(`/events/${id}`)} className="p-0.5 bg-gradient-to-t from-violet-400 via-green-200 to-violet-400 rounded-xl max-h-[285px]">
+    <div onClick={() => handleNavigation(id)} className="p-0.5 bg-gradient-to-t from-violet-400 via-green-200 to-violet-400 rounded-xl max-h-[285px]">
       <div className="w-full h-full bg-white rounded-xl flex flex-col">
         <div className="p-3">
           <Image
