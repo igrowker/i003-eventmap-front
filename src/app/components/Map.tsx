@@ -8,13 +8,16 @@ import LocateControl from "./LocateControl";
 import { Location } from "./Location";
 import Markers from "./Markers";
 import Heatmap from "./Heatmap";
-
+import { usePathname } from "next/navigation";
 
 
 const Map = () => {
+
+  const pathname = usePathname();
+
   return (
     <MapContainer
-      style={{ height: "100vh", width: "100vw" }}
+      className={`${pathname === "/" ? "w-full h-[180px]" : "w-screen h-screen"}`}
       center={[-34.603851, -58.381775]}
       zoom={14}
       scrollWheelZoom={true}
