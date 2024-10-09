@@ -1,6 +1,6 @@
 "use client";
 
-import EventMapLogo from "@/../public/isotipo.webp";
+import EventMapLogo from "@/../public/logo_eventmap.png";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -136,8 +136,8 @@ export default function Login() {
         <div className="flex flex-col items-center gap-4 py-6">
           <Image
             className=""
-            width={140}
-            height={140}
+            width={120}
+            height={120}
             src={EventMapLogo}
             alt="Logo EventMap"
           />

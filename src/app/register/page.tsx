@@ -1,6 +1,6 @@
 "use client";
 
-import EventMapLogo from "@/../public/isotipo.webp";
+import EventMapLogo from "@/../public/logo_eventmap.png";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -221,7 +221,7 @@ export default function Register() {
         }}
       />
       <div className="py-5 px-4">
-        <Link href={"/"}>
+        <Link href={"/login"}>
           <BiArrowBack className="mb-4" size={24} color="white" />
         </Link>
 
