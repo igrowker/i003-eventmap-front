@@ -27,6 +27,8 @@ export default function Register() {
 
   const [termsAccepted, setTermsAccepted] = useState(false);
 
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
   const [fieldStates, setFieldStates] = useState<FormFieldStates>({
     firstName: { isFocused: false },
     lastName: { isFocused: false },
@@ -169,7 +171,7 @@ export default function Register() {
 
         // Enviar datos al backend
         const req = await fetch(
-          "https://i003-eventmap-back.onrender.com/auth/register",
+        `${API_URL}/auth/register`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },

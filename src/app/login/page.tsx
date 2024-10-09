@@ -23,6 +23,8 @@ export default function Login() {
   const [loginError, setLoginError] = useState("");
   const [togglePassword, setTogglePassword] = useState(true);
 
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
   const router = useRouter();
 
   const [fieldStates, setFieldStates] = useState<FormFieldStates>({
@@ -83,7 +85,7 @@ export default function Login() {
       };
       // Enviar datos al backend
       const req = await fetch(
-        "https://i003-eventmap-back.onrender.com/auth/login",
+        `${API_URL}/auth/login`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

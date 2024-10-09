@@ -9,7 +9,8 @@ import { getEvents } from "@/utils/getEvents";
 import Link from "next/link";
 
 export default function ContainerEventList({ filtersForEvents = [], executeFilterState }: { filtersForEvents: Filters[] | [], executeFilterState: { executeFilter: boolean, setExecuteFilter: (value: boolean) => void } }) {
-  const API_URL = 'https://i003-eventmap-back.onrender.com/events'
+  
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const [eventsList, setEventsList] = useState<eventTypes[]>([])
   const [eventsListFiltered, setEventsListFiltered] = useState<eventTypes[]>([])
   const [currentLimit, setCurrentLimit] = useState(10)
@@ -17,7 +18,8 @@ export default function ContainerEventList({ filtersForEvents = [], executeFilte
   const { executeFilter, setExecuteFilter } = executeFilterState
 
   useEffect(() => {
-    getEvents(`${API_URL}?lat=-34.12&lon=-45.32`).then(data => {
+    // esta longitud y latitud debe cambiarse por la que envie el mapa
+    getEvents(`${API_URL}?lat=-34.60448395867932&lon=-58.38164429855504`).then(data => {
       setEventsList(data)
       setEventsListFiltered(data)
     })
