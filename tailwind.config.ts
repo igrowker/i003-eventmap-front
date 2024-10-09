@@ -35,7 +35,7 @@ const config: Config = {
         'arte-gradient': 'linear-gradient(to bottom, #C5BE62, #E1DB8B)',
         'deportes-gradient': 'linear-gradient(to bottom, #64BCBF, #76C19E)',
         'gastronomia-gradient': 'linear-gradient(to bottom, #DBB67C, #CC5555)',
-        'navbar-gradient': 'linear-gradient(to right, #8C64BF, #271E3E)'
+        'navbar-gradient': 'linear-gradient(to bottom, #8C64BF, #271E3E)',
       },
     },
   },

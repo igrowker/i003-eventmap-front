@@ -31,12 +31,13 @@ function EventDetails() {
   const [modalOpen, setModalOpen] = useState(false);
   const path = usePathname();
   const id = path.split("/")[2];
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     const fetchEvent = async () => {
       try {
         const response = await fetch(
-          `https://i003-eventmap-back.onrender.com/events/event/${id}`
+          `${API_URL}/events/event/${id}`
         );
         if (!response.ok) {
           throw new Error("Error en la peticion");
@@ -52,7 +53,7 @@ function EventDetails() {
     if (id) {
       fetchEvent();
     }
-  }, [id]);
+  }, [API_URL, id]);
 
   if (!event) {
     return (

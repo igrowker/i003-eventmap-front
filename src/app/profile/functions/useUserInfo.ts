@@ -6,11 +6,12 @@ import { UserInfo } from '@/types/events-types';
 const useUserInfo = (userId: any) => {
     const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
     const token = Cookies.get('auth_token');
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
     useEffect(() => {
         const fetchUserInfo = async () => {
             try {
-                const response = await fetch(`https://i003-eventmap-back.onrender.com/users/${userId.sub}`, {
+                const response = await fetch(`${API_URL}/users/${userId.sub}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -30,7 +31,7 @@ const useUserInfo = (userId: any) => {
         if (userId) {
             fetchUserInfo();
         }
-    }, [userId, token]);
+    }, [userId, token, API_URL]);
 
     return userInfo;
 };
