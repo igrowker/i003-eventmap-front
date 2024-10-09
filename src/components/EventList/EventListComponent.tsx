@@ -5,6 +5,7 @@ import OptionDays from "./OptionDays";
 import SelectFilterByType from "./SelectFilterByType";
 import { eventTypes } from "@/types/events-list-types";
 import { BiArrowBack } from "react-icons/bi";
+import { FaSearch } from "react-icons/fa";
 import { Filters, FilterValues } from "@/types/filter-types";
 import Link from "next/link";
 
@@ -21,7 +22,10 @@ export default function EventListComponent() {
       <div className="flex flex-col gap-4">
         <SelectFilterByType setFilters={setFilters} />
         <OptionDays filtersState={{ filters, setFilters }} />
-        <button onClick={() => setExecuteFilter(true)} className="w-full bg-createEventButton text-white py-2 rounded-full">Buscar</button>
+        <button onClick={() => setExecuteFilter(true)} className="w-full flex gap-2 items-center justify-center bg-createEventButton text-white py-2 rounded-full">
+          <FaSearch />
+          <span className="font-semibold">Buscar</span>
+        </button>
       </div>
       <ContainerEventList filtersForEvents={filters} executeFilterState={{ executeFilter, setExecuteFilter }} />
     </div>

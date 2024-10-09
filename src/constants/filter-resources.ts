@@ -1,8 +1,8 @@
 export const FILTER_BY_TYPE_LIST = [
-{ label: 'Todos', value: 'all' },
-{ label: 'Artístico', value: 'Artístico' },
-{ label: 'Gastronómico', value: 'Gastronómico' },
-{ label: 'Deportivo', value: 'Deportivo' }
+{ label: 'Todo', value: 'all' },
+{ label: 'Arte', value: 'Artistico' },
+{ label: 'Gastronomía', value: 'Gastronomico' },
+{ label: 'Deportes', value: 'Deportivo' }
 ] as const
 
 export const INITIAL_FILTER_VALUES = {
