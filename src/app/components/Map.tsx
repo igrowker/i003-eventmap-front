@@ -1,7 +1,7 @@
 "use client";
 
 import "leaflet/dist/leaflet.css";
-import { MapContainer, TileLayer} from "react-leaflet";
+import { MapContainer, TileLayer } from "react-leaflet";
 import "leaflet.heat";
 import LocateControl from "./LocateControl";
 // import Search from "./search"
@@ -206,10 +206,6 @@ import Heatmap from "./Heatmap";
 //   }
 //   ]
 const Map = () => {
-  const formatLatLng = (latlng: { lat: number; lon: number }) => {
-    return `${latlng.lat.toFixed(4)}, ${latlng.lon.toFixed(4)}`;
-  };
-
   return (
     <MapContainer
       style={{ height: "100vh", width: "100vw" }}
