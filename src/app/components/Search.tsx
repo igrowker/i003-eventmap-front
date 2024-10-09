@@ -48,7 +48,7 @@ const Search: React.FC<SearchProps> = ({ center, zoom, onSearchArea }) => {
   const customIcon = new Icon({
     iconUrl: "next.svg",
 
-    iconSize: [38, 38], // size of the icon
+    iconSize: [38, 38] // size of the icon
   });
 
 
