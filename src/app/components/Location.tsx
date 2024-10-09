@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Marker, Popup, useMapEvents, useMap } from "react-leaflet";
 import "leaflet-routing-machine";
-import { LatLng } from 'leaflet';
+import { LatLng , Icon } from 'leaflet';
 
 export const Location: React.FC<{ center: [number, number] }> = ({ center }) => {
   const [userLocation, setUserLocation] = useState<LatLng | null>(null);
@@ -17,12 +17,18 @@ export const Location: React.FC<{ center: [number, number] }> = ({ center }) => 
     },
   });
 
+  const customIcon = new Icon({
+    iconUrl: "isotipo.webp",
+
+    iconSize: [38, 38] // size of the icon
+  });
+
   const formatLatLng = (latlng: LatLng) => {
     return `${latlng.lat.toFixed(4)}, ${latlng.lng.toFixed(4)}`;
   };
 
   return userLocation === null ? null : (
-    <Marker position={userLocation}>
+    <Marker position={userLocation} icon={customIcon}>
       <Popup>Estás Aquí: {formatLatLng(userLocation)}</Popup>
     </Marker>
   );
