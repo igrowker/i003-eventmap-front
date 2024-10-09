@@ -7,6 +7,9 @@ const nextConfig = {
     });
     return config;
   },
+  images: {
+    domains: ['res.cloudinary.com', 'picsum.photos'],
+  },
 };
 
 export default nextConfig;
