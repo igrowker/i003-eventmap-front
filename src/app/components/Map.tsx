@@ -1,44 +1,40 @@
 "use client";
 
-import L from "leaflet";
-import MarkerIcon from "leaflet/dist/images/marker-icon.png";
-import MarkerShadow from "leaflet/dist/images/marker-shadow.png";
 import "leaflet/dist/leaflet.css";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer } from "react-leaflet";
+import "leaflet.heat";
 import LocateControl from "./LocateControl";
+// import Search from "./search"
+import { Location } from "./Location";
+import Markers from "./Markers";
+import Heatmap from "./Heatmap";
+
+
 
 const Map = () => {
   return (
     <MapContainer
-      className="h-40 w-96 rounded-2xl"
-      center={[-34.6047, -58.3995]}
-      zoom={13}
-      scrollWheelZoom={false}
+      style={{ height: "100vh", width: "100vw" }}
+      center={[-34.603851, -58.381775]}
+      zoom={14}
+      scrollWheelZoom={true}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
+      <Location center={[-34.603851, -58.381775]} />
 
-      <Marker
-        icon={
-          new L.Icon({
-            iconUrl: MarkerIcon.src,
-            iconRetinaUrl: MarkerIcon.src,
-            iconSize: [25, 41],
-            iconAnchor: [12.5, 41],
-            popupAnchor: [0, -41],
-            shadowUrl: MarkerShadow.src,
-            shadowSize: [41, 41],
-          })
-        }
-        position={[-34.6047, -58.3995]}
-      >
-        <Popup>
-          Ud está No Aquí. <br />
-        </Popup>
-      </Marker>
+      <Heatmap />
+      <Markers />
       <LocateControl />
+      {/* <Search
+        center={[-34.603851, -58.381775]}
+        zoom={15}
+        onSearchArea={(bounds) => {
+          console.log("Área seleccionada:", bounds);
+        }}
+      /> */}
     </MapContainer>
   );
 };
