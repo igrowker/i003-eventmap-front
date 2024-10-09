@@ -6,9 +6,10 @@ import ShareIcon from "@/assets/icons/share-icon.svg"
 import { FaUsers } from "react-icons/fa6"
 import { getCapacityAndColor } from "@/utils/getCapacityAndColor"
 import DefaultNoPhoto from '@/assets/icons/default-no-photo.png'
+import ConcurrenceComponent from "../EventDetails/ConcurrenceComponent"
 
 export default function CardEventList({ event, lastCardRef }: { event: eventTypes, lastCardRef: React.RefObject<HTMLDivElement> | null }) {
-  const { photos, name, date, description, type, capacity } = event
+  const { photos, name, date, description, type, capacity, amount } = event
 
   const handleShareEvent = async () => {
     if (!navigator.share) return
@@ -40,7 +41,8 @@ export default function CardEventList({ event, lastCardRef }: { event: eventType
             {/* <small className="w-fit bg-dark/40 px-4 text-light font-semibold capitalize text-xs border border-dark rounded-full">{type}</small> */}
             <span className="text-sm md:text-xs first-letter:uppercase line-clamp-2">{getEventTimeFormatted(date)}</span>
             <h2 className="text-lg font-semibold text-pretty line-clamp-1 overflow-x-hidden whitespace-break-spaces">{name}</h2>
-            <span className={`${getCapacityAndColor(capacity).color} flex gap-2 items-center`}><FaUsers width={15} height={15} /> Concurrencia: {getCapacityAndColor(capacity).capacity}</span> 
+            {/* <span className={`${getCapacityAndColor(capacity).color} flex gap-2 items-center`}><FaUsers width={15} height={15} /> Concurrencia: {getCapacityAndColor(capacity).capacity}</span>  */}
+            <ConcurrenceComponent concurrence={amount} clas={false} />
             <p className="text-sm md:text-xs text-pretty line-clamp-1 break-all">{description}</p>
             <div className="sm:absolute bottom-4 right-4 flex gap-4 max-sm:justify-end max-sm:mt-2 items-center">
               {/* <button><HeartIcon alt="agregar favoritos" width={20} height={20} /></button> */}

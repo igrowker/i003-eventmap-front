@@ -16,7 +16,10 @@ import { BiArrowBack } from "react-icons/bi";
 import ModalPostEvent from "../modals/modalPostEvent/ModalPostEvent";
 import Link from "next/link";
 import { TbPhotoPlus } from "react-icons/tb";
+import { BiCalendar } from "react-icons/bi";
+import { FaCircleCheck } from "react-icons/fa6";
 import FilePhoto from "../../../public/TbPhotoPlus.svg";
+import CustomModal from "../modals/modalPostEvent/CustomModal";
 
 interface EventFormData {
   name: string;
@@ -76,6 +79,7 @@ const PostEvent: React.FC = () => {
   const [suggestions, setSuggestions] = React.useState<Suggestion[]>([]);
   const [provider, setProvider] = React.useState<any>(null);
   const [showModal, setShowModal] = React.useState<any>(false);
+  const [thumbnail, setThumbnail] = React.useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -104,6 +108,7 @@ const PostEvent: React.FC = () => {
           field: "files",
           value: e.target.files[0],
         });
+        setThumbnail(URL.createObjectURL(e.target.files[0]));
       } else if (name === "capacity") {
         let numericAmount = "0.3";
         switch (value) {
@@ -290,7 +295,7 @@ const PostEvent: React.FC = () => {
         </div>
 
         <div className="flex flex-row mb-4">
-          <div className="w-80">
+          <div className="w-full">
             <label className="block text-gray-700">Tipo de evento</label>
             <select
               name="type"
@@ -304,7 +309,7 @@ const PostEvent: React.FC = () => {
             </select>
           </div>
 
-          <div className="pt-6 pl-5">
+          <div className="pt-6 pl-3">
             <input
               type="file"
               ref={fileInputRef}
@@ -313,7 +318,11 @@ const PostEvent: React.FC = () => {
               accept="image/*"
               className="hidden"
             />
-            <FilePhoto size={30} onClick={handleFileInputClick} />
+            {
+              thumbnail
+                ? <img src={thumbnail} alt="thumbnail" className="w-10 h-10 cursor-pointer object-cover rounded-lg" onClick={handleFileInputClick} />
+                : <FilePhoto size={30} onClick={handleFileInputClick} />
+            }
           </div>
         </div>
 
@@ -340,10 +349,16 @@ const PostEvent: React.FC = () => {
         </button>
       </form>
       {showModal && (
-        <ModalPostEvent
-          message="¡Evento creado exitosamente!"
-          onClose={() => setShowModal(false)}
-        />
+        <CustomModal onClose={() => {}} isOpen={() => {}}>
+        <div className="z-50 bg-white w-full mx-6 flex flex-col items-center gap-2 p-4 shadow-lg rounded-2xl">
+            <div className="relative">
+              <BiCalendar className="size-28" />
+              <FaCircleCheck className="absolute bottom-0 right-0 size-12 bg-white rounded-full p-0.5 text-[#07AEAF]" />
+            </div>
+            <p className="text-lg font-semibold">¡Evento creado con éxito!</p>
+            <Link href={'./profile'} className="mt-8 w-full text-center mx-6 bg-createEventButton text-white rounded-full px-4 py-2">Entendido</Link>
+          </div>
+        </CustomModal>
       )}
     </main>
   );

@@ -3,6 +3,7 @@
 import EventMapLogo from "@/../public/isotipo.webp";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { validateEmail, formatCuitCuil } from "@/utils/formUtils";
 
@@ -13,18 +14,17 @@ import { BiArrowBack } from "react-icons/bi";
 import { iconShowPassword } from "@/components/icons/IconShowPassword";
 import { iconHidePassword } from "@/components/icons/IconHidePassword";
 
-import {
-  FormValues,
-  Errors,
-  FormFieldStates,
-} from '@/types/register-types';
+import { FormValues, Errors, FormFieldStates } from "@/types/register-types";
+import toast, { Toaster } from "react-hot-toast";
+import { setTimeout } from "timers/promises";
 
 export default function Register() {
+
+  const router = useRouter();
+
   const [togglePassword, setTogglePassword] = useState(true);
   const [toggleConfirmPassword, setToggleConfirmPassword] = useState(true);
-  const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
-
   const [termsAccepted, setTermsAccepted] = useState(false);
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -116,13 +116,16 @@ export default function Register() {
     } else if (password.length < 8 || password.length > 16) {
       newErrors.password = "La contraseña debe tener entre 8 y 16 caracteres";
     } else if (!/[A-Z]/.test(password)) {
-      newErrors.password = "La contraseña debe tener al menos una letra mayúscula";
+      newErrors.password =
+        "La contraseña debe tener al menos una letra mayúscula";
     } else if (!/[a-z]/.test(password)) {
-      newErrors.password = "La contraseña debe tener al menos una letra minúscula";
+      newErrors.password =
+        "La contraseña debe tener al menos una letra minúscula";
     } else if (!/\d/.test(password)) {
       newErrors.password = "La contraseña debe tener al menos un número";
-    } else if (!/[!@#$%^&*()\[\]{}\-_,.]/.test(password)) {
-      newErrors.password = "La contraseña debe tener al menos un carácter especial";
+    } else if (!/[!@+#$%^&*()\[\]{}\-_,.]/.test(password)) {
+      newErrors.password =
+        "La contraseña debe tener al menos un carácter especial";
     }
 
     if (!confirmPassword.trim()) {
@@ -159,43 +162,67 @@ export default function Register() {
     const newErrors = handleError();
 
     if (Object.keys(newErrors).length === 0) {
-      setLoading(true);
-      try {
-        const trimmedFormValues = {
-          name: formValues.firstName.trim(),
-          lastName: formValues.lastName.trim(),
-          email: formValues.email.trim(),
-          password: formValues.password,
-          cuit: formValues.cuitCuil,
-        };
-
-        // Enviar datos al backend
-        const req = await fetch(
-        `${API_URL}/auth/register`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(trimmedFormValues),
-          }
-        );
-        const res = await req.json();
-        console.log(res);
-        if (req.ok) {
-          setShowModal(true);
-        }
-      } catch (error) {
-        console.error("Error al enviar los dato", error);
-      } finally {
-        setLoading(false);
-      }
+      toast.promise(registerUser(), {
+        loading: "Registrando usuario...",
+        success: "Registro exitoso!",
+        error: "Error al registrar",
+      });
     }
   };
 
+  const registerUser = async () => {
+    setLoading(true);
+    try {
+      const trimmedFormValues = {
+        name: formValues.firstName.trim(),
+        lastName: formValues.lastName.trim(),
+        email: formValues.email.trim(),
+        password: formValues.password,
+        cuit: formValues.cuitCuil,
+      };
+
+      // Enviar datos al backend
+      const req = await fetch(
+        `${API_URL}/auth/register`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(trimmedFormValues),
+        }
+      );
+      const res = await req.json();
+      console.log(res);
+      if (req.ok) {
+        window.setTimeout(() => {
+          router.push("/login");
+        }, 1000)
+        
+      }
+    } catch (error) {
+      console.error("Error al enviar los dato", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="bg-[#131a23]">
+      <Toaster
+        toastOptions={{
+          duration: 1500,
+          position: "top-center",
+          className: "w-full",
+          style: {
+            background: "#e5dff7",
+            color: "#6750A4",
+            padding: "25px",
+            fontWeight: "bold",
+            fontSize: "17px",
+          },
+        }}
+      />
       <div className="py-5 px-4">
         <Link href={"/"}>
-          <BiArrowBack className="mb-4" size={24} color="white"/>
+          <BiArrowBack className="mb-4" size={24} color="white" />
         </Link>
 
         <h1 className="font-bold text-2xl text-white">
@@ -256,7 +283,9 @@ export default function Register() {
               />
             </div>
             {errors.firstName && (
-              <p className="text-[#cc5555] text-sm pt-1 text-end">{errors.firstName}</p>
+              <p className="text-[#cc5555] text-sm pt-1 text-end">
+                {errors.firstName}
+              </p>
             )}
           </div>
 
@@ -295,7 +324,9 @@ export default function Register() {
               />
             </div>
             {errors.lastName && (
-              <p className="text-[#cc5555] text-sm pt-1 text-end">{errors.lastName}</p>
+              <p className="text-[#cc5555] text-sm pt-1 text-end">
+                {errors.lastName}
+              </p>
             )}
           </div>
         </div>
@@ -333,7 +364,9 @@ export default function Register() {
             />
           </div>
           {errors.email && (
-            <p className="text-[#cc5555] text-sm pt-1 text-end">{errors.email}</p>
+            <p className="text-[#cc5555] text-sm pt-1 text-end">
+              {errors.email}
+            </p>
           )}
         </div>
 
@@ -370,7 +403,9 @@ export default function Register() {
             />
           </div>
           {errors.password && (
-            <p className="text-[#cc5555] text-sm pt-1 text-end">{errors.password}</p>
+            <p className="text-[#cc5555] text-sm pt-1 text-end">
+              {errors.password}
+            </p>
           )}
         </div>
 
@@ -448,7 +483,9 @@ export default function Register() {
             />
           </div>
           {errors.cuitCuil && (
-            <p className="text-[#cc5555] text-sm pt-1 text-end">{errors.cuitCuil}</p>
+            <p className="text-[#cc5555] text-sm pt-1 text-end">
+              {errors.cuitCuil}
+            </p>
           )}
         </div>
 
@@ -473,33 +510,14 @@ export default function Register() {
         </div>
 
         {/* SPINNER AND CREATE ACCOUNT BUTTON */}
-        <div className="flex justify-center">
-          {loading ? (
-            <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-current" />
-          ) : (
-            <button
-              className="bg-[#6750A4] text-white text-lg p-2 py-2.5 w-full rounded-full"
-              type="submit"
-            >
-              Crear Cuenta
-            </button>
-          )}
-        </div>
+        <button
+          
+          className={`${loading ? 'opacity-50 cursor-none' : ''} bg-[#6750A4] text-white text-lg p-2 py-2.5 w-full rounded-full mb-14`}
+          type="submit"
+        >
+          Crear Cuenta
+        </button>
       </form>
-
-      {/* MODAL */}
-      <div
-        className={`${
-          showModal ? "fixed" : "hidden"
-        } z-50 inset-0 flex justify-center items-center bg-black/50`}
-      >
-        <div className="bg-white p-8 rounded shadow-lg flex flex-col justify-center">
-          <h1 className="text-lg font-semibold">Registro completado</h1>
-          <button className="mt-4 p-2 bg-blue-500 text-white rounded">
-            <Link href={"/login"}>Iniciar Sesion</Link>
-          </button>
-        </div>
-      </div>
     </div>
   );
 }

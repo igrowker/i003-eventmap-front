@@ -62,7 +62,7 @@ export default function ContainerEventList({ filtersForEvents = [], executeFilte
         {
           eventsListFiltered.length > 0
             ? eventsListFiltered.map((event, index) => (
-              <Link key={event.id} href={`/event/${event.id}`}>
+              <Link key={event.id} href={`/events/${event.id}`}>
                 <CardEventList event={event} lastCardRef={index + 1 === currentLimit ? lastCardRef : null} />
               </Link>
             ))
