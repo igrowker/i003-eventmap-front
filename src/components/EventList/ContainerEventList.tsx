@@ -19,7 +19,7 @@ export default function ContainerEventList({ filtersForEvents = [], executeFilte
 
   useEffect(() => {
     // esta longitud y latitud debe cambiarse por la que envie el mapa
-    getEvents(`${API_URL}?lat=-34.60448395867932&lon=-58.38164429855504`).then(data => {
+    getEvents(`${API_URL}/events?lat=-34.60448395867932&lon=-58.38164429855504`).then(data => {
       setEventsList(data)
       setEventsListFiltered(data)
     })

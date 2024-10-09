@@ -8,7 +8,16 @@ const nextConfig = {
     return config;
   },
   images: {
-    domains: ['res.cloudinary.com', 'picsum.photos'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'picsum.photos',
+      },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
+    ],
   },
 };
 
