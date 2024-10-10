@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import useDecodedToken from "./functions/useDecodeToken";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { BiArrowBack } from "react-icons/bi";
@@ -9,32 +8,53 @@ import { BsFillPersonFill } from "react-icons/bs";
 import { GiPartyFlags } from "react-icons/gi";
 import SliderEventContainer from "@/components/Profile/SliderEventContainer";
 import { useEffect, useState } from "react";
-import useUserInfo from "./functions/useUserInfo";
 import { Event } from "@/types/events-types";
 import PreviousEventCointainer from "@/components/Profile/PreviousEventContainer";
 import EmptyEvents from "@/components/Profile/EmptyEvents";
-
-import toast, {Toaster} from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
+import { useUserContext } from "../../components/UserContext";
 
 function Profile() {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
-
+  const [isCheckingToken, setIsCheckingToken] = useState(true);
   const router = useRouter();
-  const { userId } = useDecodedToken();
-  const userInfo = useUserInfo(userId);
+  const { userProfile, setUserProfile } = useUserContext();
 
   useEffect(() => {
-    if (userInfo) {
-      setEvents(userInfo.events);
+    const checkToken = async () => {
+      const token = Cookies.get("auth_token");
+      const storedProfile = localStorage.getItem("user_profile");
+
+      if (token && storedProfile) {
+        try {
+          const currentUser = await JSON.parse(storedProfile);
+          setUserProfile(currentUser);
+          console.log({ token, userProfile, currentUser });
+          setIsCheckingToken(false); // Token verificado
+        } catch (error) {
+          console.error("Error parsing user profile from localStorage:", error);
+          router.push("/login");
+        }
+      } else {
+        router.push("/login");
+      }
+
+    };
+
+    checkToken();
+  }, [setUserProfile, router]);
+
+  useEffect(() => {
+    if (userProfile) {
+      setEvents(userProfile.events);
       setLoading(false);
     }
-  }, [userInfo]);
-  console.log(userInfo)
+  }, [userProfile]);
 
   const logOutToast = () => {
-    toast.success("Sesion cerrada");
-  }
+    toast.success("Sesión cerrada");
+  };
 
   const previousEvents = (events: Event[]) => {
     const today = new Date();
@@ -49,26 +69,36 @@ function Profile() {
 
   const handleLogout = () => {
     logOutToast();
+    Cookies.remove("auth_token");
+    setUserProfile(null);
+    localStorage.removeItem("user_profile");
     setTimeout(() => {
-      Cookies.remove("auth_token");
       router.push("/");
-    }, 850);
+    }, 1500);
   };
 
   return (
+    isCheckingToken
+    ?
+    <div className="w-full flex justify-center my-4 h-[200px] items-center">
+      <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-current" />
+    </div>
+    :
     <section className="px-3 py-5">
-      <Toaster toastOptions={{
-         duration: 1500,
-         position: "top-center",
-         className: "w-full",
-         style: {
-           background: "#e5dff7",
-           color: "#6750A4",
-           padding: "25px",
-           fontWeight: "bold",
-           fontSize: "17px",
-         }
-       }}/>
+      <Toaster
+        toastOptions={{
+          duration: 1500,
+          position: "top-center",
+          className: "w-full",
+          style: {
+            background: "#e5dff7",
+            color: "#6750A4",
+            padding: "25px",
+            fontWeight: "bold",
+            fontSize: "17px",
+          },
+        }}
+      />
       <Link href={"/"}>
         <BiArrowBack className="mb-4 top-3 left-3" size={24} color="black" />
       </Link>
@@ -81,7 +111,7 @@ function Profile() {
       <div className="items-center gap-1 my-2 py-0.5 px-2 rounded-full border border-[#6750A4] inline-flex">
         <BsFillPersonFill size={20} color="#6750A4" />
         <h2 className="font-semibold">
-          {userInfo?.name} {userInfo?.lastName}
+          {userProfile?.name} {userProfile?.lastName}
         </h2>
       </div>
 
