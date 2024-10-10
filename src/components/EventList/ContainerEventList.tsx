@@ -8,7 +8,7 @@ import { Filters } from "@/types/filter-types";
 import { getEvents } from "@/utils/getEvents";
 import Link from "next/link";
 
-export default function ContainerEventList({ filtersForEvents = [], executeFilterState }: { filtersForEvents: Filters[] | [], executeFilterState: { executeFilter: boolean, setExecuteFilter: (value: boolean) => void } }) {
+export default function ContainerEventList({ filtersForEvents = [], executeFilterState, typeFilter }: { filtersForEvents: Filters[] | [], executeFilterState: { executeFilter: boolean, setExecuteFilter: (value: boolean) => void }, typeFilter?: string }) {
   
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const [eventsList, setEventsList] = useState<eventTypes[]>([])
@@ -28,7 +28,7 @@ export default function ContainerEventList({ filtersForEvents = [], executeFilte
   useEffect(() => {
     if (!executeFilter) return
     const filteredList = eventsList.filter((event) => {
-    return filtersForEvents.every(({ property, filterValue }) => {
+    return filtersForEvents.every(({ property, filterValue }) => {      
       if (property === "type")
         return filterValue === FILTER_BY_TYPE_LIST[0].value
           ? true
@@ -40,6 +40,14 @@ export default function ContainerEventList({ filtersForEvents = [], executeFilte
     setExecuteFilter(false)
     setEventsListFiltered(filteredList)
   }, [executeFilter]);
+
+  useEffect(() => {
+    if (typeFilter && typeFilter.length > 0) {
+      setTimeout(() => {
+        setExecuteFilter(true);
+      }, 400);
+    }
+  }, []);
 
   const lastCardRef = useRef<HTMLDivElement>(null)
 

@@ -86,11 +86,18 @@ const PostEvent: React.FC = () => {
   useEffect(() => {
     const loadProvider = async () => {
       const { OpenStreetMapProvider } = await import("leaflet-geosearch");
-      const osmProvider = new OpenStreetMapProvider();
+      const osmProvider = new OpenStreetMapProvider({
+        params: {
+          'accept-language': 'es-AR',
+          countrycodes: "ar",
+          viewbox: '-58.5,-34.6,-58.3,-34.3',
+          bounded: 1
+        }
+      });
       setProvider(osmProvider);
     };
     loadProvider();
-  }, []);
+  }, []);  
 
   const handleChange = useCallback(
     (
@@ -142,7 +149,7 @@ const PostEvent: React.FC = () => {
       const { value } = e.target;
       dispatch({ type: "SET_FIELD", field: "address", value });
 
-      if (provider && value.length > 3) {
+      if (provider && value.length > 3) {        
         const results = await provider.search({ query: value });
         setSuggestions(
           results.map((result: any) => ({
@@ -158,7 +165,7 @@ const PostEvent: React.FC = () => {
     [provider]
   );
 
-  const handleSuggestionClick = useCallback((suggestion: Suggestion) => {
+  const handleSuggestionClick = useCallback((suggestion: Suggestion) => {    
     dispatch({
       type: "SET_LOCATION",
       location: {
