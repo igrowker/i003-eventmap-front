@@ -256,7 +256,7 @@ export default function Login() {
           </div>
         </div>
         <div className="flex justify-end pr-2 pt-1">
-          <Link href={'/forgot-password'} className="underline text-[#5C5F5F]">
+          <Link href={'/restore-password/forgot-password'} className="underline text-[#5C5F5F]">
             Olvidé mi contraseña
           </Link>
           
