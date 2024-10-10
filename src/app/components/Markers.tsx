@@ -26,12 +26,14 @@ interface Event {
   }
  const Markers = () => {
     const [data, setData] = useState<Event[]>([]);
+    
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
     useEffect(() => {
         const fetchData = async () => {
           try {
             const response = await fetch(
-              "https://i003-eventmap-back.onrender.com/events/all"
+              `${API_URL}/events/all`
             );
             console.log(response);
     
