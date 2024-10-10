@@ -149,7 +149,10 @@ const PostEvent: React.FC = () => {
       const { value } = e.target;
       dispatch({ type: "SET_FIELD", field: "address", value });
 
-      if (provider && value.length > 3) {        
+      if (provider && value.length > 3) {
+
+        console.log({value});
+        
         const results = await provider.search({ query: value });
         setSuggestions(
           results.map((result: any) => ({
@@ -165,7 +168,10 @@ const PostEvent: React.FC = () => {
     [provider]
   );
 
-  const handleSuggestionClick = useCallback((suggestion: Suggestion) => {    
+  const handleSuggestionClick = useCallback((suggestion: Suggestion) => {
+
+    console.log({suggestion});
+    
     dispatch({
       type: "SET_LOCATION",
       location: {
