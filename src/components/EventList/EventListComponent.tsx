@@ -1,18 +1,36 @@
 'use client'
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
 import ContainerEventList from "./ContainerEventList";
 import OptionDays from "./OptionDays";
 import SelectFilterByType from "./SelectFilterByType";
-import { eventTypes } from "@/types/events-list-types";
-import { BiArrowBack } from "react-icons/bi";
-import { FaSearch } from "react-icons/fa";
-import { Filters, FilterValues } from "@/types/filter-types";
+import { useSearchParams } from 'next/navigation'; // Usa esto para obtener los query params
+import { Filters } from "@/types/filter-types";
 import Link from "next/link";
+import { BiArrowBack } from "react-icons/bi";
+import { FILTER_BY_TYPE_LIST } from "../../constants/filter-resources";
+import { FaSearch } from "react-icons/fa";
 
 export default function EventListComponent() {
   // Hasta que no se use estados globales, usamos esta forma para manejar el estado de los filtros
-  const [filters, setFilters] = useState<Filters[] | []>([])
-  const [executeFilter, setExecuteFilter] = useState<boolean>(false)
+  const [filters, setFilters] = useState<Filters[] | []>([]);
+  const [executeFilter, setExecuteFilter] = useState<boolean>(false);
+
+  //busco en params
+  const searchParams = useSearchParams();
+  const typeFilter = searchParams.get('type');
+
+  useEffect(() => {
+    const foundFilter = FILTER_BY_TYPE_LIST.find(
+      (filter) => filter.value === typeFilter
+    );
+
+    if (foundFilter) {
+      setFilters([{ property: 'type', filterValue: foundFilter.value as Filters['filterValue'] }]);
+      setExecuteFilter(true);
+    }
+  }, [typeFilter]);
+
   return (
     <div className="max-w-[1000px] w-full flex flex-col gap-4 px-8 mx-auto my-6">
       <div className="flex gap-2 items-center">
@@ -27,7 +45,11 @@ export default function EventListComponent() {
           <span className="font-semibold">Buscar</span>
         </button>
       </div>
-      <ContainerEventList filtersForEvents={filters} executeFilterState={{ executeFilter, setExecuteFilter }} />
+      {
+        typeFilter ? <ContainerEventList filtersForEvents={filters} executeFilterState={{ executeFilter, setExecuteFilter }} typeFilter={typeFilter}/>
+        :
+        <ContainerEventList filtersForEvents={filters} executeFilterState={{ executeFilter, setExecuteFilter }}/>
+      }
     </div>
-  )
+  );
 }
