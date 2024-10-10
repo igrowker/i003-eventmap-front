@@ -1,6 +1,6 @@
 'use client'
 
-import { Dispatch, SetStateAction, Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import ContainerEventList from "./ContainerEventList";
 import OptionDays from "./OptionDays";
 import SelectFilterByType from "./SelectFilterByType";
@@ -10,8 +10,10 @@ import Link from "next/link";
 import { BiArrowBack } from "react-icons/bi";
 import { FILTER_BY_TYPE_LIST } from "../../constants/filter-resources";
 import { FaSearch } from "react-icons/fa";
+import { SearchParamsComponentProps } from "../../types/events-list-types";
 
 export default function EventListComponent() {
+  // Hasta que no se use estados globales, usamos esta forma para manejar el estado de los filtros
   const [filters, setFilters] = useState<Filters[] | []>([]);
   const [executeFilter, setExecuteFilter] = useState<boolean>(false);
 
@@ -34,14 +36,7 @@ export default function EventListComponent() {
   );
 }
 
-
-interface SearchParamsComponentProps {
-  filters: Filters[];
-  setFilters: Dispatch<SetStateAction<Filters[]>>;
-  executeFilter: boolean;
-  setExecuteFilter: Dispatch<SetStateAction<boolean>>;
-}
-
+//busco en params
 function SearchParamsComponent({ filters, setFilters, executeFilter, setExecuteFilter }: SearchParamsComponentProps) {
   const searchParams = useSearchParams();
   const typeFilter = searchParams.get('type');
