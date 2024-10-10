@@ -10,14 +10,15 @@ import "leaflet.locatecontrol/dist/L.Control.Locate.min.css";
 const LocateControl = createControlComponent(function(props) {
     return new L.Control.Locate({
         ...props,
-        position: 'topleft', // Posiciona el control en la esquina superior izquierda
+        position: 'bottomright', //  
         strings: {
             title: "Mostrar mi ubicación", // Cambia el texto del botón
             popup: "Has sido geolocalizado dentro de un radio de {distance} metros.", // Personaliza el mensaje mostrado cuando se encuentra la ubicación
-            // outsideMapBounds: "Estás fuera de los límites del mapa.",
+            
         },
-        // keepCurrentOnReCenter: false, // Mantiene la vista actual si el usuario interactúa con el mapa después de la geolocalización
+        
         flyTo: true, // Usa la animación suave para centrar el mapa en la ubicación del usuario
+        drawMarker: true
         
     });
 });

@@ -5,21 +5,31 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { validateEmail } from "@/utils/formUtils";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
-interface FormValues {
-  email: string;
-  password: string;
-}
+import { BiSolidEnvelope } from "react-icons/bi";
+import { BiArrowBack } from "react-icons/bi";
 
-interface Errors {
-  email?: string;
-  password?: string;
-}
+import { iconShowPassword } from "@/components/icons/IconShowPassword";
+import { iconHidePassword } from "@/components/icons/IconHidePassword";
+import toast, { Toaster } from "react-hot-toast";
+
+import { FormValues, Errors, FormFieldStates } from "@/types/login-types";
 
 export default function Login() {
-  const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState();
+  const [loginError, setLoginError] = useState("");
+  const [togglePassword, setTogglePassword] = useState(true);
+
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+  const router = useRouter();
+
+  const [fieldStates, setFieldStates] = useState<FormFieldStates>({
+    email: { isFocused: false },
+    password: { isFocused: false },
+  });
 
   const [formValues, setFormValues] = useState<FormValues>({
     email: "",
@@ -44,7 +54,7 @@ export default function Login() {
     if (!trimmedEmail) newErrors.email = "El email es requerido";
     else if (!validateEmail(trimmedEmail)) newErrors.email = "Email inválido";
 
-    if (!formValues.password) newErrors.password = "La contraseña es requerida";
+    if (!formValues.password) newErrors.password = "La contraseña es requerido";
 
     setErrors(newErrors);
     return newErrors;
@@ -56,51 +66,70 @@ export default function Login() {
     const newErrors = handleError();
 
     if (Object.keys(newErrors).length === 0) {
-      setLoading(true);
+      setLoginError("");
 
-      try {
-        const trimmedFormValues = {
-          email: formValues.email.trim(),
-          password: formValues.password,
-        };
-        //Enviar datos al backend
-        const req = await fetch(
-          "https://i003-eventmap-back.onrender.com/auth/login",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(trimmedFormValues),
-          }
-        );
-        const res = await req.json();
-        console.log(res);
-        setUser(res.profile.name);
-      } catch (error) {
-        console.error("Error al enviar los datos:", error);
-      } finally {
-        setLoading(false);
-        setShowModal(true);
+      toast.promise(loginUser(), {
+        loading: "Iniciando sesión...",
+        success: "Inicio de sesión exitoso!",
+        error: "Los datos son incorrectos",
+      });
+    }
+  };
+
+
+  const loginUser = async () => {
+    setLoading(true);
+    try {
+      const trimmedFormValues = {
+        email: formValues.email.trim(),
+        password: formValues.password,
+      };
+      // Enviar datos al backend
+      const req = await fetch(
+        `${API_URL}/auth/login`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(trimmedFormValues),
+        }
+      );
+      const res = await req.json();
+      if (req.ok) {
+        const token = res.token;
+        Cookies.set("auth_token", token, {expires: 1});
+        setTimeout(() => {
+          router.push("/profile");
+        }, 1000);
+      } else {
+        throw new Error("Login failed");
       }
+    } catch (error) {
+      console.error("Error al enviar los datos:", error);
+      throw error; 
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="bg-[#131a23]">
+       <Toaster 
+       
+       toastOptions={{
+         duration: 1500,
+         position: "top-center",
+         className: "w-full",
+         style: {
+           background: "#e5dff7",
+           color: "#6750A4",
+           padding: "25px",
+           fontWeight: "bold",
+           fontSize: "17px",
+         }
+       }} />
       <div className="py-5 px-4">
-        <Link href={"#"}>
-          <svg
-            className="mb-4"
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M15.9999 7.00008V9.00008H3.99991L9.49991 14.5001L8.07991 15.9201L0.159912 8.00008L8.07991 0.0800781L9.49991 1.50008L3.99991 7.00008H15.9999Z"
-              fill="white"
-            />
-          </svg>
+        <Link href={"/"}>
+          <BiArrowBack className="mb-4" size={24} color="white" />
         </Link>
 
         <h1 className="font-bold text-2xl text-white">Iniciar sesión</h1>
@@ -125,70 +154,73 @@ export default function Login() {
         <div className="flex flex-col gap-4">
           <div className="relative flex flex-col">
             <label
-              className={` ${
-                errors.email ? "text-[#cc5555]" : "text-[#8A8D8E]"
+              className={`${
+                errors.email && !fieldStates.email.isFocused
+                  ? "text-[#cc5555]"
+                  : fieldStates.email.isFocused
+                  ? "text-[#6750a4]"
+                  : "text-[#8A8D8E]"
               } absolute z-30 left-2.5 -top-2 text-xs font-bold bg-white px-1`}
             >
               Correo
             </label>
 
             <div className="relative flex items-center">
-              <svg
-                className="absolute right-3"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M20 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V18C2 18.5304 2.21071 19.0391 2.58579 19.4142C2.96086 19.7893 3.46957 20 4 20H20C20.5304 20 21.0391 19.7893 21.4142 19.4142C21.7893 19.0391 22 18.5304 22 18V6C22 5.46957 21.7893 4.96086 21.4142 4.58579C21.0391 4.21071 20.5304 4 20 4ZM20 8.7L12 14.034L4 8.7V6.297L12 11.63L20 6.297V8.7Z"
-                  fill="#5C5F5F"
-                />
-              </svg>
-
+              <BiSolidEnvelope
+                size={24}
+                color="#5C5F5F"
+                className="absolute left-3"
+              />
               <input
                 name="email"
                 placeholder="correo@email.com"
                 className={`${
                   errors.email
                     ? "border-[#cc5555] border-2"
-                    : "border-[#8A8D8E]"
-                } placeholder-gray-700 p-2 pl-2 rounded-full border-2  w-full`}
+                    : "border-[#8A8D8E] border-2"
+                } placeholder-textPlaceholder focus-visible:outline-[#6750a4] placeholder:font-normal pl-10 p-2 rounded-full w-full`}
                 type="text"
                 value={formValues.email}
                 onChange={handleChange}
+                onFocus={() =>
+                  setFieldStates((prev) => ({
+                    ...prev,
+                    email: { isFocused: true },
+                  }))
+                }
+                onBlur={() =>
+                  setFieldStates((prev) => ({
+                    ...prev,
+                    email: { isFocused: false },
+                  }))
+                }
               />
             </div>
 
             {errors.email && (
-              <p className="text-[#cc5555] text-sm pl-3 ">{errors.email}</p>
+              <p className="text-[#cc5555] text-sm pt-1 text-end">
+                {errors.email}
+              </p>
             )}
           </div>
 
           <div className="relative flex flex-col">
             <label
-              className={` ${
-                errors.password ? "text-[#cc5555]" : "text-[#8A8D8E]"
+              className={`${
+                errors.password && !fieldStates.password.isFocused
+                  ? "text-[#cc5555]"
+                  : fieldStates.password.isFocused
+                  ? "text-[#6750a4]"
+                  : "text-[#8A8D8E]"
               } absolute z-30 left-2.5 -top-2 text-xs font-bold bg-white px-1`}
             >
               Contraseña
             </label>
 
             <div className="relative flex items-center">
-              <svg
-                className="absolute right-3"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M7 17C8.15196 16.9985 9.26816 16.5998 10.1604 15.8711C11.0526 15.1424 11.6663 14.1284 11.898 13H14V15H16V13H18V16H20V13H21V11H11.898C11.6663 9.87158 11.0526 8.85755 10.1604 8.1289C9.26816 7.40025 8.15196 7.00154 7 7C4.243 7 2 9.243 2 12C2 14.757 4.243 17 7 17ZM7 9C8.654 9 10 10.346 10 12C10 13.654 8.654 15 7 15C5.346 15 4 13.654 4 12C4 10.346 5.346 9 7 9Z"
-                  fill="#5C5F5F"
-                />
-              </svg>
+              {togglePassword
+                ? iconShowPassword(() => setTogglePassword((prev) => !prev))
+                : iconHidePassword(() => setTogglePassword((prev) => !prev))}
 
               <input
                 name="password"
@@ -197,42 +229,58 @@ export default function Login() {
                   errors.password
                     ? "border-[#cc5555] border-2"
                     : "border-[#8A8D8E]"
-                } placeholder-gray-700 p-2 pl-2 rounded-full border-2 w-full`}
-                type="password"
+                } placeholder-textPlaceholder font-normal focus-visible:outline-[#6750a4] p-2 pl-2 rounded-full border-2 w-full`}
+                type={togglePassword ? "password" : "text"}
                 value={formValues.password}
                 onChange={handleChange}
+                onFocus={() =>
+                  setFieldStates((prev) => ({
+                    ...prev,
+                    password: { isFocused: true },
+                  }))
+                }
+                onBlur={() =>
+                  setFieldStates((prev) => ({
+                    ...prev,
+                    password: { isFocused: false },
+                  }))
+                }
               />
             </div>
 
             {errors.password && (
-              <p className="text-[#cc5555] text-sm pl-3">{errors.password}</p>
+              <p className="text-[#cc5555] text-sm pt-1 text-end">
+                {errors.password}
+              </p>
             )}
           </div>
         </div>
         <div className="flex justify-end pr-2 pt-1">
-          <button className="underline text-[#5C5F5F]">Olvidé mi contraseña</button>
+          <Link href={'/forgot-password'} className="underline text-[#5C5F5F]">
+            Olvidé mi contraseña
+          </Link>
+          
         </div>
-        {/* <span className="my-3 text-center text-gray-700">O</span>
-        <div className="flex flex-col gap-4">
-          <button className="border border-black w-full rounded-lg p-2 font-bold">
-            Gmail
-          </button>
-          <button className="border border-black w-full rounded-lg p-2 font-bold">
-            Facebook
-          </button>
-        </div> */}
-        {loading ? (
+        {/* {loading ? (
           <div className="w-full flex justify-center my-4">
             <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-current" />
           </div>
         ) : (
+          
+        )} */}
+        <>
+          {loginError && (
+            <div className="text-[#cc5555] text-sm text-end pt-1">
+              {loginError}
+            </div>
+          )}
           <button
-            className="bg-[#6750A4] text-white text-lg p-2 py-2.5 my-4 w-full rounded-full"
+            className={`${loading ? 'opacity-50 cursor-none' : ''} bg-[#6750A4] text-white text-lg p-2 py-2.5 my-4 w-full rounded-full`}
             type="submit"
           >
             Ingresar
           </button>
-        )}
+        </>
 
         <div>
           <p className="text-center text-[#5C5F5F]">
@@ -243,18 +291,6 @@ export default function Login() {
           </p>
         </div>
       </form>
-      <div
-        className={`${
-          showModal ? "fixed" : "hidden"
-        } z-50 inset-0 flex justify-center items-center bg-black/50`}
-      >
-        <div className="bg-white p-8 rounded shadow-lg text-center">
-          <h1 className="text-lg">Sesion Iniciada! Bienvenido <span className="font-bold">{user}</span></h1>
-          <button onClick={() => setShowModal(false)} className="mt-4 p-2 bg-blue-500 text-white rounded">
-            Cerrar
-          </button>
-        </div>
-      </div>
     </div>
   );
 }
