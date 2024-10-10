@@ -1,11 +1,25 @@
-"use client";
-
 import Link from 'next/link';
-import React from 'react';
+import React, { useEffect, useState } from 'react'
 import { BiArrowBack } from 'react-icons/bi';
 import EventCard from './NotificationCard';
 
 export const NotificationsComponent = () => {
+    useEffect(() => {
+        const fetchEvents = async () => {
+            try {
+                const request = await fetch(`http://localhost:3000/events/all`);
+                const result = await request.json();
+                setEvents(result.filter((event: any) => event.amount >= 0.8));
+            } catch (error) {
+                console.error('Error fetching events:', error);
+            }
+        };
+
+        fetchEvents();
+    }, []);
+
+    const [events, setEvents] = useState([]);
+
     return (
         <>
             <div className="py-5 px-4">
@@ -24,6 +38,7 @@ export const NotificationsComponent = () => {
                         location="Anfiteatro Municipal - Las Heras 234"
                         onButtonClick={() => window.open('https://maps.google.com')}
                     />
+                    <button onClick={() => console.log(events)}>Obtener eventos</button>
                 </div>
             </div>
         </>
