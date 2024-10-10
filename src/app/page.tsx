@@ -65,9 +65,6 @@ export default function Home() {
       <div className="pt-5 pb-16 max-w-[384px]">
         <Newsletter />
       </div>
-      <nav>
-        <NavBar />
-      </nav>
     </main>
   );
 }

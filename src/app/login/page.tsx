@@ -16,11 +16,13 @@ import { iconHidePassword } from "@/components/icons/IconHidePassword";
 import toast, { Toaster } from "react-hot-toast";
 
 import { FormValues, Errors, FormFieldStates } from "@/types/login-types";
+import { useUserContext } from "../../components/UserContext";
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
   const [loginError, setLoginError] = useState("");
   const [togglePassword, setTogglePassword] = useState(true);
+  const { setUserProfile } = useUserContext();
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -93,13 +95,17 @@ export default function Login() {
           body: JSON.stringify(trimmedFormValues),
         }
       );
-      const res = await req.json();
       if (req.ok) {
-        const token = res.token;
+        const { token, profile } = await req.json();
+        
+        // profile en context y localstorage
         Cookies.set("auth_token", token, {expires: 1});
+        localStorage.setItem('user_profile', JSON.stringify(profile));
+        setUserProfile(profile);
+
         setTimeout(() => {
           router.push("/profile");
-        }, 1000);
+        }, 1500);
       } else {
         throw new Error("Login failed");
       }
