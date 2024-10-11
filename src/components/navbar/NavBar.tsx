@@ -44,7 +44,7 @@ function NavBar() {
   };
 
   return (
-    <main className="fixed bottom-0 left-0 w-full bg-navbar-gradient shadow-lg z-50">
+    <main className="fixed bottom-0 left-0 w-full bg-[#6750A4] shadow-lg z-50">
       <div className="flex justify-around items-center py-3">
         <Link href="/">{renderIcon("/")}</Link>
         <Link href="/notifications">{renderIcon("/notifications")}</Link>
