@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import CustomModal from "@/components/modals/modalPostEvent/CustomModal";
 
+
 const ResetPasswordPage = () => {
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
