@@ -18,8 +18,8 @@ function Profile() {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [isCheckingToken, setIsCheckingToken] = useState(true);
-  const router = useRouter();
   const { userProfile, setUserProfile } = useUserContext();
+  const router = useRouter();
 
   useEffect(() => {
     const checkToken = async () => {
@@ -30,8 +30,7 @@ function Profile() {
         try {
           const currentUser = await JSON.parse(storedProfile);
           setUserProfile(currentUser);
-          console.log({ token, userProfile, currentUser });
-          setIsCheckingToken(false); // Token verificado
+          setIsCheckingToken(false);
         } catch (error) {
           console.error("Error parsing user profile from localStorage:", error);
           router.push("/login");
@@ -80,8 +79,8 @@ function Profile() {
   return (
     isCheckingToken
     ?
-    <div className="w-full flex justify-center my-4 h-[200px] items-center">
-      <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-current" />
+    <div className="w-full flex justify-center items-center min-h-screen">
+      <div className="h-16 w-16 animate-spin rounded-full border-b-4 border-current" />
     </div>
     :
     <section className="px-3 py-5">
