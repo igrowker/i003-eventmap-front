@@ -19,7 +19,7 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body className={lato.className}>
+      <body className={`bg-white ${lato.className}`}>
         <UserProvider>
           {children}
           {<NavBar />}          
