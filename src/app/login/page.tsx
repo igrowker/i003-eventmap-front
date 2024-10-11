@@ -1,6 +1,6 @@
 "use client";
 
-import EventMapLogo from "@/../public/isotipo.webp";
+import EventMapLogo from "@/../public/logo_eventmap.png";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -16,11 +16,13 @@ import { iconHidePassword } from "@/components/icons/IconHidePassword";
 import toast, { Toaster } from "react-hot-toast";
 
 import { FormValues, Errors, FormFieldStates } from "@/types/login-types";
+import { useUserContext } from "../../components/UserContext";
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
   const [loginError, setLoginError] = useState("");
   const [togglePassword, setTogglePassword] = useState(true);
+  const { setUserProfile } = useUserContext();
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -93,13 +95,17 @@ export default function Login() {
           body: JSON.stringify(trimmedFormValues),
         }
       );
-      const res = await req.json();
       if (req.ok) {
-        const token = res.token;
+        const { token, profile } = await req.json();
+        
+        // profile en context y localstorage
         Cookies.set("auth_token", token, {expires: 1});
+        localStorage.setItem('user_profile', JSON.stringify(profile));
+        setUserProfile(profile);
+
         setTimeout(() => {
           router.push("/profile");
-        }, 1000);
+        }, 1500);
       } else {
         throw new Error("Login failed");
       }
@@ -136,8 +142,8 @@ export default function Login() {
         <div className="flex flex-col items-center gap-4 py-6">
           <Image
             className=""
-            width={140}
-            height={140}
+            width={120}
+            height={120}
             src={EventMapLogo}
             alt="Logo EventMap"
           />
@@ -256,7 +262,7 @@ export default function Login() {
           </div>
         </div>
         <div className="flex justify-end pr-2 pt-1">
-          <Link href={'/forgot-password'} className="underline text-[#5C5F5F]">
+          <Link href={'/restore-password/forgot-password'} className="underline text-[#5C5F5F]">
             Olvidé mi contraseña
           </Link>
           
