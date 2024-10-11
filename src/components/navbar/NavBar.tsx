@@ -27,7 +27,7 @@ function NavBar() {
         );
       case "/login":
       case "/register":
-        return pathname === "/login" || pathname === "/register" ? (
+        return pathname === "/login" || pathname === "/register" || pathname === "/profile"? (
           <BsFillPersonFill size={30} className="text-white" />
         ) : (
           <BsPerson size={30} className="text-white" />
@@ -48,7 +48,7 @@ function NavBar() {
       <div className="flex justify-around items-center py-3">
         <Link href="/">{renderIcon("/")}</Link>
         <Link href="/notifications">{renderIcon("/notifications")}</Link>
-        <Link href="/login">{renderIcon("/login")}</Link>
+        <Link href="/profile">{renderIcon("/login")}</Link>
       </div>
     </main>
   );
