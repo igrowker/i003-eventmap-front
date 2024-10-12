@@ -28,7 +28,7 @@ export default function Home() {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push('/events');
+    router.push('/map');
   };
 
   const { events, error} = useGetAllEventsFree();
@@ -41,13 +41,13 @@ export default function Home() {
       <h4 className="font-semibold text-black text-base py-4">
         Optimizá tus rutas y maximizá tus ganancias
       </h4>
-      <div className="p-0.5 bg-gradient-to-t from-violet-400 via-green-200 to-violet-400 rounded-lg w-full shadow-[0px_2px_2px_1px_rgba(0,0,0,0.1)] overflow-hidden">
-        <div className="flex justify-center w-full z-0 rounded-lg overflow-hidden pointer-events-none"
-        onClick={handleClick}
-        >
+      <button className="p-0.5 bg-gradient-to-t from-violet-400 via-green-200 to-violet-400 rounded-lg w-full shadow-[0px_2px_2px_1px_rgba(0,0,0,0.1)] overflow-hidden"
+      onClick={handleClick}
+      >
+        <div className="flex justify-center w-full h-full z-0 rounded-lg overflow-hidden pointer-events-none">
           <Dynamic />
         </div>
-      </div>
+      </button>
       <div className="flex flex-col sm:max-w-sm md:max-w-md lg:max-w-lg mt-5">
         <h6 className="text-black font-semibold mx-2">Categorías</h6>
         <HomeCategories />

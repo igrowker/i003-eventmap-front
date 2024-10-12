@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { Filters } from "@/types/filter-types";
 import { getEvents } from "@/utils/getEvents";
 import Link from "next/link";
+import useMapStore from "../../store/mapStore";
 
 export default function ContainerEventList({ filtersForEvents = [], executeFilterState, typeFilter }: { filtersForEvents: Filters[] | [], executeFilterState: { executeFilter: boolean, setExecuteFilter: (value: boolean) => void }, typeFilter?: string }) {
   
@@ -17,13 +18,15 @@ export default function ContainerEventList({ filtersForEvents = [], executeFilte
   const [isLoading, setIsLoading] = useState(false)
   const { executeFilter, setExecuteFilter } = executeFilterState
 
+  const { searchAreaPosition } = useMapStore();
+
   useEffect(() => {
     // esta longitud y latitud debe cambiarse por la que envie el mapa
-    getEvents(`${API_URL}/events?lat=-34.60448395867932&lon=-58.38164429855504`).then(data => {
+    getEvents(`${API_URL}/events?lat=${searchAreaPosition.lat}&lon=${searchAreaPosition.lng}`).then(data => {
       setEventsList(data)
       setEventsListFiltered(data)
     })
-  }, [])
+  }, [searchAreaPosition])
 
   useEffect(() => {
     if (!executeFilter) return

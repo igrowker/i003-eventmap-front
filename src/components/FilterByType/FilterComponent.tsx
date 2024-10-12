@@ -29,7 +29,7 @@ export default function FilterComponent({ onFilterChange }: FilterComponentProps
 
 
   return (
-    <div className="z-[9999]">
+    <div className="z-[8888]">
       <div className="absolute top-4 right-4 flex flex-col gap-2">
         <button onClick={() => setIsFilterMenuOpen(!isFilterMenuOpen)} className="flex gap-2 items-center bg-createEventButton py-2 px-4 rounded-lg sm:hidden max-sm:self-end">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="#ffffff" className="size-4">
@@ -37,7 +37,7 @@ export default function FilterComponent({ onFilterChange }: FilterComponentProps
           </svg>
           <span className="text-light text-sm">Filtrar</span>
         </button>
-        <div className={`${!isFilterMenuOpen ? 'max-sm:hidden' : ''} relative max-sm:border max-sm:border-dark max-sm:border-opacity-20 max-sm:rounded-lg max-sm:p-2 flex max-sm:flex-col-reverse items-center gap-4`}>
+        <div className={`${!isFilterMenuOpen ? 'max-sm:hidden' : ''} bg-light relative max-sm:border max-sm:border-dark max-sm:border-opacity-20 max-sm:rounded-lg max-sm:p-2 flex max-sm:flex-col-reverse items-center gap-4`}>
           {/* @ts-ignore */}
           <TimelineComponent filterValueState={{ filterValues, setFilterValues }} setIsFilterMenuOpen={setIsFilterMenuOpen} />
           {/* @ts-ignore */}

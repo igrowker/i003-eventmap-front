@@ -24,7 +24,7 @@ function PreviousCardEvent({
   }
 
   return (
-    <div onClick={() => handleNavigation(id)} className="p-0.5 bg-gradient-to-t from-violet-400 via-green-200 to-violet-400 rounded-xl max-h-[285px]">
+    <div onClick={() => handleNavigation(id)} className="p-0.5 bg-gradient-to-t from-violet-400 via-green-200 to-violet-400 rounded-xl max-h-[285px] shadow-lg">
       <div className="w-full h-full bg-white rounded-xl flex flex-col">
         <div className="p-3">
           <Image
@@ -42,7 +42,9 @@ function PreviousCardEvent({
             <ConcurrenceComponent concurrence={amount} clas={false} />
           </div>
           <DateTimeComponent size={"text-[12px] text-[#6750A4]"} date={date} time={time} />
-          <p className="text-[14px] truncate w-full overflow-hidden text-ellipsis whitespace-nowrap">
+          <p className="text-[14px] w-full overflow-hidden text-ellipsis line-clamp-2"
+          style={{ minHeight: "2.5rem" }}
+          >
             {addres}
           </p>
         </div>
