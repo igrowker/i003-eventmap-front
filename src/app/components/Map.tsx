@@ -17,7 +17,7 @@ const Map = () => {
 
   return (
     <MapContainer
-    className={`${pathname === "/" ? "w-full h-[180px] rounded-xl m-0.5 border-purple-600 border-2 " : "fullmap"}`}
+    className={`${pathname === "/" ? "w-full h-[180px]" : "fullmap"}`}
       center={[-34.603851, -58.381775]}
       zoom={14}
       scrollWheelZoom={true}
