@@ -2,8 +2,10 @@ import React from 'react'
 import { createControlComponent } from '@react-leaflet/core';
 import L from 'leaflet';
 import 'leaflet.locatecontrol';
-import 'leaflet.locatecontrol/dist/L.Control.Locate.css';
+import "leaflet.locatecontrol/dist/L.Control.Locate.css";
 import "leaflet.locatecontrol/dist/L.Control.Locate.min.css";
+import { MdOutlineMyLocation } from "react-icons/md";
+
 
 
 
@@ -18,8 +20,12 @@ const LocateControl = createControlComponent(function(props) {
         },
         
         flyTo: true, // Usa la animación suave para centrar el mapa en la ubicación del usuario
-        drawMarker: true
+        drawMarker: true,
+        //  icon: locate,
+        //  iconElementTag:'div'
         
     });
 });
-export default LocateControl
+export default LocateControl 
+
+

@@ -5,6 +5,9 @@ import "leaflet/dist/leaflet.css";
 import "leaflet.heat";
 import HeatmapLayer from "react-leaflet-heat-layer";
 
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL as string;
+
 const gradientConfig: ColorGradientConfig = {
     0: "#0000FF", // Azul oscuro
     0.1: "#00FFFF", // Azul claro
@@ -36,12 +39,11 @@ const gradientConfig: ColorGradientConfig = {
  const Heatmap = () => {
     const [dataMap, setDataMap] = useState<Event[]>([]);
 
+   
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const response = await fetch(
-              "https://i003-eventmap-back.onrender.com/events/all"
-            );
+            const response = await fetch(`${API_URL}/events/all`);
             console.log(response);
     
             if (!response.ok) {
