@@ -7,7 +7,8 @@ interface EventCardProps {
     eventName: string;
     date: string;
     time: string;
-    location: string;
+    // location: string;
+    addres: string;
     onButtonClick: () => void;
 }
 
@@ -16,7 +17,8 @@ const EventCard: React.FC<EventCardProps> = ({
     eventName,
     date,
     time,
-    location,
+    // location,
+    addres,
     onButtonClick,
 }) => {
     return (
@@ -31,7 +33,8 @@ const EventCard: React.FC<EventCardProps> = ({
                 </div>
                 <p className="text-x2 font-bold text-gray-800">{eventName}</p>
                 <p className="text-gray-600">{`${date} a las ${time}`}</p>
-                <p className="text-gray-600">{location}</p>
+                {/* <p className="text-gray-600">{location}</p> */}
+                <p className="text-gray-600">{addres}</p>
                 <div className="flex justify-between items-center mt-2">
                     <button
                         style={{ backgroundColor: '#6750A4' }}
