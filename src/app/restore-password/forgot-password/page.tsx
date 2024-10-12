@@ -8,8 +8,7 @@ import { validateEmail } from "@/utils/formUtils";
 
 function ForgotPassword() {
 
-  // const API_URL = process.env.NEXT_PUBLIC_API_URL;
-  const API_URL = 'http://localhost:3000';
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   const [email, setEmail] = useState("");
   const [errors, setErrors] = useState({ email: "" });

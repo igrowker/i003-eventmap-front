@@ -10,8 +10,7 @@ import Link from "next/link";
 
 export default function ContainerEventList({ filtersForEvents = [], executeFilterState, typeFilter }: { filtersForEvents: Filters[] | [], executeFilterState: { executeFilter: boolean, setExecuteFilter: (value: boolean) => void }, typeFilter?: string }) {
   
-  // const API_URL = process.env.NEXT_PUBLIC_API_URL;
-  const API_URL = 'http://localhost:3000';
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const [eventsList, setEventsList] = useState<eventTypes[]>([])  
   const [eventsListFiltered, setEventsListFiltered] = useState<eventTypes[]>([])
   const [currentLimit, setCurrentLimit] = useState(10)
@@ -35,12 +34,15 @@ export default function ContainerEventList({ filtersForEvents = [], executeFilte
       }
     }
 
+    getEvents();
+    
     if (typeFilter && typeFilter.length > 0) {
       setTimeout(() => {
         setExecuteFilter(true);
       }, 400);
     }
   }, [])
+
 
   useEffect(() => {
     console.log('executeFilter', executeFilter)

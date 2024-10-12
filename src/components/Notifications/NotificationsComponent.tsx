@@ -46,7 +46,7 @@ export const NotificationsComponent = () => {
                             //         : event.location
                             // }
                             addres={event.addres}
-                            onButtonClick={() => window.open(event.link)}
+                            onButtonClick={() => window.location.href = `/events/${event.id}`}
                         />
                     ))
                 ) : (
