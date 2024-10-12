@@ -73,7 +73,10 @@ body {
   pointer-events: none;
   color: #333;
 }
-
+.fullmap {
+  width: 100vw;
+  height: calc(100vh - 50px);
+}
 /* Imagenes para Post Event*/
 .top-image1 {
   top: -1rem;
