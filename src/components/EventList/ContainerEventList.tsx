@@ -11,19 +11,19 @@ import Link from "next/link";
 export default function ContainerEventList({ filtersForEvents = [], executeFilterState }: { filtersForEvents: Filters[] | [], executeFilterState: { executeFilter: boolean, setExecuteFilter: (value: boolean) => void } }) {
   
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
-  const [eventsList, setEventsList] = useState<eventTypes[]>([])
-  const [eventsListFiltered, setEventsListFiltered] = useState<eventTypes[]>([])
+  const [eventsList, setEventsList] = useState<eventTypes[]>(EVENTS_LIST)
+  const [eventsListFiltered, setEventsListFiltered] = useState<eventTypes[]>(EVENTS_LIST)
   const [currentLimit, setCurrentLimit] = useState(10)
   const [isLoading, setIsLoading] = useState(false)
   const { executeFilter, setExecuteFilter } = executeFilterState
 
-  useEffect(() => {
-    // esta longitud y latitud debe cambiarse por la que envie el mapa
-    getEvents(`${API_URL}/events?lat=-34.60448395867932&lon=-58.38164429855504`).then(data => {
-      setEventsList(data)
-      setEventsListFiltered(data)
-    })
-  }, [])
+  // useEffect(() => {
+  //   // esta longitud y latitud debe cambiarse por la que envie el mapa
+  //   getEvents(`${API_URL}/events?lat=-34.60448395867932&lon=-58.38164429855504`).then(data => {
+  //     setEventsList(data)
+  //     setEventsListFiltered(data)
+  //   })
+  // }, [])
 
   useEffect(() => {
     if (!executeFilter) return
@@ -60,8 +60,8 @@ export default function ContainerEventList({ filtersForEvents = [], executeFilte
     <div className="flex flex-col gap-4 items-center">
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 py-4 mb-6">
         {
-          eventsListFiltered.length > 0
-            ? eventsListFiltered.map((event, index) => (
+          eventsList?.length > 0
+            ? eventsList.map((event, index) => (
               <Link key={event.id} href={`/events/${event.id}`}>
                 <CardEventList event={event} lastCardRef={index + 1 === currentLimit ? lastCardRef : null} />
               </Link>

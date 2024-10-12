@@ -44,7 +44,7 @@ export default function CardEventList({ event, lastCardRef }: { event: eventType
             {/* <span className={`${getCapacityAndColor(capacity).color} flex gap-2 items-center`}><FaUsers width={15} height={15} /> Concurrencia: {getCapacityAndColor(capacity).capacity}</span>  */}
             <ConcurrenceComponent concurrence={amount} clas={false} />
             <p className="text-sm md:text-xs text-pretty line-clamp-1 break-all">{description}</p>
-            <div className="sm:absolute bottom-4 right-4 flex gap-4 max-sm:justify-end max-sm:mt-2 items-center">
+            <div className="sm:absolute bottom-4 right-4 flex gap-4 max-sm:mt-2 items-center">
               {/* <button><HeartIcon alt="agregar favoritos" width={20} height={20} /></button> */}
               <button className="bg-createEventButton text-white px-4 py-1 rounded-full">Ver más</button>
               {/* <button onClick={handleShareEvent}><ShareIcon alt="compartir" width={18} height={18} /></button> */}
