@@ -6,6 +6,9 @@ concurrency:
 
 on:
   workflow_dispatch:
+  pull_request:
+    branches:
+      - main
 
 permissions:
   pull-requests: read
@@ -28,6 +31,6 @@ jobs:
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
       with:
         args:
-          -Dsonar.projectKey=eventmapfront
+          -Dsonar.projectKey=eventmapback
           -Dsonar.sources=.
           -X
