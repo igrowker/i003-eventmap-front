@@ -1,25 +1,22 @@
 "use client";
-
-//enviar por parametro (url) el id del usuario organizador para un getEventById
-//id del evento a modificar por req.body (lo mismo para delete)
-//por url el id del usuario que desea modificar su información
-
 import React, {
-  useReducer,
   useCallback,
   useEffect,
-  ChangeEvent,
   FormEvent,
   useRef,
+  useState,
 } from "react";
 import { BiArrowBack } from "react-icons/bi";
-import ModalPostEvent from "../modals/modalPostEvent/ModalPostEvent";
 import Link from "next/link";
-import { TbPhotoPlus } from "react-icons/tb";
 import { BiCalendar } from "react-icons/bi";
 import { FaCircleCheck } from "react-icons/fa6";
 import FilePhoto from "../../../public/TbPhotoPlus.svg";
 import CustomModal from "../modals/modalPostEvent/CustomModal";
+import { useUserContext } from "../UserContext";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
+import { MdPhoto } from "react-icons/md";
+import Image from "next/image";
 
 interface EventFormData {
   name: string;
@@ -32,24 +29,16 @@ interface EventFormData {
   capacity: string;
   lat: string;
   lon: string;
-  files: File | null;
+  files: File[];
 }
 
-interface Suggestion {
-  label: string;
-  latitude: number;
-  longitude: number;
-}
+type Suggestion = {
+  display_name: string;
+  lat: string;
+  lon: string;
+};
 
-type Action =
-  | {
-      type: "SET_FIELD";
-      field: keyof EventFormData;
-      value: string | File | null;
-    }
-  | { type: "SET_LOCATION"; location: { lat: string; lon: string } };
-
-const initialState: EventFormData = {
+const initialFormData: EventFormData = {
   name: "",
   address: "",
   date: "",
@@ -60,123 +49,156 @@ const initialState: EventFormData = {
   capacity: "Menos de 500",
   lat: "",
   lon: "",
-  files: null,
+  files: [] as File[],
 };
 
-function formReducer(state: EventFormData, action: Action): EventFormData {
-  switch (action.type) {
-    case "SET_FIELD":
-      return { ...state, [action.field]: action.value };
-    case "SET_LOCATION":
-      return { ...state, lat: action.location.lat, lon: action.location.lon };
-    default:
-      return state;
-  }
-}
-
 const PostEvent: React.FC = () => {
-  const [formData, dispatch] = useReducer(formReducer, initialState);
-  const [suggestions, setSuggestions] = React.useState<Suggestion[]>([]);
-  const [provider, setProvider] = React.useState<any>(null);
   const [showModal, setShowModal] = React.useState<any>(false);
-  const [thumbnail, setThumbnail] = React.useState<string | null>(null);
-
+  const [isCheckingToken, setIsCheckingToken] = useState(true);
+  const { userProfile, setUserProfile } = useUserContext();
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState(initialFormData);
+  const [query, setQuery] = useState<string>(""); // input para la API
+  const [suggestions, setSuggestions] = useState<any[]>([]); // sugerencias de la API
+  const [city, setCity] = useState<string>(", Buenos Aires,");
+  
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const router = useRouter();
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+  // verify token
   useEffect(() => {
-    const loadProvider = async () => {
-      const { OpenStreetMapProvider } = await import("leaflet-geosearch");
-      const osmProvider = new OpenStreetMapProvider();
-      setProvider(osmProvider);
+    const checkToken = () => {
+      const token = Cookies.get("auth_token");
+      const storedProfile = localStorage.getItem("user_profile");
+
+      if (token && storedProfile) {
+        const currentUser = JSON.parse(storedProfile);
+        setUserProfile(currentUser);
+        setIsCheckingToken(false);
+      } else {
+        router.push("/login");
+      }
+
     };
-    loadProvider();
-  }, []);
 
-  const handleChange = useCallback(
-    (
-      e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
-    ) => {
-      const { name, value } = e.target;
+    checkToken();
+  }, [setUserProfile, router]);
 
-      if (
-        name === "files" &&
-        e.target instanceof HTMLInputElement &&
-        e.target.files
-      ) {
-        dispatch({
-          type: "SET_FIELD",
-          field: "files",
-          value: e.target.files[0],
-        });
-        setThumbnail(URL.createObjectURL(e.target.files[0]));
-      } else if (name === "capacity") {
-        let numericAmount = "0.3";
-        switch (value) {
-          case "Entre 500 y 2000":
-            numericAmount = "0.5";
-            break;
-          case "Entre 2000 y 5000":
-            numericAmount = "0.7";
-            break;
-          case "Más de 5000":
-            numericAmount = "0.9";
-            break;
-          default:
-            numericAmount = "0.3";
-        }
-        dispatch({ type: "SET_FIELD", field: "capacity", value });
-        dispatch({ type: "SET_FIELD", field: "amount", value: numericAmount });
-      } else {
-        dispatch({
-          type: "SET_FIELD",
-          field: name as keyof EventFormData,
-          value,
-        });
-      }
-    },
-    []
-  );
+  //handle de la sugerencia de la API
+  const handleSugeChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setQuery(value);
 
-  const handleAddressSearch = useCallback(
-    async (e: ChangeEvent<HTMLInputElement>) => {
-      const { value } = e.target;
-      dispatch({ type: "SET_FIELD", field: "address", value });
+    //settings viewbox=left, top, right, bottom
+    const viewboxPBA= "-63.393, -33.033, -57.092, -40.882"
+    const viewboxCABA= "-58.531, -34.512, -58.335, -34.705"
+    const viewBox = city === ", Buenos Aires," ? viewboxPBA : viewboxCABA;
 
-      if (provider && value.length > 3) {
-        const results = await provider.search({ query: value });
-        setSuggestions(
-          results.map((result: any) => ({
-            label: result.label,
-            latitude: result.y,
-            longitude: result.x,
-          }))
-        );
-      } else {
-        setSuggestions([]);
-      }
-    },
-    [provider]
-  );
+    if (value.length > 2) {
 
-  const handleSuggestionClick = useCallback((suggestion: Suggestion) => {
-    dispatch({
-      type: "SET_LOCATION",
-      location: {
-        lat: suggestion.latitude.toString(),
-        lon: suggestion.longitude.toString(),
-      },
+      const url = `https://nominatim.openstreetmap.org/search?q=${value}&format=json&limit=5&addressdetails=1&bounded=1&viewbox=${viewBox}&accept-language=es`;
+      const response = await fetch(url);
+      const data = await response.json();
+
+      //filtro x mapa?
+      const filteredSuggestions = data.filter((suggestion: any) => {
+        const sugerencias = suggestion.display_name.includes(city)        
+        return sugerencias;
+      });      
+
+      setSuggestions(filteredSuggestions);
+
+    } else {
+      setSuggestions([]); // limpiar sugerencias si la consulta es corta
+    }
+  };
+
+  // handle cuando el usuario seleccion la direccion de la API
+  const handleSelectSuggestion = (suggestion: Suggestion) => {
+    setFormData({
+      ...formData,
+      address: suggestion.display_name,
+      lat: suggestion.lat,
+      lon: suggestion.lon,
     });
-    dispatch({ type: "SET_FIELD", field: "address", value: suggestion.label });
-    setSuggestions([]);
-  }, []);
+    setQuery(suggestion.display_name); // Actualizar el input con la dirección seleccionada
+    setSuggestions([]); // Limpiar las sugerencias después de la selección
+  };
 
+  //handle de la ciudad seleccionada
+  const handleCityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setCity(e.target.value);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const selectedFiles = Array.from(e.target.files);
+      if (selectedFiles.length + formData.files.length > 3) {
+        alert('Solo puedes seleccionar un máximo de 3 imágenes');
+        return;
+      }
+      setFormData({
+        ...formData,
+        files: [...formData.files, ...selectedFiles].slice(0, 3), // Asegura que solo haya 3 imágenes
+      });
+    }
+  };
+
+  //handle del icono de image
+  const handleFileInputClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  //eliminar imagen
+  const removeImage = (index: number) => {
+    const newFiles = formData.files.filter((_, i) => i !== index);
+    setFormData({ ...formData, files: newFiles });
+  };
+
+  //handle del formulario
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+
+    let numericAmount = formData.amount;
+
+    if (e.target.name === "capacity") {
+      switch (e.target.value) {
+        case "Entre 500 y 2000":
+          numericAmount = "0.5";
+          break;
+        case "Entre 2000 y 5000":
+          numericAmount = "0.7";
+          break;
+        case "Más de 5000":
+          numericAmount = "0.9";
+          break;
+        default:
+          numericAmount = "0.3";
+      }
+    };
+      
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+      //conversion de la capacidad
+      amount: numericAmount,
+    });
+  };
+  
   const handleSubmit = useCallback(
     (e: FormEvent) => {
       e.preventDefault();
 
       const formDataToSend = new FormData();
+
+      if (userProfile) {
+        formDataToSend.append("userId", userProfile?.id );
+      }
+
       formDataToSend.append("name", formData.name);
-      formDataToSend.append("address", formData.address);
+      formDataToSend.append("addres", formData.address);
       formDataToSend.append("date", formData.date);
       formDataToSend.append("time", formData.time);
       formDataToSend.append("type", formData.type);
@@ -186,33 +208,74 @@ const PostEvent: React.FC = () => {
       formDataToSend.append("lat", formData.lat);
       formDataToSend.append("lon", formData.lon);
 
-      //archivo si está presente
-      if (formData.files) {
-        formDataToSend.append("files", formData.files);
-      }
+      //cargar varios files
+      formData.files.forEach((file) => {
+        formDataToSend.append("files", file);
+      }); 
+      
+      //envio de formulario completo
+      const postEvent = async () => {
+        setLoading(true);
+        const token = Cookies.get("auth_token");
+        const storedProfile = localStorage.getItem("user_profile");
 
-      //petición al backend con formDataToSend en lugar de formData
-      console.log("FormData enviada:", formDataToSend);
+        try {
+          const req = await fetch(
+            `${API_URL}/events/${userProfile?.id}`,
+            {
+              method: "POST",
+              headers: {
+                "Authorization": `Bearer ${token}`
+              },
+              body: formDataToSend,
+            }
+          );
+          //limipo form
+          setFormData(initialFormData);
+          
+          const response = await req.json();
+          if (req.ok && token && storedProfile) {
+            setShowModal(true);
+            const dataProfileUser = await JSON.parse(storedProfile);
+            dataProfileUser.events.push(response);
 
-      setShowModal(true);
-      setTimeout(() => {
-        setShowModal(false);
-      }, 3000);
+            //cargo el nuevo profile con el nuevo evento
+            localStorage.setItem('user_profile', JSON.stringify(dataProfileUser));
+            
+            window.setTimeout(() => {
+              setShowModal(false);
+              router.push("/profile");
+            }, 2000)
+            
+          }
+        } catch (error) {
+          console.error("Error al enviar los datos", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      postEvent();
     },
     [formData]
   );
 
-  const handleFileInputClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
-  };
-
   return (
-    <main className="max-w-lg mx-auto p-4 rounded-lg bg-bgHome mb-20">
-      <Link href={"/"}>
+    isCheckingToken
+    ?
+    <div className="w-full flex justify-center items-center min-h-screen">
+      <div className="h-16 w-16 animate-spin rounded-full border-b-4 border-current" />
+    </div>
+    :
+    loading ? (
+    <div className="w-full flex justify-center items-center min-h-screen">
+      <div className="h-16 w-16 animate-spin rounded-full border-b-4 border-current" />
+    </div>
+    ) :
+    <main className="max-w-lg mx-auto p-4 rounded-lg bg-white mb-20">
+      <button onClick={() => router.back()} className="btn-back">
         <BiArrowBack size={30} />
-      </Link>
+      </button>
       <form className="pt-2" onSubmit={handleSubmit}>
         <h1 className="text-2xl font-bold mb-8">Crear evento</h1>
 
@@ -222,7 +285,7 @@ const PostEvent: React.FC = () => {
             type="text"
             name="name"
             value={formData.name}
-            onChange={handleChange}
+            onChange={handleInputChange}
             placeholder="Nombre del evento"
             required
             className="w-full px-3 py-2 border border-gray-400 rounded-full"
@@ -236,7 +299,7 @@ const PostEvent: React.FC = () => {
               type="date"
               name="date"
               value={formData.date}
-              onChange={handleChange}
+              onChange={handleInputChange}
               required
               className="w-full px-3 py-2 border border-gray-300 rounded-full"
             />
@@ -248,33 +311,45 @@ const PostEvent: React.FC = () => {
               type="time"
               name="time"
               value={formData.time}
-              onChange={handleChange}
+              onChange={handleInputChange}
               required
               className="w-full px-3 py-2 border border-gray-300 rounded-full"
             />
           </div>
         </div>
 
-        <div className="mb-4 relative">
-          <label className="block text-gray-700">Dirección</label>
+        <div className="w-full mb-4">
+          <label className="block text-gray-700">Seleccione Ciudad</label>
+          <select
+            name="type"
+            value={city}
+            onChange={handleCityChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-full"
+          >
+            <option value=", Buenos Aires,">Gran Buenos Aires</option>
+            <option value=", Ciudad Autónoma de Buenos Aires,">Ciudad Autónoma de Buenos Aires</option>
+          </select>
+        </div>
+
+        <div>
           <input
             type="text"
-            name="address"
-            value={formData.address}
-            onChange={handleAddressSearch}
-            placeholder="Dirección del evento"
-            required
-            className="w-full px-3 py-2 border border-gray-300 rounded-full"
+            value={query}
+            onChange={handleSugeChange}
+            placeholder="Escribe una dirección"
+            className="w-full px-3 py-2 border border-gray-400 rounded-full"
           />
+
+          {/* sugerencias de la API de open */}
           {suggestions.length > 0 && (
-            <ul className="absolute z-10 bg-white border border-gray-300 rounded-md mt-1 max-h-40 overflow-y-auto">
+            <ul className="border mt-2 max-h-40 overflow-auto">
               {suggestions.map((suggestion, index) => (
                 <li
                   key={index}
-                  onClick={() => handleSuggestionClick(suggestion)}
-                  className="px-3 py-2 cursor-pointer hover:bg-gray-100"
+                  onClick={() => handleSelectSuggestion(suggestion)}
+                  className="p-2 hover:bg-gray-200 cursor-pointer"
                 >
-                  {suggestion.label}
+                  {suggestion.display_name}
                 </li>
               ))}
             </ul>
@@ -286,7 +361,7 @@ const PostEvent: React.FC = () => {
           <textarea
             name="description"
             value={formData.description}
-            onChange={handleChange}
+            onChange={handleInputChange}
             placeholder="Descripción del evento"
             required
             rows={3}
@@ -300,38 +375,72 @@ const PostEvent: React.FC = () => {
             <select
               name="type"
               value={formData.type}
-              onChange={handleChange}
+              onChange={handleInputChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-full"
             >
               <option value="Gastronomico">Gastronómico</option>
               <option value="Artistico">Artístico</option>
               <option value="Deportivo">Deportivo</option>
             </select>
-          </div>
+          </div>          
 
           <div className="pt-6 pl-3">
             <input
               type="file"
               ref={fileInputRef}
-              onChange={handleChange}
-              name="files"
+              multiple
               accept="image/*"
+              onChange={handleFileChange}
               className="hidden"
             />
-            {
-              thumbnail
-                ? <img src={thumbnail} alt="thumbnail" className="w-10 h-10 cursor-pointer object-cover rounded-lg" onClick={handleFileInputClick} />
-                : <FilePhoto size={30} onClick={handleFileInputClick} />
-            }
-          </div>
+            <FilePhoto size={30} onClick={handleFileInputClick} />
+          </div>          
         </div>
 
-        <div className="mb-4">
+        {/* imagenes cargadas */}
+        {formData.files.length > 0 && (
+          <div className="mt-4 mb-4">
+              {formData.files.map((file, index) => (
+                <div key={index} className="flex m-1 items-center">
+                  <MdPhoto
+                  size={24}
+                  className="text-gray-600"
+                   />                  
+                  <div className="w-40">
+                    <h5 className="text-gray-600 ms-3 overflow-hidden whitespace-nowrap text-ellipsis">{file.name}</h5>
+                  </div>
+                  <div className="ms-2 flex items-center">
+                    <button
+                      type="button"
+                      className="border border-gray-600 text-gray-600 rounded-full w-4 h-4 flex items-center justify-center text-base"
+                      onClick={() => removeImage(index)}
+                    >
+                      <span className="mb-1">x</span>
+                    </button>
+                  </div>
+                  <div className="relative w-20">
+                    <Image
+                      src={URL.createObjectURL(file)}
+                      alt={`preview-${index}`}
+                      width={80}
+                      height={80}
+                      className={`absolute w-20 h-20 ms-6 object-cover rounded-xl border border-white
+                        ${index === 0 ? "top-image1" : index === 1 ? "top-image2" : "top-image3" }
+                        ${index === 0 ? "left-image1" : index === 1 ? "left-image2" : "left-image3" }
+                        `}
+                    />
+                  </div>
+                </div>
+              ))}
+          </div>
+        )}
+
+        <div className="mt-8 mb-4">
           <label className="block text-gray-700">Capacidad</label>
           <select
             name="capacity"
             value={formData.capacity}
-            onChange={handleChange}
+            onChange={handleInputChange}
             className="w-full px-3 py-2 border border-gray-300 rounded-full"
           >
             <option value="Menos de 500">Menos de 500</option>

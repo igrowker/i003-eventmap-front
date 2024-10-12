@@ -1,9 +1,14 @@
-name: Deploy to Vercel
+name: Deploy to Vercel Dev
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 on:
   push:
     branches:
-      - main
+      - develop
+      - devops-workflow
       #- 'releases/**'
   workflow_dispatch:
 
@@ -47,8 +52,11 @@ jobs:
       - name: Install Dependencies
         run: npm ci --verbose --frozen-lockfile
 
-      #- name: Verify dependencies
-        #run: npm audit
+    #   - name: Audit dependencies
+    #     run: npm audit --production --audit-level=moderate
+
+    #   - name: Run unit tests
+    #     run: npm test
 
       - name: Build application
         run: npm run build
@@ -59,5 +67,5 @@ jobs:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-args: ${{ github.ref == 'refs/heads/main' && '--prod' || '' }}
+          vercel-args: ''
           working-directory: ./

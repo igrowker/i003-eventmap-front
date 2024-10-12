@@ -273,12 +273,12 @@ password?token=${token}`,
   );
 };
 
-const ResetPasswordPagePageWrapper = () => {
-  return(
+const ResetPasswordPageWrapper = () => {
+  return (
     <Suspense fallback={<div>Loading...</div>}>
       <ResetPasswordPage />
     </Suspense>
-  )
-}
+  );
+};
 
-export default ResetPasswordPagePageWrapper;
+export default ResetPasswordPageWrapper;
