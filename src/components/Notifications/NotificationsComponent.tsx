@@ -11,7 +11,8 @@ export const NotificationsComponent = () => {
     useEffect(() => {
         const fetchEvents = async () => {
             try {
-                const request = await fetch(`http://localhost:3000/events/all`);
+                // const request = await fetch(`http://localhost:3000/events/all`);
+                const request = await fetch(`https://i003-eventmap-back.onrender.com/events/all`);
                 const result = await request.json();
                 setEvents(result.filter((event: any) => event.amount >= 0.8));
             } catch (error) {
@@ -39,11 +40,12 @@ export const NotificationsComponent = () => {
                             eventName={event.name}
                             date={event.date}
                             time={event.time}
-                            location={
-                                typeof event.location === 'object'
-                                    ? `Lat: ${event.location.lat}, Lon: ${event.location.lon}`
-                                    : event.location
-                            }
+                            // location={
+                            //     typeof event.location === 'object'
+                            //         ? `Lat: ${event.location.lat}, Lon: ${event.location.lon}`
+                            //         : event.location
+                            // }
+                            addres={event.addres}
                             onButtonClick={() => window.open(event.link)}
                         />
                     ))

@@ -20,11 +20,21 @@ export default function ContainerEventList({ filtersForEvents = [], executeFilte
 
   useEffect(() => {
     // esta longitud y latitud debe cambiarse por la que envie el mapa
-      getEvents(`${API_URL}/events?lat=-34.60448395867932&lon=-58.38164429855504`).then(data => {
-      setEventsList(data)
-      setEventsListFiltered(data)
-      console.log('data', data)
-    })
+    const getEvents = async () => {
+      try {
+        //valores hardcodeados
+        const request = await fetch(`${API_URL}/events?lat=-34.60448395867932&lon=-58.38164429855504`);
+        const data = await request.json();
+
+        //se setea lo mismo para eventos sin filtrar y filtrados
+        setEventsList(data);
+        setEventsListFiltered(data);
+
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
     if (typeFilter && typeFilter.length > 0) {
       setTimeout(() => {
         setExecuteFilter(true);
@@ -37,13 +47,13 @@ export default function ContainerEventList({ filtersForEvents = [], executeFilte
 
     if (!executeFilter) return
     const filteredList = eventsList.filter((event) => {
-    return filtersForEvents.every(({ property, filterValue }) => {      
-      if (property === "type")
-        return filterValue === FILTER_BY_TYPE_LIST[0].value
-          ? true
-          : event?.type === filterValue;
-      if (property === "date")
-        return filterValue ? filterDateTo(event?.date, filterValue) : true;
+      return filtersForEvents.every(({ property, filterValue }) => {
+        if (property === "type")
+          return filterValue === FILTER_BY_TYPE_LIST[0].value
+            ? true
+            : event?.type === filterValue;
+        if (property === "date")
+          return filterValue ? filterDateTo(event?.date, filterValue) : true;
       });
     })
 

@@ -140,7 +140,8 @@ export default function Login() {
         </Link>
 
         <h1 className="font-bold text-2xl text-white">Iniciar sesión</h1>
-        <div className="flex flex-col items-center gap-4 py-6">
+        {/* modificamos el padding xq tapaba la navbar el registro en modo mobil */}
+        <div className="flex flex-col items-center gap-4 py-3">
           <Image
             className=""
             width={120}
@@ -153,7 +154,7 @@ export default function Login() {
 
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col bg-white rounded-t-3xl px-5 mb-20"
+        className="flex flex-col bg-white rounded-t-3xl px-4 mb-5"
       >
         <p className="font-bold text-center my-8">
           Ingreso sólo para organizadores
