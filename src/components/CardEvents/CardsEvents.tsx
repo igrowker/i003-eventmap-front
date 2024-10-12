@@ -43,7 +43,7 @@ const CardEventsSwiper: React.FC<EventProps> = ({ events }) => {
                   <ConcurrenceComponent concurrence={event.amount} clas={false} />
                 </div>
                 <div className="my-1">
-                  <DateTimeComponent size={'text-[13px] text-[#6750A4]'} date={event.date} time={event.time} />
+                  <DateTimeComponent size={'text-[12px] text-[#6750A4]'} date={event.date} time={event.time} />
                 </div>
                 <p className="text-sm w-full overflow-hidden text-ellipsis line-clamp-2">{event.addres}</p>
               </div>
