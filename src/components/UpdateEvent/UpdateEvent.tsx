@@ -6,10 +6,10 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { BiArrowBack } from "react-icons/bi";
+import { BiArrowBack, BiImage } from "react-icons/bi";
 import Link from "next/link";
 import { BiCalendar } from "react-icons/bi";
-import { FaCircleCheck } from "react-icons/fa6";
+import { FaCircleCheck, FaCircleExclamation } from "react-icons/fa6";
 import FilePhoto from "../../../public/TbPhotoPlus.svg";
 import CustomModal from "../modals/modalPostEvent/CustomModal";
 import { useUserContext } from "../UserContext";
@@ -30,6 +30,7 @@ interface EventFormData {
   capacity: string;
   lat: string;
   lon: string;
+  createdAt: string;
   files: File[];
 }
 
@@ -51,6 +52,7 @@ const initialFormData: EventFormData = {
   capacity: "Menos de 500",
   lat: "",
   lon: "",
+  createdAt: "",
   files: [] as File[],
 };
 
@@ -60,20 +62,23 @@ const UpdateEvent: React.FC = () => {
   const { userProfile, setUserProfile } = useUserContext();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState(initialFormData);
-  const [query, setQuery] = useState<string>(""); // input para la API
   const [suggestions, setSuggestions] = useState<any[]>([]); // sugerencias de la API
   const [city, setCity] = useState<string>(", Buenos Aires,");
   const [images, setImages] = useState<string[]>([]);
   const [address, setAddress] = useState(formData.addres || '');
+  const [showModalPrevForm, setShowModalPrevForm] = useState(false);
+  const [errorImage, setErrorImage] = useState(false);
+  const formRef = useRef(null);
   
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const router = useRouter();
 
-  const { id } = useParams(); // Obtener el parámetro 'id' directamente
+  //id de params
+  const { id } = useParams();
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-  // verify token
+  //verify token
   useEffect(() => {
     const checkToken = () => {
       const token = Cookies.get("auth_token");
@@ -99,12 +104,14 @@ const UpdateEvent: React.FC = () => {
         const dataProfileUser = JSON.parse(storedProfile);
         const eventToEdit = dataProfileUser.events.find(
           (event: EventFormData) => event.id === id // Usar el ID de la URL para buscar el evento
-        );
-        if (eventToEdit) {        
+        );      
+        if (eventToEdit) {            
           setImages(eventToEdit.photos);
           setAddress(eventToEdit.addres);          
           setFormData({
             ...eventToEdit,
+            lat: eventToEdit.location.lat,
+            lon: eventToEdit.location.lon,
             files: []
           });
         }
@@ -116,7 +123,6 @@ const UpdateEvent: React.FC = () => {
   const handleSugeChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setAddress(value);
-    // setQuery(value);
 
     //settings viewbox=left, top, right, bottom
     const viewboxPBA= "-63.393, -33.033, -57.092, -40.882"
@@ -137,7 +143,8 @@ const UpdateEvent: React.FC = () => {
       setSuggestions(filteredSuggestions);
 
     } else {
-      setSuggestions([]); // limpiar sugerencias si la consulta es corta
+      //limpiar sugerencias si la consulta es corta
+      setSuggestions([]);
     }
   };
 
@@ -150,8 +157,8 @@ const UpdateEvent: React.FC = () => {
       lon: suggestion.lon,
     });
     setAddress(suggestion.display_name);
-    // setQuery(suggestion.display_name); // Actualizar el input con la dirección seleccionada
-    setSuggestions([]); // Limpiar las sugerencias después de la selección
+    //Limpiar las sugerencias despues de elegir
+    setSuggestions([]);
   };
 
   //handle de la ciudad seleccionada
@@ -168,7 +175,8 @@ const UpdateEvent: React.FC = () => {
       }
       setFormData({
         ...formData,
-        files: [...formData.files, ...selectedFiles].slice(0, 3), // Asegura que solo haya 3 imágenes
+        //confirmar solo 3 imagenes
+        files: [...formData.files, ...selectedFiles].slice(0, 3),
       });
     }
   };
@@ -223,16 +231,22 @@ const UpdateEvent: React.FC = () => {
     });
   };
   
+  const handleModalPrevForm = (event: { preventDefault: () => void; }) => {
+    event.preventDefault();
+
+    images.length > 0 && formData.files.length > 0 ? setErrorImage(true) : setShowModalPrevForm(true);
+    
+  };
+
   const handleSubmit = useCallback(
     (e: FormEvent) => {
       e.preventDefault();
 
+      setLoading(true);
+
       const formDataToSend = new FormData();
-
-      if (userProfile) {
-        formDataToSend.append("userId", userProfile?.id );
-      }
-
+      
+      formDataToSend.append("id", formData.id);
       formDataToSend.append("name", formData.name);
       formDataToSend.append("addres", formData.addres);
       formDataToSend.append("date", formData.date);
@@ -243,6 +257,7 @@ const UpdateEvent: React.FC = () => {
       formDataToSend.append("capacity", formData.capacity);
       formDataToSend.append("lat", formData.lat);
       formDataToSend.append("lon", formData.lon);
+      formDataToSend.append("createdAt", formData.createdAt);
 
       //cargar varios files
       if (formData.files && formData.files.length > 0) {
@@ -251,57 +266,47 @@ const UpdateEvent: React.FC = () => {
         });
       }
 
-      console.log({formDataToSend});
-      
-      
       //envio de formulario completo
-      // const postEvent = async () => {
-      //   setLoading(true);
-      //   const token = Cookies.get("auth_token");
-      //   const storedProfile = localStorage.getItem("user_profile");
+      const putEvent = async () => {
+        const token = Cookies.get("auth_token");
+        const storedProfile = localStorage.getItem("user_profile");
 
-      //   try {
-      //     const req = await fetch(
-      //       `${API_URL}/events/${userProfile?.id}`,
-      //       {
-      //         method: "PUT",
-      //         headers: {
-      //           "Authorization": `Bearer ${token}`
-      //         },
-      //         body: formDataToSend,
-      //       }
-      //     );
-      //     //limipo form
-      //     setFormData(initialFormData);
+        try {
+          const req = await fetch(
+            `${API_URL}/events/${userProfile?.id}`,
+            {
+              method: "PUT",
+              headers: {
+                "Authorization": `Bearer ${token}`
+              },
+              body: formDataToSend,
+            }
+          );
+          //limipo form y modal
+          setFormData(initialFormData);
+          setShowModalPrevForm(false);
           
-      //     const response = await req.json();
-      //     if (req.ok && token && storedProfile) {
-      //       setShowModal(true);
-      //       const dataProfileUser = await JSON.parse(storedProfile);
+          const response = await req.json();
+          
+          if (req.ok && token && storedProfile) {
+            setLoading(false);            
+            setShowModal(true);
 
-      //                 // Actualizar evento en el profile
-      //       const indexToUpdate = dataProfileUser.events.findIndex((event: { id: string; }) => event.id === formData.id);
-      //       dataProfileUser.events[indexToUpdate] = response; // Reemplazar el evento editado
+            const dataProfileUser = await JSON.parse(storedProfile);
 
-      //       // dataProfileUser.events.push(response);
+            //actualizo el evento en el localStorage
+            const indexToUpdate = dataProfileUser.events.findIndex((event: { id: string; }) => event.id === formData.id);
+            dataProfileUser.events[indexToUpdate] = response;
 
-      //       //cargo el nuevo profile con el nuevo evento
-      //       localStorage.setItem('user_profile', JSON.stringify(dataProfileUser));
-            
-      //       window.setTimeout(() => {
-      //         setShowModal(false);
-      //         router.push("/profile");
-      //       }, 2000)
-            
-      //     }
-      //   } catch (error) {
-      //     console.error("Error al enviar los datos", error);
-      //   } finally {
-      //     setLoading(false);
-      //   }
-      // };
+            //cargo el nuevo profile con el nuevo evento
+            localStorage.setItem('user_profile', JSON.stringify(dataProfileUser));            
+          }
+        } catch (error) {
+          console.error("Error al enviar los datos", error);
+        }
+      };
 
-      // postEvent();
+      putEvent();
     },
     [formData]
   );
@@ -322,7 +327,7 @@ const UpdateEvent: React.FC = () => {
       <button onClick={() => router.back()} className="btn-back">
         <BiArrowBack size={30} />
       </button>
-      <form className="pt-2" onSubmit={handleSubmit}>
+      <form ref={formRef} onSubmit={handleModalPrevForm} className="pt-2">
         <h1 className="text-2xl font-bold mb-8">Editar evento</h1>
 
         <div className="mb-4">
@@ -464,7 +469,7 @@ const UpdateEvent: React.FC = () => {
                 </div>
                 <div className="relative w-20">
                   <Image
-                    src={url} // Cargar imagen desde la URL
+                    src={url}
                     alt={`image-${index}`}
                     width={80}
                     height={80}
@@ -547,8 +552,40 @@ const UpdateEvent: React.FC = () => {
               <BiCalendar className="size-28" />
               <FaCircleCheck className="absolute bottom-0 right-0 size-12 bg-white rounded-full p-0.5 text-[#07AEAF]" />
             </div>
-            <p className="text-lg font-semibold">¡Evento creado con éxito!</p>
-            <Link href={'./profile'} className="mt-8 w-full text-center mx-6 bg-createEventButton text-white rounded-full px-4 py-2">Entendido</Link>
+            <p className="text-lg font-semibold">¡Evento actualizado con éxito!</p>
+            <Link href={'/profile'} className="mt-8 w-full text-center mx-6 bg-createEventButton text-white rounded-full px-4 py-2">Entendido</Link>
+          </div>
+        </CustomModal>
+      )}
+      {errorImage && (
+        <CustomModal onClose={() => {}} isOpen={() => {}}>
+        <div className="z-50 bg-white w-full mx-6 flex flex-col items-center gap-2 p-4 shadow-lg rounded-2xl">
+            <div className="relative">
+              <BiImage className="size-28" />
+              <FaCircleExclamation className="absolute bottom-0 right-0 size-12 bg-white rounded-full p-0.5 text-[#07AEAF]" />
+            </div>
+            <p className="text-lg font-semibold text-center">¡Debes seleccionar un solo tipo de imagenes!</p>
+            <button onClick={() => setErrorImage(false)} className="w-full text-center mx-6 bg-createEventButton text-white rounded-full px-4 py-2">
+              Volver
+            </button>
+        </div>
+        </CustomModal>
+      )}
+      {showModalPrevForm && (
+        <CustomModal onClose={() => setShowModal(false)} isOpen={showModal}>
+          <div className="z-50 bg-white w-full mx-6 flex flex-col items-center gap-2 p-4 shadow-lg rounded-2xl">
+            <div className="relative">
+              <BiCalendar className="size-28" />
+              <FaCircleExclamation className="absolute bottom-0 right-0 size-12 bg-white rounded-full p-0.5 text-red-500" />
+            </div>
+            <p className="text-lg font-semibold text-center">Estos cambios no se pueden revertir.</p>
+            <p className="text-lg font-semibold">¿Continuar?</p>
+            <button onClick={() => setShowModalPrevForm(false)} className="w-full text-center mx-6 bg-createEventButton text-white rounded-full px-4 py-2">
+              Volver
+            </button>
+            <button onClick={handleSubmit} className="w-full text-center mx-6 bg-createEventButton text-white rounded-full px-4 py-2">
+              Entendido
+            </button>
           </div>
         </CustomModal>
       )}
