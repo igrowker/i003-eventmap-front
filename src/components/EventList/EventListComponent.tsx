@@ -18,7 +18,7 @@ export default function EventListComponent() {
   const [executeFilter, setExecuteFilter] = useState<boolean>(false);
 
   return (
-    <div className="max-w-[1000px] w-full flex flex-col gap-4 px-8 mx-auto my-6">
+    <div className="max-w-[1000px] w-full flex flex-col gap-4 px-4 sm:px-8 mx-auto my-6">
       <div className="flex gap-2 items-center">
         <Link href="./"><BiArrowBack width={20} height={20} /></Link>
         <h1 className="text-2xl font-semibold">En mi ubicación actual</h1>

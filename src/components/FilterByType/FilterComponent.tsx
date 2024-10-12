@@ -37,7 +37,7 @@ export default function FilterComponent({ onFilterChange }: FilterComponentProps
           </svg>
           <span className="text-light text-sm">Filtrar</span>
         </button>
-        <div className={`${!isFilterMenuOpen ? 'max-sm:hidden' : ''} relative max-sm:border max-sm:border-dark max-sm:border-opacity-20 max-sm:rounded-lg max-sm:p-2 flex max-sm:flex-col-reverse items-center gap-4`}>
+        <div className={`${!isFilterMenuOpen ? 'max-sm:hidden' : ''} bg-light relative max-sm:border max-sm:border-dark max-sm:border-opacity-20 max-sm:rounded-lg max-sm:p-2 flex max-sm:flex-col-reverse items-center gap-4`}>
           {/* @ts-ignore */}
           <TimelineComponent filterValueState={{ filterValues, setFilterValues }} setIsFilterMenuOpen={setIsFilterMenuOpen} />
           {/* @ts-ignore */}
