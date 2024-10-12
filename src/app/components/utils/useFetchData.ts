@@ -24,7 +24,6 @@ interface Event {
 const useFetchData = (url: string) => {
     const [data, setData] = useState<Event[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -37,7 +36,6 @@ const useFetchData = (url: string) => {
                 setData(result);
             } catch (error) {
                 console.error("Error fetching data:", error);
-                setError(error);
             } finally {
                 setLoading(false);
             }
@@ -45,7 +43,7 @@ const useFetchData = (url: string) => {
         fetchData();
     }, [url]);
 
-    return { data, loading, error };
+    return { data, loading };
 };
 
 export default useFetchData;
