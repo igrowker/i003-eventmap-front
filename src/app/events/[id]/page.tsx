@@ -10,6 +10,10 @@ import DateTimeComponent from "@/components/EventDetails/DateTimeComponent";
 import CustomModal from "@/components/modals/modalPostEvent/CustomModal";
 import ModalImage from "@/../public/eventdetailmodal.png";
 import NoImage from "@/../public/noImage.png";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination } from "swiper/modules";
+import "swiper/css";
+import 'swiper/css/pagination';
 
 interface Event {
   time: string;
@@ -36,9 +40,7 @@ function EventDetails() {
   useEffect(() => {
     const fetchEvent = async () => {
       try {
-        const response = await fetch(
-          `${API_URL}/events/event/${id}`
-        );
+        const response = await fetch(`${API_URL}/events/event/${id}`);
         if (!response.ok) {
           throw new Error("Error en la peticion");
         }
@@ -89,23 +91,38 @@ function EventDetails() {
   return (
     <div>
       <div className="relative">
-      <button className="absolute" onClick={() => router.back()}>
+        <button className="absolute" onClick={() => router.back()}>
           <BiArrowBack
             className="mb-4 absolute top-4 left-4"
             size={24}
             color="black"
           />
         </button>
-        {photos && (
-          <Image
-            className="object-cover w-full h-[350px] max-h-[420px] max-w-[420px]"
-            src={photos[0] || NoImage}
-            alt="Event Image"
-            width={400}
-            height={300}
-            priority={true}
-          />
-        )}
+        <Swiper
+          spaceBetween={2}
+          slidesPerView={1}
+          modules={[Pagination]}
+          pagination={{
+            clickable: true,
+            bulletClass: "swiper-pagination-bullet",
+            bulletActiveClass: "swiper-pagination-bullet-active",
+          }}
+          
+          className="mySwiper"
+        >
+          {photos.map((photo, index) => (
+            <SwiperSlide key={index}>
+              <Image
+                className="object-cover w-full h-[350px] max-h-[420px] max-w-[420px]"
+                src={photo || NoImage}
+                alt="Event Image"
+                width={400}
+                height={300}
+                priority={true}
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </div>
       <div className="flex flex-col gap-4 p-4">
         <ConcurrenceComponent concurrence={amount} clas={true} />
