@@ -4,7 +4,6 @@ import HomeCategories from "@/components/HomeCategories/HomeCategories";
 import Header from "@/components/header/Header";
 import CardEventsSwiper from "@/components/CardEvents/CardsEvents";
 import Newsletter from "@/components/Newsletter/Newsletter";
-import NavBar from "@/components/navbar/NavBar";
 import useGetAllEventsFree from "../hooks/useGetAllProjectsFree";
 import ErrorEvents from '@/assets/images/error-events.png'
 import Image from "next/image";
@@ -32,7 +31,7 @@ export default function Home() {
       <header className="flex w-full justify-center sm:max-w-sm">
         <Header />
       </header>
-      <h4 className="font-semibold text-black text-sm p-4">
+      <h4 className="font-semibold text-black text-base py-4">
         Optimizá tus rutas y maximizá tus ganancias
       </h4>
       <div className="flex justify-center w-full">
@@ -65,9 +64,6 @@ export default function Home() {
       <div className="pt-5 pb-16 max-w-[384px]">
         <Newsletter />
       </div>
-      <nav>
-        <NavBar />
-      </nav>
     </main>
   );
 }
