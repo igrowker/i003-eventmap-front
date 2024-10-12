@@ -4,10 +4,10 @@ import HomeCategories from "@/components/HomeCategories/HomeCategories";
 import Header from "@/components/header/Header";
 import CardEventsSwiper from "@/components/CardEvents/CardsEvents";
 import Newsletter from "@/components/Newsletter/Newsletter";
-import NavBar from "@/components/navbar/NavBar";
 import useGetAllEventsFree from "../hooks/useGetAllProjectsFree";
 import ErrorEvents from '@/assets/images/error-events.png'
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const Dynamic = dynamic(() => import("./components/Map"), {
   loading: () => (
@@ -24,6 +24,12 @@ const Dynamic = dynamic(() => import("./components/Map"), {
 });
 
 export default function Home() {
+  
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push('/events');
+  };
 
   const { events, error} = useGetAllEventsFree();
 
@@ -32,11 +38,15 @@ export default function Home() {
       <header className="flex w-full justify-center sm:max-w-sm">
         <Header />
       </header>
-      <h4 className="font-semibold text-black text-sm p-4">
+      <h4 className="font-semibold text-black text-base py-4">
         Optimizá tus rutas y maximizá tus ganancias
       </h4>
-      <div className="flex justify-center w-full">
-        <Dynamic />
+      <div className="p-0.5 bg-gradient-to-t from-violet-400 via-green-200 to-violet-400 rounded-lg w-full shadow-[0px_2px_2px_1px_rgba(0,0,0,0.1)] overflow-hidden">
+        <div className="flex justify-center w-full z-0 rounded-lg overflow-hidden pointer-events-none"
+        onClick={handleClick}
+        >
+          <Dynamic />
+        </div>
       </div>
       <div className="flex flex-col sm:max-w-sm md:max-w-md lg:max-w-lg mt-5">
         <h6 className="text-black font-semibold mx-2">Categorías</h6>
@@ -65,9 +75,6 @@ export default function Home() {
       <div className="pt-5 pb-16 max-w-[384px]">
         <Newsletter />
       </div>
-      <nav>
-        <NavBar />
-      </nav>
     </main>
   );
 }

@@ -22,10 +22,18 @@ export default function ContainerEventList({ filtersForEvents = [], executeFilte
     getEvents(`${API_URL}/events?lat=-34.60448395867932&lon=-58.38164429855504`).then(data => {
       setEventsList(data)
       setEventsListFiltered(data)
+      console.log('data', data)
     })
+    if (typeFilter && typeFilter.length > 0) {
+      setTimeout(() => {
+        setExecuteFilter(true);
+      }, 400);
+    }
   }, [])
 
   useEffect(() => {
+    console.log('executeFilter', executeFilter)
+
     if (!executeFilter) return
     const filteredList = eventsList.filter((event) => {
     return filtersForEvents.every(({ property, filterValue }) => {      
@@ -37,17 +45,12 @@ export default function ContainerEventList({ filtersForEvents = [], executeFilte
         return filterValue ? filterDateTo(event?.date, filterValue) : true;
       });
     })
+
+    console.log('filteredList', filteredList)
+
     setExecuteFilter(false)
     setEventsListFiltered(filteredList)
   }, [executeFilter]);
-
-  useEffect(() => {
-    if (typeFilter && typeFilter.length > 0) {
-      setTimeout(() => {
-        setExecuteFilter(true);
-      }, 400);
-    }
-  }, []);
 
   const lastCardRef = useRef<HTMLDivElement>(null)
 
@@ -68,8 +71,8 @@ export default function ContainerEventList({ filtersForEvents = [], executeFilte
     <div className="flex flex-col gap-4 items-center">
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 py-4 mb-6">
         {
-          eventsListFiltered.length > 0
-            ? eventsListFiltered.map((event, index) => (
+          eventsListFiltered?.length > 0
+            ? eventsListFiltered.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()).map((event, index) => (
               <Link key={event.id} href={`/events/${event.id}`}>
                 <CardEventList event={event} lastCardRef={index + 1 === currentLimit ? lastCardRef : null} />
               </Link>

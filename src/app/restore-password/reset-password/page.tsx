@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { iconShowPassword } from "@/components/icons/IconShowPassword";
 import { iconHidePassword } from "@/components/icons/IconHidePassword";
@@ -8,6 +8,7 @@ import { BiArrowBack } from "react-icons/bi";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import CustomModal from "@/components/modals/modalPostEvent/CustomModal";
+
 
 const ResetPasswordPage = () => {
 
@@ -272,4 +273,12 @@ password?token=${token}`,
   );
 };
 
-export default ResetPasswordPage;
+const ResetPasswordPageWrapper = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ResetPasswordPage />
+    </Suspense>
+  );
+};
+
+export default ResetPasswordPageWrapper;

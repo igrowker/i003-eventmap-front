@@ -8,12 +8,16 @@ import Image from "next/image";
 import ConcurrenceComponent from "../EventDetails/ConcurrenceComponent";
 import DateTimeComponent from "../EventDetails/DateTimeComponent";
 import { eventTypes } from "../../types/events-list-types";
+import { useRouter } from "next/navigation";
 
 interface EventProps {
   events: eventTypes[];
 }
 
 const CardEventsSwiper: React.FC<EventProps> = ({ events }) => {
+
+  const router = useRouter();
+
   return (
     <Swiper
       spaceBetween={4}
@@ -25,7 +29,7 @@ const CardEventsSwiper: React.FC<EventProps> = ({ events }) => {
         <SwiperSlide key={event.id}>
           <div
           className="p-0.5 bg-gradient-to-t from-violet-400 via-green-200 to-violet-400 rounded-lg w-48 shadow-[0px_2px_2px_1px_rgba(0,0,0,0.1)]"
-          onClick={() => window.open(`/events/${event.id}`)}
+          onClick={() => router.push(`/events/${event.id}`)}
           >
             <div className="border rounded-lg p-2 w-full h-auto min-h-32 bg-bgHome">
               <Image
@@ -43,7 +47,7 @@ const CardEventsSwiper: React.FC<EventProps> = ({ events }) => {
                   <ConcurrenceComponent concurrence={event.amount} clas={false} />
                 </div>
                 <div className="my-1">
-                  <DateTimeComponent size={'text-[13px] text-[#6750A4]'} date={event.date} time={event.time} />
+                  <DateTimeComponent size={'text-[12px] text-[#6750A4]'} date={event.date} time={event.time} />
                 </div>
                 <p className="text-sm w-full overflow-hidden text-ellipsis line-clamp-2">{event.addres}</p>
               </div>
