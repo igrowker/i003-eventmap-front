@@ -21,7 +21,7 @@ function CardEvent({ date, time, name, amount, addres, photos, id }: Event) {
   }
 
   return (
-    <div onClick={() => handleNavigation(id)}  className="p-0.5 bg-gradient-to-t from-violet-400 via-green-200 to-violet-400 rounded-xl max-h-[280px]">
+    <div onClick={() => handleNavigation(id)}  className="p-0.5 bg-gradient-to-t from-violet-400 via-green-200 to-violet-400 rounded-xl max-h-[280px] my-2 shadow-xl">
       <div className="w-full h-full bg-white rounded-xl flex gap-2">
         <div className="basis-[40%] pl-2 py-2">
           <Image
