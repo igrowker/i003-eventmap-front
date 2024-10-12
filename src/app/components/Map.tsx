@@ -7,7 +7,7 @@ import LocateControl from "./LocateControl";
 import SearchEvent from "./SearchEvent";
 import { Location } from "./Location";
 import Markers from "./Markers";
-import Heatmap from "./Heatmap";
+
 
 
 const Map = () => {
@@ -26,9 +26,7 @@ const Map = () => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <Location center={[-34.603851, -58.381775]} />
-      {/* <Search/> */}
-      {/* <Heatmap />
-      <Markers /> */}
+      
       <LocateControl />
       <SearchEvent/>
     </MapContainer>
