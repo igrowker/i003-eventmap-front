@@ -42,7 +42,9 @@ function PreviousCardEvent({
             <ConcurrenceComponent concurrence={amount} clas={false} />
           </div>
           <DateTimeComponent size={"text-[12px] text-[#6750A4]"} date={date} time={time} />
-          <p className="text-[14px] truncate w-full overflow-hidden text-ellipsis whitespace-nowrap">
+          <p className="text-[14px] w-full overflow-hidden text-ellipsis line-clamp-2"
+          style={{ minHeight: "2.5rem" }}
+          >
             {addres}
           </p>
         </div>
