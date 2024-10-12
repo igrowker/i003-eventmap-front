@@ -12,7 +12,8 @@ import CustomModal from "@/components/modals/modalPostEvent/CustomModal";
 
 const ResetPasswordPage = () => {
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  // const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  const API_URL = 'http://localhost:3000';
   const router = useRouter();
 
   const [togglePassword, setTogglePassword] = useState(true);

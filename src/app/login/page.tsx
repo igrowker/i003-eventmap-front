@@ -24,7 +24,8 @@ export default function Login() {
   const [togglePassword, setTogglePassword] = useState(true);
   const { setUserProfile } = useUserContext();
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  // const API_URL = process.env.NEXT_PUBLIC_API_URL;
+    const API_URL = 'http://localhost:3000';
 
   const router = useRouter();
 
@@ -152,7 +153,7 @@ export default function Login() {
 
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col bg-white rounded-t-3xl px-4"
+        className="flex flex-col bg-white rounded-t-3xl px-5 mb-20"
       >
         <p className="font-bold text-center my-8">
           Ingreso sólo para organizadores

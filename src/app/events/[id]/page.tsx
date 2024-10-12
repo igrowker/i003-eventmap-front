@@ -31,7 +31,8 @@ function EventDetails() {
   const [modalOpen, setModalOpen] = useState(false);
   const path = usePathname();
   const id = path.split("/")[2];
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+    // const API_URL = process.env.NEXT_PUBLIC_API_URL;
+    const API_URL = 'http://localhost:3000';
 
   useEffect(() => {
     const fetchEvent = async () => {

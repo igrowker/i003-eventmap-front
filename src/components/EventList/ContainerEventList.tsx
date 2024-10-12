@@ -10,8 +10,9 @@ import Link from "next/link";
 
 export default function ContainerEventList({ filtersForEvents = [], executeFilterState, typeFilter }: { filtersForEvents: Filters[] | [], executeFilterState: { executeFilter: boolean, setExecuteFilter: (value: boolean) => void }, typeFilter?: string }) {
   
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
-  const [eventsList, setEventsList] = useState<eventTypes[]>([])
+  // const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  const API_URL = 'http://localhost:3000';
+  const [eventsList, setEventsList] = useState<eventTypes[]>([])  
   const [eventsListFiltered, setEventsListFiltered] = useState<eventTypes[]>([])
   const [currentLimit, setCurrentLimit] = useState(10)
   const [isLoading, setIsLoading] = useState(false)
@@ -19,7 +20,7 @@ export default function ContainerEventList({ filtersForEvents = [], executeFilte
 
   useEffect(() => {
     // esta longitud y latitud debe cambiarse por la que envie el mapa
-    getEvents(`${API_URL}/events?lat=-34.60448395867932&lon=-58.38164429855504`).then(data => {
+      getEvents(`${API_URL}/events?lat=-34.60448395867932&lon=-58.38164429855504`).then(data => {
       setEventsList(data)
       setEventsListFiltered(data)
       console.log('data', data)

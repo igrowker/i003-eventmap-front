@@ -27,7 +27,8 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  // const API_URL = 'process.env.NEXT_PUBLIC_API_URL';
+  const API_URL = 'http://localhost:3000';
 
   const [fieldStates, setFieldStates] = useState<FormFieldStates>({
     firstName: { isFocused: false },
