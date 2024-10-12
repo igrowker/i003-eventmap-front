@@ -96,3 +96,14 @@ body {
 .left-image3 {
   left: 1rem;
 }
+.swiper-pagination-bullet {
+  width: 12px;
+  height: 12px;
+  background-color: #F2EBF7 !important;
+  border-radius: 50%;
+  opacity: 1;
+}
+.swiper-pagination-bullet-active {
+  background-color: #6750A4 !important;
+  transform: scale(1.2);
+}
