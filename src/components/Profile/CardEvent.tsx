@@ -21,7 +21,7 @@ function CardEvent({ date, time, name, amount, addres, photos, id }: Event) {
   }
 
   return (
-    <div onClick={() => handleNavigation(id)}  className="p-0.5 bg-gradient-to-t from-violet-400 via-green-200 to-violet-400 rounded-xl max-h-[280px]">
+    <div onClick={() => handleNavigation(id)}  className="p-0.5 bg-gradient-to-t from-violet-400 via-green-200 to-violet-400 rounded-xl max-h-[280px] my-2 shadow-xl">
       <div className="w-full h-full bg-white rounded-xl flex gap-2">
         <div className="basis-[40%] pl-3 py-4 ">
           <Image
@@ -43,7 +43,7 @@ function CardEvent({ date, time, name, amount, addres, photos, id }: Event) {
           <p className="truncate w-full overflow-hidden text-ellipsis whitespace-nowrap">{addres}</p>
 
           <div className="flex mt-2 gap-1">
-            <Link onClick={(e) => e.stopPropagation()} href={`/editEvent/${id}`} className="w-full py-1.5 font-bold text-white bg-[#6750A4] rounded-full flex items-center justify-center gap-1 mr-2">
+            <Link onClick={(e) => e.stopPropagation()} href={`/editEvent/${id}`} className="w-1/2 py-1.5 font-bold text-white bg-[#6750A4] rounded-full flex items-center justify-center gap-1 mr-2">
               <span className="text-sm">Editar</span>
               <AiOutlineEdit color="white" size={16} />
             </Link>

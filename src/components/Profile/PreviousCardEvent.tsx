@@ -24,7 +24,7 @@ function PreviousCardEvent({
   }
 
   return (
-    <div onClick={() => handleNavigation(id)} className="p-0.5 bg-gradient-to-t from-violet-400 via-green-200 to-violet-400 rounded-xl max-h-[285px]">
+    <div onClick={() => handleNavigation(id)} className="p-0.5 bg-gradient-to-t from-violet-400 via-green-200 to-violet-400 rounded-xl max-h-[285px] shadow-lg">
       <div className="w-full h-full bg-white rounded-xl flex flex-col">
         <div className="p-3">
           <Image
