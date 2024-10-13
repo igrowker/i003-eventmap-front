@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { getEvents } from "../utils/getEvents";
+import { eventTypes } from "../types/events-list-types";
 
 const useGetAllEventsFree = () => {
-    const [events, setEvents] = useState([]);
+    const [events, setEvents] = useState<eventTypes[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
 
@@ -15,7 +16,7 @@ const useGetAllEventsFree = () => {
               setLoading(true);
               const req = await getEvents(`${API_URL}/events/all`);
               if (!req) setError(true);
-              setEvents(req.slice(0, 5)); // Obtener solo los primeros 5 eventos
+              setEvents(req);
               
             } catch (error) {
               setError(true)

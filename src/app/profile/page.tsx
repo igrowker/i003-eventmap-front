@@ -16,6 +16,7 @@ import { useUserContext } from "../../components/UserContext";
 
 function Profile() {
   const [events, setEvents] = useState<Event[]>([]);
+  const [pastEvents, setPastEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [isCheckingToken, setIsCheckingToken] = useState(true);
   const { userProfile, setUserProfile } = useUserContext();
@@ -46,7 +47,11 @@ function Profile() {
 
   useEffect(() => {
     if (userProfile) {
-      setEvents(userProfile.events);
+      //filtro eventos anteriores
+      const today = new Date().toISOString().split('T')[0];
+      const pastEvents = userProfile.events.filter(event => new Date(event.date) < new Date(today));
+      setEvents(userProfile.events);      
+      setPastEvents(pastEvents);
       setLoading(false);
     }
   }, [userProfile]);
@@ -179,7 +184,7 @@ function Profile() {
         ) : (
           <>
             {events.length > 0 ? (
-              <PreviousEventCointainer events={previousEvents(events)} />
+              <PreviousEventCointainer events={previousEvents(pastEvents)} />
             ) : (
               <EmptyEvents text="No hay eventos anteriores" />
             )}

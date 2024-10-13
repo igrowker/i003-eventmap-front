@@ -33,6 +33,10 @@ export default function Home() {
 
   const { events, error} = useGetAllEventsFree();
 
+  // filtro x dia
+  const today = new Date().toISOString().split('T')[0];
+  const eventsToDay = events.filter(evento => evento.date === today);
+
   return (
     <main className=" bg-bgHome flex min-h-screen flex-col items-center p-5 relative min-w-[360px]">
       <header className="flex w-full justify-center sm:max-w-sm">
@@ -69,7 +73,7 @@ export default function Home() {
               No hay eventos disponibles en la zona.
             </p>
         </div>
-          ) : ( <CardEventsSwiper events={events} />)
+          ) : ( <CardEventsSwiper events={eventsToDay} />)
       }
       </section>
       <div className="pt-5 pb-16 max-w-[384px]">

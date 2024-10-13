@@ -580,11 +580,11 @@ const UpdateEvent: React.FC = () => {
             </div>
             <p className="text-lg font-semibold text-center">Estos cambios no se pueden revertir.</p>
             <p className="text-lg font-semibold">¿Continuar?</p>
-            <button onClick={() => setShowModalPrevForm(false)} className="w-full text-center mx-6 bg-createEventButton text-white rounded-full px-4 py-2">
-              Volver
-            </button>
             <button onClick={handleSubmit} className="w-full text-center mx-6 bg-createEventButton text-white rounded-full px-4 py-2">
-              Entendido
+              Aceptar
+            </button>
+            <button onClick={() => setShowModalPrevForm(false)} className="w-full text-center mx-6 text-createEventButton border border-createEventButton rounded-full px-4 py-2">
+              Volver
             </button>
           </div>
         </CustomModal>
