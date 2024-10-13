@@ -132,6 +132,16 @@ https://eventmap-mvp.vercel.app/
   - **Leaflet**
   - **Zustand**
 
+### Tecnologías
+
+- Backend:
+
+  - **Nest**
+  - **Neont**
+  - **Class-Validator**
+  - **Bcrypt y JWT**
+  - **Jest , SuperTest , Postman**
+
 ### Repositorio de FrontEnd: 
 [FrontEnd  Github]https://github.com/igrowker/i003-eventmap-front
 
@@ -168,17 +178,17 @@ https://eventmap-mvp.vercel.app/
 | Rol               | Nombre               | Redes                                                                                                                             |
 | :---------------- | :------------------- | :-------------------------------------------------------------------------------------------------------------------------------- |
 | `Back End`       | Octavio Quintero       | [![GitHub]](https://github.com/octa-quintero) [![linkedin]](https://www.linkedin.com/in/octavio-quintero/)                               |
-| `Back End`       | Santiago Balbarey       | [![Github]](https://github.com/SashaFran) [![linkedin]](https://www.linkedin.com/in/sasha-ailen-franchini/)           |                               |
-| `Back End`       | Ulises Rodriguez      | [![Github]](https://github.com/SashaFran) [![linkedin]](https://www.linkedin.com/in/sasha-ailen-franchini/)           | 
-| `Front End`      | Gabriel Aviles     | [![GitHub]](https://github.com/LucaasN) [![linkedin]](https://www.linkedin.com/in/lucas-n-nunez/)                      |
-| `Front End`      | Christian Zamora   | [![GitHub]](https://github.com/JoaquinxHerrera) [![linkedin]](https://www.linkedin.com/in/joaquinherrera1/)                      |
-| `Front End`      | Franco Huayller       | [![GitHub]](https://github.com/ParkerPiter) [![linkedin]](https://www.linkedin.com/in/gabriel-lea-n/)                             |
-| `Fullstack`      | Nicolás Agüero       | [![Github]](https://github.com/XabierGallardo) [![linkedin]](https://www.linkedin.com/in/javier-rodriguez-3267712b2/)           |
-| `QA`             | Mariana Carmona       | [![Github]](https://github.com/Marianoafx22) [![linkedin]](https://www.linkedin.com/in/mariano-sosa-alvarez-a52440284/)           |
-| `Ux/Ui`          | Sol Gayarin       | [![Github]](https://github.com/Marianoafx22) [![linkedin]](https://www.linkedin.com/in/mariano-sosa-alvarez-a52440284/)           |
-| `Ux/Ui`          | Justina Cid       | [![Github]](https://github.com/Marianoafx22) [![linkedin]](https://www.linkedin.com/in/mariano-sosa-alvarez-a52440284/)           |
-| `PM`             | Pamela Sol Pilotti      | [![Github]](https://github.com/Marianoafx22) [![linkedin]](https://www.linkedin.com/in/mariano-sosa-alvarez-a52440284/)           |
-| `Lider Tecnico`  | Cesar Augusto Ausa Vasquez | [![GitHub]](https://github.com/DEV-AusA) [![linkedin]](https://www.linkedin.com/in/dev-ausa//) |
-| `DevOps`         | Adrián Ramos         | [![GitHub]](https://github.com/aramos20)  |
+| `Back End`       | Santiago Balbarey       | [![Github]](https://github.com/balbito) [![linkedin]](https://www.linkedin.com/in/santiagobalbarrey/)           |                               |
+| `Back End`       | Ulises Rodriguez      | [![Github]](https://github.com/Ulises-Rodriguez-809) [![linkedin]](https://www.linkedin.com/in/ulises-rodriguez-desarrolloweb-fullstack/)           | 
+| `Front End`      | Gabriel Aviles     | [![GitHub]](https://github.com/Gavbriel015) [![linkedin]](https://www.linkedin.com/in/gabriel-aviles-031465321/)                      |
+| `Front End`      | Christian Zamora   | [![GitHub]](https://github.com/christianzamher) [![linkedin]](https://www.linkedin.com/in/christianzamorahermida/)                      |
+| `Front End`      | Franco Huayller       | [![GitHub]](https://github.com/fhuayller) [![linkedin]](https://www.linkedin.com/in/franco-huayller-a80087235/)                             |
+| `Fullstack`      | Nicolás Agüero       | [![Github]](https://github.com/nicolasAguero99) [![linkedin]](https://www.linkedin.com/in/nicolas-aguero99/)           |
+| `QA`             | Mariana Carmona       | [![Github]](https://github.com/Mar2303) [![linkedin]](https://www.linkedin.com/in/mariana-carmona/)           |
+| `Ux/Ui`          | Sol Gayarin       | [![Github]](https://github.com/SolGayarin) [![linkedin]](https://www.linkedin.com/in/sol-gayarin/)           |
+| `Ux/Ui`          | Justina Cid       | [![Github]](https://github.com/Juscid) [![linkedin]](https://www.linkedin.com/in/justinacid/)           |
+| `PM`             | Pamela Sol Pilotti      | [![Github]](https://github.com/Pamela198713) [![linkedin]](https://www.linkedin.com/in/pamela-sol-pilotti)           |
+| `Lider Tecnico`  | Cesar Augusto Ausa Vasquez | [![GitHub]](https://github.com/DEV-AusA) [![linkedin]](https://www.linkedin.com/in/dev-ausa/) |
+| `DevOps`         | Adrián Ramos         | [![GitHub]](https://github.com/aramos20)  | [![linkedin]](https://www.linkedin.com/in/adri%C3%A1nramos/) |
 
 
