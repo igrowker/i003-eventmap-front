@@ -1,4 +1,4 @@
-![portada](/src/assets/images/error-events.png)
+![portada](/src/assets/images/Eventmap1.png)
 
 
 # Introducción:
