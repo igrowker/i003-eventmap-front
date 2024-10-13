@@ -77,46 +77,37 @@ https://eventmap-mvp.vercel.app/
 **1. Funcionalidades y Componentes Implementados:**
 
 - **Autenticación y Sesiones:**
-  - Se ha implementado un sistema de autenticación que permite a los usuarios registrarse, iniciar sesión y cerrar sesión. La lógica de autenticación se maneja a través de un contexto de usuario y hooks personalizados.
+  - Se ha implementado un sistema de autenticación que permite a los organizadores de eventos registrarse, dar de alta o modificar un evento a promocionar. La lógica de autenticación se maneja a través de un contexto de usuario y hooks personalizados.
 
 - **Navegación y UI:**
-  - El proyecto incluye una barra de navegación que utiliza un diseño responsivo con un menú hamburguesa animado. Se ha implementado la funcionalidad de mostrar y ocultar el menú en dispositivos móviles utilizando solo CSS.
+  - El proyecto incluye una barra de navegación que utiliza un diseño responsivo para mobile. 
   - Se han creado componentes reutilizables para la presentación de proyectos y acciones del usuario.
+  - Para el diseño de EventMap, optamos por ajustar la paleta de colores y el logo, buscando que la interfaz fuera menos impactante visualmente para los conductores, de modo que no experimenten distracciones mientras conducen. 
 
 - **Búsqueda y Filtros:**
-  - La sección de oportunidades incluye un sistema de búsqueda y filtrado de proyectos, permitiendo a los usuarios buscar proyectos específicos por título. La lógica de filtrado se maneja con un hook de estado y se actualiza dinámicamente según la entrada del usuario.
-
-- **Publicación y Postulación de Proyectos:**
-  - Los perfiles de empresa pueden publicar y editar proyectos detallados en la plataforma, especificando requisitos, presupuestos y otros detalles relevantes. Los perfiles de freelancers pueden buscar estos proyectos y postularse, facilitando la conexión entre talentos y oportunidades laborales.
-
-- **Perfiles editables:**
-  - Los perfiles de empresa y freelancer pueden ser editados y actualizados en cualquier momento asegurando una mejor dinámica y conexión entre ambas partes.
+  - Se despliega un menú de filtrado donde el usuario podrá seleccionar distintas categorias y verificar los elementos que se despliegan de las mismas
 
 - **Carga y Estado:**
   - Un componente de carga muestra una animación de carga mientras los datos están siendo recuperados del backend.
 
+- **Mapas:**
+- Se muestra un mapa interactivo con capas de eventos que
+  indiquen la posible demanda.
+- El mapa permite seleccionar un rango de tiempo dentro de los
+  próximos 7 días.
+- Las zonas con alta demanda están representadas mediante
+  un mapa de calor (Heatmap)
+
 **2. Estado de Desarrollo y Consideraciones:**
 
 - **Responsividad:**
-  - La interfaz se ha optimizado para ser responsiva, con un enfoque en mejorar la experiencia de usuario en dispositivos móviles. Las clases de Bootstrap se han utilizado para asegurar la adaptabilidad, y se ha añadido CSS personalizado para elementos específicos.
-
+  - La interfaz se ha optimizado para ser mobile First, ya que la app está integramente diseñada para su uso en dispositivos móviles.
+    
 - **Optimización de Código:**
-  - Se ha mantenido un enfoque modular, utilizando componentes y hooks personalizados para una mejor organización y reutilización del código.
+  - Se ha implementado Typescript, ademas de componentes y hooks personalizados para una mejor organización y reutilización del código.
 
 - **Estilización:**
-  - Se han utilizado variables CSS para gestionar colores, fuentes y otros estilos, lo que facilita el mantenimiento y la consistencia del diseño.
-
-**3. Próximos Pasos:**
-
-- **Integración de Funcionalidades Avanzadas:**
-  - Implementación de funcionalidades avanzadas como notificaciones, chat en vivo entre freelancers y empleadores, y un sistema de calificaciones y reseñas.
-
-- **Sistema de Pago:**
-  - Se planea implementar un sistema de pago que permita a las empresas realizar pagos a los freelancers de manera segura y eficiente a través de la plataforma. Esto incluirá la integración de métodos de pago populares y el manejo de transacciones financieras dentro del sistema.
-
-- **Páginas de Información:**
-  - Se completarán y mejorarán las páginas de información relacionadas con TalentPlace, incluyendo formularios de contacto, información respecto al uso de la plataforma. Esto ayudará a los usuarios a comprender mejor los servicios ofrecidos y cómo aprovecharlos al máximo.
-
+  - Se han utilizado Tailwind para gestionar colores, fuentes y otros estilos, lo que facilita el mantenimiento y la consistencia del diseño.
 
 
 
