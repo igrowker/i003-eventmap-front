@@ -7,7 +7,7 @@ import LocateControl from "../components/LocateControl";
 import Image from "next/image";
 
 import { Location } from "../components/Location";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Markers from "../components/Markers";
 import Heatmap from "../components/Heatmap";
 import { usePathname } from "next/navigation";
@@ -15,11 +15,29 @@ import FilterComponent from "@/components/FilterByType/FilterComponent";
 import useMapStore from "@/store/mapStore";
 import DateTimeComponent from "@/components/EventDetails/DateTimeComponent";
 import ConcurrenceComponent from "@/components/EventDetails/ConcurrenceComponent";
+import Cookies from "js-cookie";
 
 function FullMap() {
   const { currentEvent, showModal, setShowModal } = useMapStore();
+  const [admin, setAdmin] = useState(false);
 
   const pathname = usePathname();
+
+  useEffect(() => {
+    const checkUserAdmin = () => {
+      const token = Cookies.get("auth_token");
+      const storedProfile = localStorage.getItem("user_profile");      
+
+      if (token && storedProfile) {
+        const currentUser = JSON.parse(storedProfile);
+        if (currentUser.rol === "Admin") {
+          setAdmin(true);
+        }        
+      }
+    };
+
+    checkUserAdmin();
+  }, []);
 
   return (
     <div className="flex flex-col z-50">
@@ -95,9 +113,22 @@ function FullMap() {
                       />
                       <p className="truncate w-full overflow-hidden text-ellipsis whitespace-nowrap max-w-[190px]">{currentEvent.addres}</p>
                     </div>
-                    <button onClick={() => window.location.href = `/events/${currentEvent.id}`} className="bg-[#6750A4] text-white self-end font-semibold py-2 rounded-full px-5 mr-3 mt-3">
-                      Ver más
-                    </button>
+                    <div className="flex justify-between items-center">
+                      {admin &&
+                        <button
+                          onClick={() => window.location.href = `/editEvent/${currentEvent.id}`}
+                          className="bg-[#6750A4] text-white font-semibold py-2 rounded-full px-5 mr-3 mt-3"
+                        >
+                          Editar
+                        </button>
+                      }
+                      <button
+                        onClick={() => window.location.href = `/events/${currentEvent.id}`}
+                        className="bg-[#6750A4] text-white font-semibold py-2 rounded-full px-5 mr-3 mt-3 ml-auto"
+                      >
+                        Ver más
+                      </button>
+                    </div>
                   </div>
                 </div>
                 
