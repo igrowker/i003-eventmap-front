@@ -19,6 +19,9 @@ export default function RootLayout({
 
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/logo_eventmap.png" />
+      </head>
       <body className={`bg-white ${lato.className}`}>
         <UserProvider>
           {children}

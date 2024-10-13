@@ -89,11 +89,11 @@ function EventDetails() {
   };
 
   return (
-    <div>
+    <div className="mb-14">
       <div className="relative">
         <button className="absolute" onClick={() => router.back()}>
           <BiArrowBack
-            className="mb-4 absolute top-4 left-4"
+            className="mb-4 absolute top-4 left-4 z-10"
             size={24}
             color="black"
           />
