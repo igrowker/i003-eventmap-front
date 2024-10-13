@@ -25,7 +25,6 @@ export default function ContainerEventList({ filtersForEvents = [], executeFilte
         //valores hardcodeados
         const request = await fetch(`${API_URL}/events?lat=-34.60448395867932&lon=-58.38164429855504`);
         const data = await request.json();
-
         //se setea lo mismo para eventos sin filtrar y filtrados
         setEventsList(data);
         setEventsListFiltered(data);
@@ -34,6 +33,8 @@ export default function ContainerEventList({ filtersForEvents = [], executeFilte
         console.log(error);
       }
     }
+
+    getEvents();
 
     if (typeFilter && typeFilter.length > 0) {
       setTimeout(() => {

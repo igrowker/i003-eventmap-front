@@ -193,12 +193,14 @@ export default function Register() {
       );
       const res = await req.json();
       console.log(res);
+
       if (req.ok) {
         window.setTimeout(() => {
           router.push("/login");
         }, 1000)
         
       }
+      
     } catch (error) {
       console.error("Error al enviar los dato", error);
     } finally {
