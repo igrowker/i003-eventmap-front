@@ -58,10 +58,10 @@ mejorar el rendimiento del servicio de heatmap.
 * Seguridad: Implementar autenticación y autorización para los
 endpoints de creación, actualización y eliminación de eventos.
 
-*Disponibilidad: Se despliega la base de datos en Neon para
+* Disponibilidad: Se despliega la base de datos en Neon para
 aprovechar sus características de escalabilidad y alta disponibilidad.
 
-*Respecto de la funcionalidad:
+* Respecto de la funcionalidad:
 La aplicación no se encarga de dar la ruta más corta o
 económica, para ello el conductor utiliza las herramientas
 habituales como Waze o Google Maps.
