@@ -41,24 +41,32 @@ trabajar en estas aplicaciones de movilidad.
 
 
 ## Características principales
-* Landing page: Información clara y detallada sobre los beneficios de la plataforma para juniors y empresas.
+* Mapas: Información clara y detallada sobre eventos con sus respectivas coordenas e
+  información correspondiente constrastadas con OpenStreetMap
 
-* Autenticación: Registro y login utilizando JWT.
+* Autenticación: Registro y login para Organizadores de eventos.
 
-* Gestión de proyectos: Empresas pueden publicar proyectos y los juniors pueden aplicar
-a ellos fácilmente.
+* Escalabilidad: Se considera la posibilidad de utilizar caché para
+mejorar el rendimiento del servicio de heatmap.
 
-* Sistema de reputación: Feedback bidireccional entre juniors y empresas para fomentar
-la confianza y la calidad del trabajo.
+* Mobile first : la aplicacion está diseñada especificamente para dispositivos mobiles
 
-* Responsive design: La plataforma está optimizada para su uso en diferentes
-dispositivos y resoluciones de pantalla.
+* Seguridad: Implementar autenticación y autorización para los
+endpoints de creación, actualización y eliminación de eventos.
+
+*Disponibilidad: Se despliega la base de datos en Neon para
+aprovechar sus características de escalabilidad y alta disponibilidad.
+
+*Respecto de la funcionalidad:
+La aplicación no se encarga de dar la ruta más corta o
+económica, para ello el conductor utiliza las herramientas
+habituales como Waze o Google Maps.
 
 
 ## Demo
-https://talent-place.netlify.app/
+https://eventmap-mvp.vercel.app/
 
-<!-- ![video_promocional](/ruta "Esta es una previsualizacion del proyecto.") -->
+
 
 ## Estado Actual del Proyecto:
 
@@ -106,34 +114,34 @@ https://talent-place.netlify.app/
   - Se completarán y mejorarán las páginas de información relacionadas con TalentPlace, incluyendo formularios de contacto, información respecto al uso de la plataforma. Esto ayudará a los usuarios a comprender mejor los servicios ofrecidos y cómo aprovecharlos al máximo.
 
 
-**4. Conclusión:**
-El proyecto TalentPlace está en una fase avanzada de desarrollo, con las funcionalidades principales implementadas y una interfaz de usuario pulida. La plataforma está bien posicionada para convertirse en una herramienta esencial para profesionales y empleadores en la industria tecnológica. Los próximos pasos se centrarán en mejorar la experiencia del usuario, la seguridad y la estabilidad del sistema. 
+
 
 
 ### Tecnologías
 
+* [![Next][Next.js]][Next-url]
+* [![React][React.js]][React-url]
+* [![Vue][Vue.js]][Vue-url]
+* [![Angular][Angular.io]][Angular-url]
+* [![Svelte][Svelte.dev]][Svelte-url]
+* [![Laravel][Laravel.com]][Laravel-url]
+* [![Bootstrap][Bootstrap.com]][Bootstrap-url]
+* [![JQuery][JQuery.com]][JQuery-url]
+
 - Frontend:
 
-  - **Javascript**
-  - **React.Js**
+  - **Typescript**
+  - **Next**
   - **Vite Js**
-  - **Bootstrap**
+  - **Leaflet**
+  - **Zustand**
 
+### Repositorio de FrontEnd: 
+[FrontEnd  Github]https://github.com/igrowker/i003-eventmap-front
 
-### Dependencias Frontend:
-
-- "axios": Para realizar solicitudes HTTP de manera sencilla.
-- "sweetalert2": Para dar mensajes a los usuarios con estilos mas detallados mejorando la UX.
-- "react-loader-spinner": Para efectos de loading al conectar a la BD y dar un mejora de UX.
-- "react-router-dom" y "react-dom": Para establecer el enrutamiento y la navegación.
-- "react-awesome-reveal": Efecto de animación para los componentes principales.
-- "react-icons": Librería utilizada para los iconos.
-- "dotenv":Utilizado para ocultar los endpoints
 
 ### Repositorio de BackEnd:
-
-En el enlace podes acceder a toda la información referente al Back.
-[Backend TP Github](https://github.com/igrowker/i002-talentplace-back).
+[Backend  Github](: https://github.com/igrowker/i003-eventmap-back).
 
 
 ### Uso de la app-web
@@ -141,7 +149,7 @@ En el enlace podes acceder a toda la información referente al Back.
 1. Clonar el repositorio desde GitHub.
 
 ```bash
-   git clone https://github.com/igrowker/i002-talentplace-front
+   git clone https://github.com/igrowker/i003-eventmap-front.git
 ```
 
 2. Asegurarse que se está en la carpeta correcta para instala las dependencias.
@@ -157,29 +165,24 @@ En el enlace podes acceder a toda la información referente al Back.
 ```
 
 
-### Link al prototipo de UX UI
 
-[Diseño y prototipado en Figma](https://www.figma.com/design/ePyQIYo9ZxXtLiImRiqd7p/TALENTPLACE?node-id=676-132&t=1IBsoYRz0U4wrVLY-0).
-
-
-### Sección QA
-
-[Casos de prueba](https://docs.google.com/document/d/1HkPqiYPVd94r29s9gSRfZgQ5-uaA-RERyTWwqAPf4zE/edit).
 
 ## Equipo:
 
 | Rol               | Nombre               | Redes                                                                                                                             |
 | :---------------- | :------------------- | :-------------------------------------------------------------------------------------------------------------------------------- |
 | `Back End`       | Octavio Quintero       | [![GitHub]](https://github.com/octa-quintero) [![linkedin]](https://www.linkedin.com/in/octavio-quintero/)                               |
-| `Full Stack`       | Cesar Augusto Ausa Vasquez | [![GitHub]](https://github.com/DEV-AusA) [![linkedin]](https://www.linkedin.com/in/dev-ausa//)                                |
-| `DevOps`       | Adrián José Ramos Guararima        | [![GitHub]](https://github.com/aramos20)  |
-| `Front End`       | Lucas Nahuel Nuñez     | [![GitHub]](https://github.com/LucaasN) [![linkedin]](https://www.linkedin.com/in/lucas-n-nunez/)                      |
-| `Front End`       | Joaquin Herrera  | [![GitHub]](https://github.com/JoaquinxHerrera) [![linkedin]](https://www.linkedin.com/in/joaquinherrera1/)                      |
-| `Back End`        | Gabriel Alejandro Leal Naranjo       | [![GitHub]](https://github.com/ParkerPiter) [![linkedin]](https://www.linkedin.com/in/gabriel-lea-n/)                             |
-| `Full Stack`  | Javier Rodriguez       | [![Github]](https://github.com/XabierGallardo) [![linkedin]](https://www.linkedin.com/in/javier-rodriguez-3267712b2/)           |
-| `Front End`  | Julieta Mamani       | [![Github]](https://github.com/julimamani) [![linkedin]](https://www.linkedin.com/in/julieta-agustina-mamani-perez-083295250/)           |
-| `QA`  | Mariano Sosa Alvarez       | [![Github]](https://github.com/Marianoafx22) [![linkedin]](https://www.linkedin.com/in/mariano-sosa-alvarez-a52440284/)           |
-| `Front End`  | Kevin Joel Noviello       | [![Github]](https://github.com/kjnoviello) [![linkedin]](https://www.linkedin.com/in/kevinjoelnoviello/)           |
-| `UX UI`  | Nayroby Azuaje       | [![linkedin]](https://www.linkedin.com/in/nazuaje14/)           |
-| `Back End`  | Sasha Ailen Franchini       | [![Github]](https://github.com/SashaFran) [![linkedin]](https://www.linkedin.com/in/sasha-ailen-franchini/)           |
+| `Back End`       | Santiago Balbarey       | [![Github]](https://github.com/SashaFran) [![linkedin]](https://www.linkedin.com/in/sasha-ailen-franchini/)           |                               |
+| `Back End`       | Ulises Rodriguez      | [![Github]](https://github.com/SashaFran) [![linkedin]](https://www.linkedin.com/in/sasha-ailen-franchini/)           | 
+| `Front End`      | Gabriel Aviles     | [![GitHub]](https://github.com/LucaasN) [![linkedin]](https://www.linkedin.com/in/lucas-n-nunez/)                      |
+| `Front End`      | Christian Zamora   | [![GitHub]](https://github.com/JoaquinxHerrera) [![linkedin]](https://www.linkedin.com/in/joaquinherrera1/)                      |
+| `Front End`      | Franco Huayller       | [![GitHub]](https://github.com/ParkerPiter) [![linkedin]](https://www.linkedin.com/in/gabriel-lea-n/)                             |
+| `Fullstack`      | Nicolás Agüero       | [![Github]](https://github.com/XabierGallardo) [![linkedin]](https://www.linkedin.com/in/javier-rodriguez-3267712b2/)           |
+| `QA`             | Mariana Carmona       | [![Github]](https://github.com/Marianoafx22) [![linkedin]](https://www.linkedin.com/in/mariano-sosa-alvarez-a52440284/)           |
+| `Ux/Ui`          | Sol Gayarin       | [![Github]](https://github.com/Marianoafx22) [![linkedin]](https://www.linkedin.com/in/mariano-sosa-alvarez-a52440284/)           |
+| `Ux/Ui`          | Justina Cid       | [![Github]](https://github.com/Marianoafx22) [![linkedin]](https://www.linkedin.com/in/mariano-sosa-alvarez-a52440284/)           |
+| `PM`             | Pamela Sol Pilotti      | [![Github]](https://github.com/Marianoafx22) [![linkedin]](https://www.linkedin.com/in/mariano-sosa-alvarez-a52440284/)           |
+| `Lider Tecnico`  | Cesar Augusto Ausa Vasquez | [![GitHub]](https://github.com/DEV-AusA) [![linkedin]](https://www.linkedin.com/in/dev-ausa//) |
+| `DevOps`         | Adrián Ramos         | [![GitHub]](https://github.com/aramos20)  |
+
 
