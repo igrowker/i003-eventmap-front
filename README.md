@@ -1,7 +1,7 @@
 ![portada](/src/assets/images/Eventmap1.png)
 ![portada](/src/assets/images/Eventmap2.png)
 
-![portada](/src/assets/images/Eventmap4.png)
+
 
 
 # Introducción:
