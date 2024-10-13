@@ -15,7 +15,7 @@ function PreviousEventCointainer({ events } : PreviousEventContainerProps ) {
   return (
     <div className="-mr-3 flex">
       <Swiper
-        slidesPerView={1.9}
+        slidesPerView={1.8}
         spaceBetween={8}
         modules={[Pagination]}
         className="mySwiper"
