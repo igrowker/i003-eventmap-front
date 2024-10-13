@@ -8,7 +8,8 @@ import { BiArrowBack } from "react-icons/bi";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import CustomModal from "@/components/modals/modalPostEvent/CustomModal";
-
+import Cookies from "js-cookie";
+import { useUserContext } from "../../../components/UserContext";
 
 const ResetPasswordPage = () => {
 
@@ -33,6 +34,8 @@ const ResetPasswordPage = () => {
     const tokenParam = searchParams.get("token");
     if (tokenParam) {
       setToken(tokenParam);
+    } else {
+      router.push("/login");
     }
   }, [searchParams]);
 
