@@ -1,7 +1,5 @@
-![portada](logo_eventmap.png)
-<a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="https://motor.elpais.com/tecnologia/compartir-ubicacion-en-google-maps-todas-las-formas-de-hacerlo/" alt="Logo" width="80" height="80">
-  </a>
+![portada](/src/assets/images/error-events.png)
+
 
 # Introducción:
 
