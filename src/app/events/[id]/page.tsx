@@ -113,11 +113,11 @@ function EventDetails() {
           {photos.map((photo, index) => (
             <SwiperSlide key={index}>
               <Image
-                className="object-cover w-full h-[350px] max-h-[420px] max-w-[420px]"
+                className="object-cover w-full h-[280px] max-h-[420px] max-w-[420px]"
                 src={photo || NoImage}
                 alt="Event Image"
                 width={400}
-                height={300}
+                height={280}
                 priority={true}
               />
             </SwiperSlide>
