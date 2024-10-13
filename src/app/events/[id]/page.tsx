@@ -128,7 +128,7 @@ function EventDetails() {
         <ConcurrenceComponent concurrence={amount} clas={true} />
         <DateTimeComponent size={14} date={date} time={time} />
         <div className="flex flex-col gap-2">
-          <h1 className="text-[18px] font-semibold text-[#ccbc98]">{name}</h1>
+          <h1 className="text-[18px] font-semibold text-[#6750A4]">{name}</h1>
           <p className="text-[#454747] text-[15px]">{description}</p>
         </div>
         <div>
