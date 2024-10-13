@@ -8,7 +8,7 @@
 
 **Descripción General:** 
 
-El problema:
+**El problema:**
 Los conductores de aplicaciones de pasajeros (ej. Uber, Didi, Cabify,
 etc) a veces salen a dar vueltas sin saber exactamente dónde y cuándo
 ir. Esto implica una inversión de tiempo y dinero sin un retorno de
