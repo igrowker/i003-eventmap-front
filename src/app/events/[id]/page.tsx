@@ -98,33 +98,6 @@ function EventDetails() {
             color="black"
           />
         </button>
-<<<<<<< HEAD
-        <Swiper
-          spaceBetween={2}
-          slidesPerView={1}
-          modules={[Pagination]}
-          pagination={{
-            clickable: true,
-            bulletClass: "swiper-pagination-bullet",
-            bulletActiveClass: "swiper-pagination-bullet-active",
-          }}
-          
-          className="mySwiper"
-        >
-          {photos.map((photo, index) => (
-            <SwiperSlide key={index}>
-              <Image
-                className="object-cover w-full h-[280px] max-h-[420px] max-w-[420px]"
-                src={photo || NoImage}
-                alt="Event Image"
-                width={400}
-                height={280}
-                priority={true}
-              />
-            </SwiperSlide>
-          ))}
-        </Swiper>
-=======
         {photos && (
           <Image
             className="object-cover w-full h-[180px] max-h-[420px] max-w-[420px]"
@@ -135,7 +108,6 @@ function EventDetails() {
             priority={true}
           />
         )}
->>>>>>> 70bf95c3a8877b213543ba6c085ab86180228d18
       </div>
 <div className="flex flex-col gap-4 p-4 mb-10">
         <ConcurrenceComponent concurrence={amount} clas={true} />
