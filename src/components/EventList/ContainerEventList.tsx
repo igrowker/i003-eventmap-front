@@ -12,7 +12,7 @@ import useMapStore from "../../store/mapStore";
 export default function ContainerEventList({ filtersForEvents = [], executeFilterState, typeFilter }: { filtersForEvents: Filters[] | [], executeFilterState: { executeFilter: boolean, setExecuteFilter: (value: boolean) => void }, typeFilter?: string }) {
   
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
-  const [eventsList, setEventsList] = useState<eventTypes[]>([])  
+  const [eventsList, setEventsList] = useState<eventTypes[]>([])
   const [eventsListFiltered, setEventsListFiltered] = useState<eventTypes[]>([])
   const [currentLimit, setCurrentLimit] = useState(10)
   const [isLoading, setIsLoading] = useState(false)
@@ -31,13 +31,13 @@ export default function ContainerEventList({ filtersForEvents = [], executeFilte
   useEffect(() => {
     if (!executeFilter) return
     const filteredList = eventsList.filter((event) => {
-      return filtersForEvents.every(({ property, filterValue }) => {
-        if (property === "type")
-          return filterValue === FILTER_BY_TYPE_LIST[0].value
-            ? true
-            : event?.type === filterValue;
-        if (property === "date")
-          return filterValue ? filterDateTo(event?.date, filterValue) : true;
+    return filtersForEvents.every(({ property, filterValue }) => {      
+      if (property === "type")
+        return filterValue === FILTER_BY_TYPE_LIST[0].value
+          ? true
+          : event?.type === filterValue;
+      if (property === "date")
+        return filterValue ? filterDateTo(event?.date, filterValue) : true;
       });
     })
     setExecuteFilter(false)

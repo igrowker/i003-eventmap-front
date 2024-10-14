@@ -40,11 +40,6 @@ export const NotificationsComponent = () => {
                             eventName={event.name}
                             date={event.date}
                             time={event.time}
-                            // location={
-                            //     typeof event.location === 'object'
-                            //         ? `Lat: ${event.location.lat}, Lon: ${event.location.lon}`
-                            //         : event.location
-                            // }
                             addres={event.addres}
                             onButtonClick={() => window.location.href = `/events/${event.id}`}
                         />
@@ -52,10 +47,6 @@ export const NotificationsComponent = () => {
                 ) : (
                     <p>No hay eventos destacados en este momento.</p>
                 )}
-                
-                <button className="mb-4" onClick={() => console.log(events)}>
-                    Obtener eventos
-                </button>
             </div>
         </div>
     );
