@@ -11,8 +11,7 @@ export const NotificationsComponent = () => {
     useEffect(() => {
         const fetchEvents = async () => {
             try {
-                // const request = await fetch(`http://localhost:3000/events/all`);
-                const request = await fetch(`https://i003-eventmap-back.onrender.com/events/all`);
+                const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events/all`);
                 const result = await request.json();
                 setEvents(result.filter((event: any) => event.amount >= 0.8));
             } catch (error) {
