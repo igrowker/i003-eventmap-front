@@ -12,7 +12,7 @@ import useMapStore from "../../store/mapStore";
 export default function ContainerEventList({ filtersForEvents = [], executeFilterState, typeFilter }: { filtersForEvents: Filters[] | [], executeFilterState: { executeFilter: boolean, setExecuteFilter: (value: boolean) => void }, typeFilter?: string }) {
   
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
-  const [eventsList, setEventsList] = useState<eventTypes[]>([])  
+  const [eventsList, setEventsList] = useState<eventTypes[]>([])
   const [eventsListFiltered, setEventsListFiltered] = useState<eventTypes[]>([])
   const [currentLimit, setCurrentLimit] = useState(10)
   const [isLoading, setIsLoading] = useState(false)
@@ -22,49 +22,22 @@ export default function ContainerEventList({ filtersForEvents = [], executeFilte
 
   useEffect(() => {
     // esta longitud y latitud debe cambiarse por la que envie el mapa
-<<<<<<< HEAD
     getEvents(`${API_URL}/events?lat=${searchAreaPosition.lat}&lon=${searchAreaPosition.lng}`).then(data => {
       setEventsList(data)
       setEventsListFiltered(data)
     })
   }, [searchAreaPosition])
-=======
-    const getEvents = async () => {
-      try {
-        //valores hardcodeados
-        const request = await fetch(`${API_URL}/events?lat=-34.60448395867932&lon=-58.38164429855504`);
-        const data = await request.json();
-
-        //se setea lo mismo para eventos sin filtrar y filtrados
-        setEventsList(data);
-        setEventsListFiltered(data);
-
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
-    getEvents();
-    
-    if (typeFilter && typeFilter.length > 0) {
-      setTimeout(() => {
-        setExecuteFilter(true);
-      }, 400);
-    }
-  }, [])
->>>>>>> 70bf95c3a8877b213543ba6c085ab86180228d18
-
 
   useEffect(() => {
     if (!executeFilter) return
     const filteredList = eventsList.filter((event) => {
-      return filtersForEvents.every(({ property, filterValue }) => {
-        if (property === "type")
-          return filterValue === FILTER_BY_TYPE_LIST[0].value
-            ? true
-            : event?.type === filterValue;
-        if (property === "date")
-          return filterValue ? filterDateTo(event?.date, filterValue) : true;
+    return filtersForEvents.every(({ property, filterValue }) => {      
+      if (property === "type")
+        return filterValue === FILTER_BY_TYPE_LIST[0].value
+          ? true
+          : event?.type === filterValue;
+      if (property === "date")
+        return filterValue ? filterDateTo(event?.date, filterValue) : true;
       });
     })
     setExecuteFilter(false)
