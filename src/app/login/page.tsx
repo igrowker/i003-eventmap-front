@@ -288,8 +288,8 @@ export default function Login() {
           </button>
         </>
 
-        <div>
-          <p className="text-center text-[#5C5F5F]">
+        <div className="pb-10">
+          <p className="text-center text-[#5C5F5F] ">
             ¿No tenés cuenta?{" "}
             <Link href={"/register"} className="text-[#6750a4]">
               Registrate
