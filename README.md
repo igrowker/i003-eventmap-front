@@ -54,7 +54,7 @@ trabajar en estas aplicaciones de movilidad.
 * Escalabilidad: Se considera la posibilidad de utilizar caché para
 mejorar el rendimiento del servicio de heatmap.
 
-* Mobile first : la aplicacion está diseñada especificamente para dispositivos mobiles
+* Mobile first : la aplicacion está diseñada especificamente para dispositivos móviles
 
 * Seguridad: Implementar autenticación y autorización para los
 endpoints de creación, actualización y eliminación de eventos.
