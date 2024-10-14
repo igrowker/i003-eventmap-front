@@ -10,6 +10,10 @@ import DateTimeComponent from "@/components/EventDetails/DateTimeComponent";
 import CustomModal from "@/components/modals/modalPostEvent/CustomModal";
 import ModalImage from "@/../public/eventdetailmodal.png";
 import NoImage from "@/../public/noImage.png";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination } from "swiper/modules";
+import "swiper/css";
+import 'swiper/css/pagination';
 
 interface Event {
   time: string;
@@ -36,9 +40,7 @@ function EventDetails() {
   useEffect(() => {
     const fetchEvent = async () => {
       try {
-        const response = await fetch(
-          `${API_URL}/events/event/${id}`
-        );
+        const response = await fetch(`${API_URL}/events/event/${id}`);
         if (!response.ok) {
           throw new Error("Error en la peticion");
         }
@@ -87,11 +89,11 @@ function EventDetails() {
   };
 
   return (
-    <div>
+    <div className="mb-14">
       <div className="relative">
-      <button className="absolute" onClick={() => router.back()}>
+        <button className="absolute" onClick={() => router.back()}>
           <BiArrowBack
-            className="mb-4 absolute top-4 left-4"
+            className="mb-4 absolute top-4 left-4 z-10"
             size={24}
             color="black"
           />

@@ -29,7 +29,7 @@ export default function FilterComponent({ onFilterChange }: FilterComponentProps
 
 
   return (
-    <div className="z-[9999]">
+    <div className="z-[8888]">
       <div className="absolute top-4 right-4 flex flex-col gap-2">
         <button onClick={() => setIsFilterMenuOpen(!isFilterMenuOpen)} className="flex gap-2 items-center bg-createEventButton py-2 px-4 rounded-lg sm:hidden max-sm:self-end">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="#ffffff" className="size-4">

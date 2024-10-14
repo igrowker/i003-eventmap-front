@@ -133,7 +133,7 @@ export default function Login() {
            fontSize: "17px",
          }
        }} />
-      <div className="py-5 px-4">
+      <div className="py-3 px-4">
         <Link href={"/"}>
           <BiArrowBack className="mb-4" size={24} color="white" />
         </Link>
@@ -155,7 +155,7 @@ export default function Login() {
         onSubmit={handleSubmit}
         className="flex flex-col bg-white rounded-t-3xl px-4 mb-5"
       >
-        <p className="font-bold text-center my-8">
+        <p className="font-bold text-center my-5">
           Ingreso sólo para organizadores
         </p>
         <div className="flex flex-col gap-4">

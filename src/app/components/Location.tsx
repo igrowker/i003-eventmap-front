@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Marker, Popup, useMapEvents, useMap } from "react-leaflet";
+import { Marker, Popup, useMapEvents, useMap, Tooltip } from "react-leaflet";
 import MarkerIcon from "leaflet/dist/images/marker-icon.png";
 import MarkerShadow from "leaflet/dist/images/marker-shadow.png";
 import "leaflet-routing-machine";
@@ -7,7 +7,6 @@ import { LatLng, Icon } from "leaflet";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import useMapStore from "@/store/mapStore";
-
 
 export const Location: React.FC<{ center: [number, number] }> = ({center}) => {
 
@@ -22,6 +21,8 @@ export const Location: React.FC<{ center: [number, number] }> = ({center}) => {
 
   const pathname = usePathname();
   const router = useRouter();
+
+  map.doubleClickZoom.disable();
 
 
   const customIcon = new Icon({
@@ -39,27 +40,31 @@ export const Location: React.FC<{ center: [number, number] }> = ({center}) => {
     }
   };
   const zoomToLocation = (latlng : LatLng) => {
-    const zoomLevel = 13;
-    map.flyTo(latlng, zoomLevel);
+    const zoomLevel = 14;
+    map.setView(latlng, zoomLevel);
+
   };
 
   const mapEvents = useMapEvents({
-    click(e) {
+    dblclick(e) {
       redirectToMap();
       setPositionOnClick(e.latlng);
     },
     locationfound(e) {
       setSearchAreaPosition(e.latlng);
-      console.log(positionOnClick)
-
+      console.log(positionOnClick);
+      zoomToLocation(e.latlng);
     },
   });
 
   // ENVIAR AL HACER CLICK EN EL BOTON BUSCAR AQUI
   const handleSearchOnArea = () => {
-    setSearchAreaPosition(positionOnClick);
-    console.log(positionOnClick);
-    zoomToLocation(searchAreaPosition);
+   
+    if (positionOnClick) {
+      setSearchAreaPosition(positionOnClick);
+      console.log(positionOnClick);
+      zoomToLocation(positionOnClick);
+    }
   };
 
 
@@ -68,13 +73,13 @@ export const Location: React.FC<{ center: [number, number] }> = ({center}) => {
       {/* Mostrar marcador para la ubicación del usuario */}
       {userLocation && (
         <Marker position={searchAreaPosition} icon={customIcon}>
-          <Popup>Estás Aquí: {formatLatLng(searchAreaPosition)}</Popup>
+          <Tooltip>Estás Aquí: {formatLatLng(searchAreaPosition)}</Tooltip>
         </Marker>
       )}
       {/* Mostrar marcador para la ubicación del clic */}
       {positionOnClick && (
         <Marker position={positionOnClick} icon={customIcon}>
-          <Popup className="">
+          <Popup autoClose>
             <button onClick={handleSearchOnArea} className="bg-[#6750A4] text-white font-semibold px-5 py-3 rounded-xl">
               Buscar aqui
             </button>

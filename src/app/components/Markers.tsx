@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import MarkerIcon from "leaflet/dist/images/marker-icon.png";
+// import MarkerIcon from "leaflet/dist/images/marker-icon.png";
 import MarkerGreen from '../../../public/markergreen.png';
-import MarkerRed from '../../../public/markerred.png';
-import MarkerYellow from '../../../public/markeryellow.png';
 import MarkerShadow from "leaflet/dist/images/marker-shadow.png";
 import L from "leaflet";
 import { Marker, Popup } from "react-leaflet";
@@ -87,7 +85,6 @@ const Markers = () => {
                     icon={
                         new L.Icon({
                             iconUrl: MarkerGreen.src,
-                            iconRetinaUrl: MarkerIcon.src,
                             iconSize: [41, 41],
                             iconAnchor: [12.5, 41],
                             popupAnchor: [0, -41],

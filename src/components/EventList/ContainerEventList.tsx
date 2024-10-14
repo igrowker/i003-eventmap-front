@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { Filters } from "@/types/filter-types";
 import { getEvents } from "@/utils/getEvents";
 import Link from "next/link";
+import useMapStore from "../../store/mapStore";
 
 export default function ContainerEventList({ filtersForEvents = [], executeFilterState, typeFilter }: { filtersForEvents: Filters[] | [], executeFilterState: { executeFilter: boolean, setExecuteFilter: (value: boolean) => void }, typeFilter?: string }) {
   
@@ -17,36 +18,17 @@ export default function ContainerEventList({ filtersForEvents = [], executeFilte
   const [isLoading, setIsLoading] = useState(false)
   const { executeFilter, setExecuteFilter } = executeFilterState
 
+  const { searchAreaPosition } = useMapStore();
+
   useEffect(() => {
     // esta longitud y latitud debe cambiarse por la que envie el mapa
-    const getEvents = async () => {
-      try {
-        //valores hardcodeados
-        const request = await fetch(`${API_URL}/events?lat=-34.60448395867932&lon=-58.38164429855504`);
-        const data = await request.json();
-
-        //se setea lo mismo para eventos sin filtrar y filtrados
-        setEventsList(data);
-        setEventsListFiltered(data);
-
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
-    getEvents();
-    
-    if (typeFilter && typeFilter.length > 0) {
-      setTimeout(() => {
-        setExecuteFilter(true);
-      }, 400);
-    }
-  }, [])
-
+    getEvents(`${API_URL}/events?lat=${searchAreaPosition.lat}&lon=${searchAreaPosition.lng}`).then(data => {
+      setEventsList(data)
+      setEventsListFiltered(data)
+    })
+  }, [searchAreaPosition])
 
   useEffect(() => {
-    console.log('executeFilter', executeFilter)
-
     if (!executeFilter) return
     const filteredList = eventsList.filter((event) => {
       return filtersForEvents.every(({ property, filterValue }) => {
@@ -58,12 +40,17 @@ export default function ContainerEventList({ filtersForEvents = [], executeFilte
           return filterValue ? filterDateTo(event?.date, filterValue) : true;
       });
     })
-
-    console.log('filteredList', filteredList)
-
     setExecuteFilter(false)
     setEventsListFiltered(filteredList)
   }, [executeFilter]);
+
+  useEffect(() => {
+    if (typeFilter && typeFilter.length > 0) {
+      setTimeout(() => {
+        setExecuteFilter(true);
+      }, 400);
+    }
+  }, []);
 
   const lastCardRef = useRef<HTMLDivElement>(null)
 
@@ -84,8 +71,8 @@ export default function ContainerEventList({ filtersForEvents = [], executeFilte
     <div className="flex flex-col gap-4 items-center">
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 py-4 mb-6">
         {
-          eventsListFiltered?.length > 0
-            ? eventsListFiltered.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()).map((event, index) => (
+          eventsListFiltered.length > 0
+            ? eventsListFiltered.map((event, index) => (
               <Link key={event.id} href={`/events/${event.id}`}>
                 <CardEventList event={event} lastCardRef={index + 1 === currentLimit ? lastCardRef : null} />
               </Link>

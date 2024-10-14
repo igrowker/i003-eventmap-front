@@ -158,10 +158,11 @@ export default function Register() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+  
     const newErrors = handleError();
-
+  
     if (Object.keys(newErrors).length === 0) {
+      
       toast.promise(registerUser(), {
         loading: "Registrando usuario...",
         success: "Registro exitoso!",
@@ -180,30 +181,33 @@ export default function Register() {
         password: formValues.password,
         cuit: formValues.cuitCuil,
       };
-
+  
       // Enviar datos al backend
-      const req = await fetch(
-        `${API_URL}/auth/register`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(trimmedFormValues),
-        }
-      );
+      const req = await fetch(`${API_URL}/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(trimmedFormValues),
+      });
+      
       const res = await req.json();
       console.log(res);
-      if (req.ok) {
-        window.setTimeout(() => {
-          router.push("/login");
-        }, 1000)
-        
+  
+      if (!req.ok) {
+        throw new Error(res.message || "Error en el registro");
       }
+      
+      window.setTimeout(() => {
+        router.push("/login");
+      }, 1000);
+  
     } catch (error) {
-      console.error("Error al enviar los dato", error);
+      
+      throw error;
     } finally {
       setLoading(false);
     }
   };
+  
   return (
     <div className="bg-[#131a23]">
       <Toaster

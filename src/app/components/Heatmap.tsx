@@ -56,17 +56,11 @@ const Heatmap = () => {
 
   //   fetchData();
   // }, [API_URL]);
-  console.log(searchAreaPosition.lat);
-  console.log(searchAreaPosition.lon);
   const URL = searchAreaPosition 
         ? `${API_URL}/events?lat=${searchAreaPosition.lat}&lon=${searchAreaPosition.lng}`
         : '';
 
-  console.log(URL);
   const { data } = useFetchData(URL);
-
-  console.log(data);
-
 
   const filteredDataMap = data.filter(event => {
     const matchesType = storeFilterValues.type === "all" || event.type === storeFilterValues.type;

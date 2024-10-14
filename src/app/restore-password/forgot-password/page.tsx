@@ -17,6 +17,7 @@ function ForgotPassword() {
   const [sentEmail, setSentEmail] = useState("");
   const [countdown, setCountdown] = useState(120);
   const [isCounting, setIsCounting] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -27,7 +28,8 @@ function ForgotPassword() {
     e.preventDefault();
     if (!validateEmail(email)) {
       setErrors({ email: "Correo electrónico no válido" });
-    } else {
+    } else {  
+      setLoading(true);
       const trimmedEmail = email.trim();
       
       try {
@@ -38,10 +40,9 @@ function ForgotPassword() {
             body: JSON.stringify({ email: trimmedEmail }),
           }
         );
-        console.log(email);
         const res = await req.json();
         if (req.ok) {
-          console.log("Respuesta exitosa:", res);
+          setLoading(false);
           setEmailSended(true);
           setSentEmail(trimmedEmail);
           setIsCounting(true); 
@@ -82,7 +83,7 @@ function ForgotPassword() {
   }, [isCounting]);
 
   return (
-    <div className="px-4 my-5">
+    <div className="px-4 my-5 w-screen h-screen">
       <Link href={"/"}>
         <BiArrowBack className="mb-4" size={24} color="black" />
       </Link>
@@ -164,6 +165,11 @@ function ForgotPassword() {
           </div>
         )}
       </form>
+      {loading && (
+        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
+          <div className="h-16 w-16 animate-spin rounded-full border-b-4 border-white" />
+        </div>
+      )}
     </div>
   );
 }
