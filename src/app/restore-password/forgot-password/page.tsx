@@ -48,6 +48,7 @@ function ForgotPassword() {
           setIsCounting(true); 
           setCountdown(120);
         } else {
+          setLoading(false);
           setErrors({ email: "El email ingresado no posee cuenta activa" });
           console.error("Error en la respuesta:", res);
           throw new Error("Falló el envío de la solicitud");
