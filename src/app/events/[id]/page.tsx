@@ -98,6 +98,7 @@ function EventDetails() {
             color="black"
           />
         </button>
+<<<<<<< HEAD
         <Swiper
           spaceBetween={2}
           slidesPerView={1}
@@ -123,8 +124,20 @@ function EventDetails() {
             </SwiperSlide>
           ))}
         </Swiper>
+=======
+        {photos && (
+          <Image
+            className="object-cover w-full h-[180px] max-h-[420px] max-w-[420px]"
+            src={photos[0] || NoImage}
+            alt="Event Image"
+            width={400}
+            height={100}
+            priority={true}
+          />
+        )}
+>>>>>>> 70bf95c3a8877b213543ba6c085ab86180228d18
       </div>
-      <div className="flex flex-col gap-4 p-4">
+<div className="flex flex-col gap-4 p-4 mb-10">
         <ConcurrenceComponent concurrence={amount} clas={true} />
         <DateTimeComponent size={14} date={date} time={time} />
         <div className="flex flex-col gap-2">

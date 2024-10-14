@@ -28,7 +28,7 @@ import useFetchData from './utils/useFetchData';
 
 const Markers = () => {
     // const [data, setData] = useState<Event[]>([]);
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
+   const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const { storeFilterValues, searchAreaPosition, setCurrentEvent, setShowModal } = useMapStore(); 
 
     // useEffect(() => {
